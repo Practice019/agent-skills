@@ -99,6 +99,10 @@ git push origin master --tags
 gh release create v1.0.1 --repo <owner>/<repo> --title "<name> v1.0.1" --notes "变更说明"
 
 # 加 Topics（⚠️ 曝光关键：DSH 市场按 dsh-plugin topic 收录）
+# ⚠️ 标签必须结合项目实际：先读 README / 依赖清单，只打与项目技术栈和用途相关的标签。
+#    DSH 生态标签（dsh-plugin / deepseek-harness / dsh / cordis）只在项目确实是 DSH 插件、
+#    集成或技能库时才打；普通项目（如 Python/CrewAI 情书生成器）绝不硬贴 DSH 标签，
+#    按其真实技术栈打（python / crewai / smtp / multi-agent 等）。
 gh repo edit <owner>/<repo> --add-topic dsh-plugin --add-topic deepseek-harness --add-topic cordis --add-topic plugin
 ```
 
@@ -125,6 +129,7 @@ npm version patch && npm publish && git push origin master --tags
 | 他人环境装不上插件 | import 了 dsh 内部包 | 改 raw 工具定义，零 dsh 包依赖 |
 | npm view 版本没更新 | 注册表索引传播延迟 | 等 1-3 分钟；curl registry 直查 `https://registry.npmjs.org/<包名>` |
 | pwsh 里 JSON 显示乱码 | Get-Content 用 GBK 解码 UTF-8 | 用 read 工具或 Node 读取验证 |
+| GitHub 标签乱打（硬贴 dsh-plugin / deepseek-harness） | 没结合项目实际内容 | 先读 README / 依赖清单；DSH 生态标签只给真正的 DSH 插件/集成/技能库打，普通项目按其真实技术栈打 |
 
 ## 输出模板
 

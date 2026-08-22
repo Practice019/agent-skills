@@ -1,7 +1,9 @@
-# 🧠 Agent Skills 技能库
+# 🧠 Agent Skills 通用技能库
 
-面向 **DeepSeek Harness (DSH)** 的 Agent 技能集合：把软件开发生命周期（SDLC）方法论沉淀为
-DSH 可检索、可加载的 Skill（`SKILL.md` + YAML frontmatter），让 Agent 按阶段路由到对应流程执行。
+**通用 Agent 技能集合**：把软件开发生命周期（SDLC）方法论沉淀为可检索、可加载的 Skill
+（`SKILL.md` + YAML frontmatter），让 Agent 按阶段路由到对应流程执行。
+以 **DeepSeek Harness (DSH)** 为参考载体（安装于 `~/.dsh/skills/`），
+方法论本身与具体平台无关，可移植到其他支持 Skill 协议的 Agent 平台。
 
 ## 技能总览
 
@@ -46,7 +48,7 @@ DSH 可检索、可加载的 Skill（`SKILL.md` + YAML frontmatter），让 Agen
 
 ## 安装与使用
 
-技能目录直接放入 DSH 扫描路径即可（优先级从高到低）：
+技能目录直接放入支持 Skill 协议的 Agent 平台扫描路径即可（以 DSH 为例，优先级从高到低）：
 
 1. 项目级 `<project>/.dsh/skills/<name>/SKILL.md`
 2. 用户级 `~/.dsh/skills/<name>/SKILL.md`（本仓库即此形态）

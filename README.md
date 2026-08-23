@@ -27,6 +27,7 @@
 | `skill-authoring` | DSH 技能制作协议：frontmatter 规范、命名、YAML 安全、校验流程 |
 | `project-publish` | 项目发布到 npm + GitHub：发布前检查、token 引导、tag/Release/topics、自动化发版 |
 | `project-tech-profile` | 项目技术画像：技术栈/架构/关键概念/学习路径 |
+| `browser-harness` | 浏览器自动化手册（CDP 直连 Chrome）：抓站/登录/爬数据/复刻网页，含 grab_page/crawl_site/login_form 封装工具与实战坑 |
 
 ## 目录结构约定
 

@@ -1,5 +1,5 @@
 ---
-name: project-publish
+name: push-project
 description: "把本地 DSH 插件/项目发布到 npm 和 GitHub：发布前检查清单、npm 账号与 automation token 引导（免 2FA 输码）、版本号与 tag、GitHub Release 与 topics（dsh-plugin 市场收录）、一键自动化发版。当用户要发布项目到 npm/GitHub 时使用。"
 whenToUse: "用户要求发布项目到 npm、发布到 GitHub、打 tag、建 Release、加 topics、配置自动化发布或处理发布报错时使用。"
 user-invocable: true

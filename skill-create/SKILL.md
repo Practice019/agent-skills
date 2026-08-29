@@ -1,5 +1,5 @@
 ---
-name: skill-authoring
+name: skill-create
 description: "在 DSH 中创建、校验、安装和发布本地 Skill 的完整协议与流程。涵盖 SKILL.md frontmatter 规范、命名规则、YAML 安全写法、目录位置、校验方法、常见踩坑（冒号空格/CRLF/引号）以及 skill_search/skill_load 验证流程。当用户想新建一个 skill、把流程沉淀为 skill、修复无法被 DSH 扫描到的 skill 时使用本技能。"
 ---
 
@@ -96,7 +96,7 @@ disable-model-invocation: false
 合法示例：
 
 ```text
-skill-authoring
+skill-create
 project-tech-profile
 windows-bash-workdir
 dsh-plugin-development

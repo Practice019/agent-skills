@@ -24,8 +24,8 @@
 | 技能 | 定位 |
 |------|------|
 | `dsh-plugin-development` | DSH 动态 Cordis 插件开发完整指南（Plugin/Package/Run、Host/Client、Slot UI、RPC、动态 Tool、版本与审批） |
-| `skill-authoring` | DSH 技能制作协议：frontmatter 规范、命名、YAML 安全、校验流程 |
-| `project-publish` | 项目发布到 npm + GitHub：发布前检查、token 引导、tag/Release/topics、自动化发版 |
+| `skill-create` | DSH 技能制作协议：frontmatter 规范、命名、YAML 安全、校验流程 |
+| `push-project` | 项目发布到 npm + GitHub：发布前检查、token 引导、tag/Release/topics、自动化发版 |
 | `project-tech-profile` | 项目技术画像：技术栈/架构/关键概念/学习路径 |
 | `browser-harness` | 浏览器自动化手册（CDP 直连 Chrome）：抓站/登录/爬数据/复刻网页，含 grab_page/crawl_site/login_form 封装工具与实战坑 |
 
@@ -63,7 +63,7 @@ skill_load build          # 加载
 
 ## 新建技能
 
-遵循 `skill-authoring/SKILL.md` 协议：
+遵循 `skill-create/SKILL.md` 协议：
 
 1. 建目录 `~/.dsh/skills/<kebab-case-name>/SKILL.md`
 2. frontmatter 必填 `name`（小写 kebab-case）与 `description`（双引号包裹、YAML 安全）

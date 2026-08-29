@@ -1,0 +1,5 @@
+# DSH skills: SKILL.md must stay LF (CRLF breaks YAML frontmatter parsing)
+SKILL.md text eol=lf
+
+# other text files keep default behavior
+*.md text eol=lf

@@ -31,6 +31,8 @@
 | `skill-create` | 创建、校验、安装和发布 DSH Skill 的协议与流程 |
 | `push-project` | 把项目发布到 npm + GitHub：检查清单、token 引导、tag/Release、一键发版 |
 | `python-code-standards` | Python 企业级代码规范：命名/格式/类型标注/NEVER 红线/反 AI 模式 |
+| `reverse-skill-router` | 逆向/渗透/安全技能路由包：AI 自动路由 + 按需工具链自举 + 自动进化经验库（含 42 个专业子技能 + CTF 侧车） |
+| `android-reverse-engineering` | APK/XAPK/JAR/AAR 反编译（jadx/Fernflower）、提取 API 端点、追踪 UI→网络调用链 |
 
 ## 目录结构
 
@@ -46,6 +48,15 @@
 遵循 `skill-create/SKILL.md` 协议：建目录 `~/.dsh/skills/<kebab-case-name>/SKILL.md`，
 frontmatter 必填 `name`（小写 kebab-case）与 `description`（双引号包裹、YAML 安全），
 统一 LF 行尾（CRLF 会破坏 YAML 解析）。
+
+## 第三方技能
+
+以下技能来自社区仓库，各自保留上游许可证（随目录携带 LICENSE）：
+
+| 目录 | 上游 | 许可证 |
+|------|------|--------|
+| `reverse-skill-router/` | [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) | MIT（核心路由包）+ GPL-3.0（`CTF-Sandbox-Orchestrator/` 侧车） |
+| `android-reverse-engineering/` | [SimoneAvogadro/android-reverse-engineering-skill](https://github.com/SimoneAvogadro/android-reverse-engineering-skill) | Apache-2.0 |
 
 ## License
 

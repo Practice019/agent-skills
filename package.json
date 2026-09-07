@@ -1,0 +1,35 @@
+{
+  "name": "@elf077/dsh-skills",
+  "version": "1.4.0",
+  "description": "DeepSeek Harness (DSH) 用户级技能库：SDLC 全阶段 + 逆向/安全/前端/桌面 UI/插件开发等领域技能，每技能独立 SKILL.md，DSH 启动自动扫描。",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "skills",
+    "skill-library",
+    "agent-skill",
+    "cordis",
+    "plugin",
+    "prompt-engineering",
+    "multi-agent"
+  ],
+  "license": "MIT",
+  "author": "Practice019",
+  "homepage": "https://github.com/Practice019/agent-skills",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Practice019/agent-skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Practice019/agent-skills/issues"
+  },
+  "files": [
+    "**/*",
+    "!node_modules",
+    "!*.tgz",
+    "!.git/"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
+}

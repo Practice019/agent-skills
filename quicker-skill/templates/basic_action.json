@@ -1,0 +1,33 @@
+{
+    "ActionId": "",
+    "SharedActionId": "00000000-0000-0000-0000-000000000000",
+    "Title": "空白动作模板",
+    "Description": "基于 C# 脚本的高级动作模板",
+    "Keywords": "template",
+    "ChangeLog": "v1.0.0 初始化",
+    "ShareUrl": "",
+    "Icon": "fa:Solid_Wrench:#FF4000",
+    "Variables": [
+        {
+            "Key": "quicker_in_param",
+            "Type": 0,
+            "DefaultValue": "",
+            "IsInput": true,
+            "Desc": "URL传入参数"
+        },
+        {
+            "Key": "rtn",
+            "Type": 0,
+            "DefaultValue": "",
+            "IsOutput": false,
+            "Desc": "返回值(自动)"
+        },
+        {
+            "Key": "errMessage",
+            "Type": 0,
+            "DefaultValue": "",
+            "IsOutput": false,
+            "Desc": "错误信息(自动)"
+        }
+    ]
+}

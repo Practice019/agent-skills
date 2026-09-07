@@ -2,6 +2,24 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.4.0] - 2026-09-08
+
+### Added
+- `autox-scripting`：AutoX.js（Auto.js 分支）自动化脚本编写与调试：截图找色、坐标点击、Shizuku 权限、多线程、文件操作、常见坑
+- `desktop-router`：macOS/Windows 桌面 UI/UX 任务路由：按路由表分发至 audit/redesign/native feel/layout/typography/motion/brand/art direction/visual draft/QA/DESIGN.md 等子技能
+- `frontend-design`：独特且生产就绪的前端界面设计与实现（HTML/CSS/JS、React、Vue 等），强审美方向
+- `model-training-mindset`：模型训练思维攻坚多步骤任务：epoch 循环 + checkpoint 回退，子问题逐级固化衔接
+- `quicker-skill`：Quicker 动作（Roslyn v2 引擎）开发、部署与发布：JSON 配置、C# 逻辑代码、Markdown 简介、本地/云端构建
+
+## [1.3.0] - 2026-09-07
+
+### Added
+- `fun-code-reverse`：趣味代码逆向收录技能
+  - 工作流：接收输入（用户点名功能点）→ 定位剥噪 → 提炼核心片段 → 写复刻提示词 → 收录进 `D:\project_GIT\fun-code-collection`
+  - 条目形态：「复刻提示词 + 核心片段（10~40 行原机制）」配套交付；不做生成验证——提示词单独复现等于抽卡，可靠性由两者配套构造性保证
+  - 规则级自进化：`playbook.md` 通用经验库只收泛化规则（可泛化/可执行/非重复三重门槛），拒绝案例日志
+  - 双副本同步约定：`.dsh` 为主副本，`.zcode` 为同步副本
+
 ## [1.2.0] - 2026-08-23
 
 ### Added

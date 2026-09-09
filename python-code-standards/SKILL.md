@@ -78,4 +78,4 @@ python-code-standards/
 
 - 【EDIT ME】团队落地时调整：注释语言、line-length（88/100）、target-version、规模上限、项目结构要求
 - 规则之间冲突时：**NEVER 红线（topics/08）优先于一切建议性规则**
-- 本技能与 `D:\project_GIT\study_Langchain\python-agents-rules\`（仓库级 AGENTS.md + skills/）同源，修改时两边同步
+- 本技能与 `python-agents-rules` 仓库（仓库级 AGENTS.md + skills/）同源，修改时两边同步；同源仓库的具体路径属团队约定，不写死在本文件

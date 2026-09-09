@@ -28,6 +28,8 @@ disable-model-invocation: false
 
 `D:\project_GIT\fun-code-collection`
 
+> 本机默认路径，属本技能的可配置项；换机器时替换此路径即可（不是需要 `read` 的引用）。
+
 - 每个条目 = 一个子文件夹（**英文小写连字符**命名，名字表达效果主题）+ `README.md` + 核心片段文件
 - 根 README 的「📌 收藏清单」表是索引，新条目必须追加一行（子文件夹链接 + 一句话简介 + 类型）
 - commit 规范：`add: 新收藏 <snippet-name>`；**不主动 push**，用户明确要求时才推

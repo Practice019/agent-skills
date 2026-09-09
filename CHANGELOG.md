@@ -2,6 +2,30 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.11.0] - 2026-09-10
+
+### Added
+- `skill-audit/scripts/audit-skill.cjs`：**单技能规范体检器**（补上库级两级扫描之外的第二层纵深）。逐个技能检查：
+  - frontmatter 上游/专有键残留（`entrypoint` / `assemble` / `description_zh` / `triggers` / `homepage` / `always` / `provenance` / `metadata.opensquilla`）
+  - description 长度与中英双语（缺任一半句给 WARN，不擅自改语义）
+  - 正文专有运行时残留（`OPENSQUILLA` / `{baseDir}` / `{{ with.* }}` / `{{ outputs.* }}` / `{{ inputs.* }}` / `skill_exec` / `publish_artifact` / `MIMO_*`）
+  - 引用精度（显式相对引用 + 裸文件名读引用是否可解析）、本机用户名路径、`read` 不展开的 `~/` 错误写法
+  - 技能内 md5 完全重复、嵌套 `SKILL.md`（DSH 只扫一层）、`user-invocable:false` + `disable-model-invocation:true` 不可调用组合
+  - 文件清单 / 体量 / SKILL.md 行数
+- `skill-audit/SKILL.md`：新增「本技能自带的三个工具」表、阶段 1 三级扫描命令与输出约定、阶段 4 `FAIL=0` 复验门、误报分类表 3 行、常见坑 3 行，以及「自检」一节（用故意做坏的夹具库证明体检器不空转）
+
+### Changed
+- `skill-audit` description 双语补入单技能体检能力（catalog 条目随之更新）
+- 阶段 1 更名「跑三级扫描」，阶段 2 判据表补入「正文专有运行时残留」等真缺陷判据
+
+### Notes
+- 三个扫描器共用同一套误报口径（`NON_REPO` / `ARTIFACTS` / `BENIGN_TILDE`），**改口径要三处同步**
+- 体检器只在 `.md` 上判 CRLF：`core.autocrlf=true` 下 `.ps1`/`.py` 工作副本本就是 CRLF 而仓库 blob 为 LF（`git ls-files --eol <path>` 可核对），对非 `.md` 报 CRLF 属噪声
+- 已知误报自动降级为 INFO：DSH 环境说明里「引用」旧运行时名、`tool-index.*`、代码块内模板引用、规则说明里的 `~/` 反例
+- 验证（夹具库，8 类缺陷全部命中）：`FAIL` 命中非 kebab name / frontmatter 残留键 / 专有运行时残留 / 断链 / 裸文件名读引用 / `read` 加 `~/` 的错误写法 / 本机用户名路径 / SKILL.md CRLF；`WARN` 命中技能内重复与 description 缺半句；嵌套 SKILL.md 与说明性引用归 `INFO`；退出码 1
+- 技能库自检：`audit-skill.cjs` → 体检=40 PASS=40 WARN=0 FAIL=0；硬门禁 `passed=172 failed=0`；宽口径 `ERROR=0 WARN=0 INFO=35`
+- 技能库 949 文件 / 660 `.md` / 172 `SKILL.md` / 顶层技能 40
+
 ## [1.10.0] - 2026-09-10
 
 ### Added

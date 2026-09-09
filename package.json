@@ -1,6 +1,6 @@
 {
   "name": "@elf077/dsh-skills",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "description": "DeepSeek Harness (DSH) 用户级技能库：SDLC 全阶段 + 逆向/安全/前端/桌面 UI/插件开发/文档处理/研究/设计/数据分析等领域技能，每技能独立 SKILL.md（description 中英双语），DSH 启动自动扫描。",
   "keywords": [
     "dsh",

@@ -31,7 +31,7 @@ function collectArtifacts(lines) {
         set.add(m[1].replace(/\/$/, ''));
       }
     }
-    if (/(deliverable|artifact|产物|输出|\boutput\b(?!\.\w))/i.test(line)) {
+    if (/(deliverable|artifact|产物|输出|生成|\boutput\b(?!\.\w)|\bgenerated\b)/i.test(line)) {
       for (const m of line.matchAll(/`([^`]+)`/g)) set.add(path.basename(m[1].trim().replace(/\/$/, '')));
     }
     // 创建动词紧邻的路径：write/keep a `X.md` —— X 是 agent 要产出的文件
@@ -134,6 +134,7 @@ for (const file of files) {
     for (const m of line.matchAll(/`([^`]+)`/g)) {
       const tok = m[1].trim();
       if (!tok || tok.startsWith('/')) continue;
+      if (/^\.(?!\.?\/)/.test(tok)) continue; // 点号配置文件（.app.json 等），非仓库文件
       if (!tok.startsWith('.') && ARTIFACTS.has(path.basename(tok.replace(/\/$/, '')))) continue;
       if (/[<>*|\s:]/.test(tok)) continue;
       if (/^https?:/i.test(tok)) continue;

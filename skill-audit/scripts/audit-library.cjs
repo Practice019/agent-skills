@@ -73,7 +73,7 @@ function collectArtifacts(lines) {
         set.add(m[1].replace(/\/$/, ''));
       }
     }
-    if (/(deliverable|artifact|产物|输出|\boutput\b(?!\.\w))/i.test(line)) {
+    if (/(deliverable|artifact|产物|输出|生成|\boutput\b(?!\.\w)|\bgenerated\b)/i.test(line)) {
       for (const m of line.matchAll(/`([^`]+)`/g)) set.add(path.basename(m[1].trim().replace(/\/$/, '')));
     }
     // 创建动词紧邻的路径：write/keep a `X.md` —— X 是 agent 要产出的文件
@@ -110,8 +110,11 @@ for (const f of skills) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(d.name)) E('name 非 kebab-case: ' + r + ' name=' + d.name);
   const dirName = path.basename(path.dirname(f));
   if (d.name !== dirName) E('name 与目录名不一致: ' + r + ' name=' + d.name + ' dir=' + dirName);
-  if (seenNames.has(d.name)) E('技能名重复: ' + d.name + ' (' + seenNames.get(d.name) + ' 与 ' + r + ')');
-  else seenNames.set(d.name, r);
+  // 只有顶层技能会被 DSH 注册；嵌套子技能（workflows/*/SKILL.md）重名无害
+  if (r.split('/').length === 2) {
+    if (seenNames.has(d.name)) E('顶层技能名重复: ' + d.name + ' (' + seenNames.get(d.name) + ' 与 ' + r + ')');
+    else seenNames.set(d.name, r);
+  }
 }
 
 // ---------- 2. 全库 .md：CRLF / 机器路径 / read ~/ / 引用可解析 ----------
@@ -154,13 +157,15 @@ for (const f of mds) {
     if (!inFence && !PROSE_DOCS.test(r) && READ_WORDS.test(line)) {
       for (const m of line.matchAll(/`([^`/\\]+\.(?:md|json|ps1|sh|js|cjs|py|ya?ml))`/gi)) {
         const tok = m[1].trim();
+        if (/^\.(?!\.?\/)/.test(tok)) continue; // 点号配置文件（.app.json 等）
         if (ARTIFACTS.has(path.basename(tok.replace(/\/$/, '')))) continue;
         if (NON_REPO.some(x => x.test(tok))) continue;
         const bases = [...new Set([path.dirname(f), packRootOf(f)])];
         refTotal++;
-        if (!bases.some(b => fs.existsSync(path.resolve(b, tok)))) {
-          E('读引用不存在（裸文件名）: ' + where + ' -> ' + tok);
-        }
+        if (bases.some(b => fs.existsSync(path.resolve(b, tok)))) continue;
+        // 非 SKILL.md 的第三方文档里，裸文件名常是「运行期产物 / 生成物」的简写 → 降级为 INFO
+        if (isSkill) E('读引用不存在（裸文件名）: ' + where + ' -> ' + tok);
+        else I('未解析的裸文件名（疑为运行期产物/文档简写）: ' + where + ' -> ' + tok);
       }
     }
   });

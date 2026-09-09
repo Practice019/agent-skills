@@ -2,6 +2,25 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.6.0] - 2026-09-10
+
+### Removed
+- `hallmark`：反 AI 味设计技能（单文件 65.9 KB + 107 个资源文件，加载成本过高）——已删除
+- `frontend-design`：与 `hallmark` 触发条件完全重叠的薄弱删节版——已删除
+- `quicker-skill`：Quicker 动作开发技能（frontmatter 使用 CRLF 行尾，且含 30+ 脚手架文件）——已删除
+
+### Changed
+- `plan`：**完全重写**。从 24 行薄壳扩为完整入口技能
+  - 补齐 frontmatter（`description` 含中文触发词、`whenToUse`、`user-invocable`、`disable-model-invocation`）
+  - 新增「目标与边界」（明确 Plan 阶段只读、唯一可写 `tasks/`）、「前置检查 Gate」（规格存在 / 读过代码 / 验收命令已知）
+  - 新增 8 步工作流程（只读侦察 → 读详细方法 → 依赖图 → 垂直切片 → 写任务 → 排序检查点 → 落盘同步 → 人工确认）
+  - 新增任务规模红线表、单任务结构模板、`tasks/plan.md` 输出模板、完成自检清单、7 条常见坑表
+  - 明确本 harness 无 `skill_load` 工具，改用 `read` 读取关联资源，并给出全部资源绝对路径
+- `README.md`：移除上述 3 个技能行，更新 `plan` 说明
+
+### Fixed
+- `plan/planning-and-task-breakdown.md`：修正断链 `../../references/definition-of-done.md` → `references/definition-of-done.md`
+
 ## [1.5.0] - 2026-09-09
 
 ### Changed

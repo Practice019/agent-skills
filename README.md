@@ -20,20 +20,17 @@
 |------|-----------|
 | `meta` | 技能路由：不确定该用哪个技能时先问它 |
 | `define` | 需求澄清、规格先行（对应 `/spec`） |
-| `plan` | 把规格拆成可验证的小任务（对应 `/plan`） |
+| `plan` | 把规格拆成可验证的小任务：依赖图 / 垂直切片 / 检查点 / `tasks/plan.md`（对应 `/plan`） |
 | `build` | 按计划增量实现 + 测试（对应 `/build`） |
 | `verify` | 真实运行验证与调试恢复（对应 `/test`） |
 | `review` | 合并前质量门禁：正确性/可读性/架构/安全/性能（对应 `/review`） |
 | `ship` | 上线发布：CI/CD、版本管理、文档（对应 `/ship`） |
 | `browser-harness` | CDP 直连 Chrome 操控浏览器：抓站、登录、爬数据、复刻网页 |
-| `hallmark` | 反 AI 味设计：落地页、重设计、设计审计（Anti-AI-slop） |
 | `dsh-plugin-development` | 在 DSH 上开发动态 Cordis 插件的完整指南（Plugin/Run/Host/Client/Slot UI/RPC） |
 | `skill-create` | 创建、校验、安装和发布 DSH Skill 的协议与流程 |
 | `push-project` | 把项目发布到 npm + GitHub：**先确认发布目标（都发 / 只发 npm / 只发 GitHub）**，再走检查清单、token 引导、tag/Release、一键发版 |
 | `python-code-standards` | Python 企业级代码规范：命名/格式/类型标注/NEVER 红线/反 AI 模式 |
 | `model-training-mindset` | 用模型训练思维攻坚多步骤任务：epoch 循环 + checkpoint 回退，子问题逐级固化 |
-| `quicker-skill` | 开发/部署/发布 Quicker 动作（Roslyn v2 引擎）：JSON 配置、C# 逻辑、Markdown 简介 |
-| `frontend-design` | 独特且生产就绪的前端界面设计与实现，强审美方向（HTML/CSS/JS、React、Vue 等） |
 | `desktop-router` | macOS/Windows 桌面 UI/UX 任务路由，分发给 desktop-* 子技能（audit/redesign/native feel 等） |
 | `autox-scripting` | AutoX.js 自动化脚本编写与调试：截图找色、坐标点击、Shizuku 权限、多线程、常见坑 |
 | `fun-code-reverse` | 趣味代码逆向收录：把点名的有趣代码片段逆向成可复现提示词，有限验证后收入 fun-code-collection（规则级自进化 playbook） |

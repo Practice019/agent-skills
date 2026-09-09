@@ -49,6 +49,8 @@
 | `data-analytics` | 定量分析工作流包（17 子技能）：数据质量、指标诊断、KPI、看板、报告 |
 | `product-design` | 产品设计工作流包（9 子技能）：UX 研究、流程审计、视觉构思、设计 QA |
 | `sales` | 销售工作流包（20 子技能）：会议准备、客户优先级、商机策略、预测 |
+| `3d-creation` | Blender MCP 建模 3D 场景/特效，或 three.js/GSAP 做叙事性 3D 艺术网站（DSH 无 Blender MCP 时明确说明并停止） |
+| `visualizer` | 用内联 SVG 画说明图：流程、架构、对比、概念、层级、因果链、空间关系 |
 
 > **description 约定**：所有技能 `description` 为**中英双语**——`<中文一句话 + 中文触发词> <官方英文原文>`。
 > 正文语言不强制统一：原有中文技能保持中文，导入的英文技能保持英文。
@@ -88,6 +90,7 @@ frontmatter 必填 `name`（小写 kebab-case）与 `description`（双引号包
 | `android-reverse-engineering/` | [SimoneAvogadro/android-reverse-engineering-skill](https://github.com/SimoneAvogadro/android-reverse-engineering-skill) | Apache-2.0 |
 | `docx-official/` `pdf-official/` `pptx-official/` `xlsx-official/` `frontend-design/` `html-to-video-pipeline/` | MiMoCode 内置技能库（`builtin_skills`） | 随目录携带 LICENSE |
 | `arxiv/` `deep-research/` `super-research/` `learn-everything/` `research-paper-writing/` `design-blueprint/` `modern-python-toolchain/` `data-analytics/` `product-design/` `sales/` | MiMoCode 内置技能库（`builtin_skills`） | 上游未附许可证，本地自用 |
+| `3d-creation/` `visualizer/` | MiMo Desktop 引擎配置技能（`engine-config/skills`） | 上游未附许可证，本地自用 |
 
 ## License
 

@@ -2,6 +2,22 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.9.0] - 2026-09-09
+
+### Added
+- 从 MiMo Desktop 引擎配置技能库（`AppData\Roaming\Xiaomi MiMo\engine-config\skills`）移植 **2 个技能**：
+  - `3d-creation`（6 文件 / 19.5 KB）：Blender MCP 建模 3D 场景与特效 + three.js/GSAP 叙事性 3D 艺术网站
+  - `visualizer`（1 文件 / 9 KB）：内联 SVG 说明图（流程 / 架构 / 对比 / 概念 / 层级 / 因果链 / 空间关系）
+
+### Fixed
+- `3d-creation`：`name: 3D Creation` → `3d-creation`（DSH 要求 kebab-case 且与目录名一致），并补正式英文 description 半句
+- `3d-creation`：加 DSH 运行时说明——DSH 无 Blender MCP，缺失时明确说明并停止；网站路径用 `browser-harness` 截图验证而非只信代码
+- `visualizer`：加 DSH 运行时说明——内联 SVG 在 DSH Web GUI 渲染无保证，渲染不出就写 `.svg` 文件
+
+### Notes
+- 该目录另有 5 个技能**有意不移植**：`figma`（920 KB，强依赖 Figma MCP）、`imagegen`（依赖 `image_gen`/`image_edit`，需映射到 `doubao_ask`，留待后续）、`mimo-desktop-guide` / `mimo-skill-authoring` / `session-chat`（MiMo Desktop 专有，DSH 无对应概念或已被 `skill-create` 覆盖）
+- 顶层技能 34 → 36；`SKILL.md` 166 → 168；catalog description 合计 22488 字符
+
 ## [1.8.0] - 2026-09-09
 
 ### Added

@@ -60,16 +60,16 @@ ffmpeg -version | Select-String 'enable-libass|enable-libx264'   # subtitles + x
 - If `ffmpeg` is missing: run `install.ps1` (Windows) or `install.sh` (macOS/Linux), or install it
   yourself. **Stop and report the missing binary — do not emit a command you cannot run.**
 - ffmpeg ≥ 5.0 is required: `subtitles=` (libass), `xfade`, `zoompan`, `libx264`.
-- Pillow is only needed for `render_title_card.py`.
+- Pillow is only needed for `scripts/render_title_card.py`.
 
 ## Pipeline recipes
 
 | Goal | Order |
 |---|---|
-| Clips → finished film | `merge.py` → (`build_srt.py`) → `burn.py` |
-| Topic → short drama with cards | `render_title_card.py` → `animate.py` (cover) → clips → `merge.py` → `burn.py` |
-| Moderated video model refused | `render_title_card.py` or existing still → `animate.py` → `merge.py` |
-| Subtitles only | `build_srt.py` → `burn.py` |
+| Clips → finished film | `scripts/merge.py` → (`scripts/build_srt.py`) → `scripts/burn.py` |
+| Topic → short drama with cards | `scripts/render_title_card.py` → `scripts/animate.py` (cover) → clips → `scripts/merge.py` → `scripts/burn.py` |
+| Moderated video model refused | `scripts/render_title_card.py` or existing still → `scripts/animate.py` → `scripts/merge.py` |
+| Subtitles only | `scripts/build_srt.py` → `scripts/burn.py` |
 
 ## 1. Merge numbered segments
 

@@ -159,6 +159,13 @@ git add -A && git commit -m "..." && git push origin master --tags
 
 之后每次发版：`npm version patch` → 改完代码 → 跑发布脚本即可。脚本里同样遵循第 0 步的目标，不要写成"总是两边都发"。
 
+本技能自带一份**只发 GitHub** 的可直接复用脚本：`scripts/release-github.ps1`（相对本技能目录）。它按顺序做：工作树检查 → 读版本号 → 拒绝重复 tag → 若仓库带技能库校验器则跑三级扫描 → 交互确认 → `git tag -a` → 推分支 → 推 tag → `gh release create`（notes 自动取 CHANGELOG 对应版本段）→ `gh repo edit --add-topic`。**不含任何 npm publish**，需要发 npm 时另走第 3、4 节。
+
+```powershell
+pwsh -File scripts\release-github.ps1 -Topics dsh-plugin          # 版本号取 package.json
+pwsh -File scripts\release-github.ps1 -Version 1.12.0 -Force      # 指定版本号、跳过确认
+```
+
 ## 常见坑
 
 | 现象 | 原因 | 修复 |

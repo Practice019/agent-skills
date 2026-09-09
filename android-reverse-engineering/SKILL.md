@@ -8,6 +8,8 @@ trigger: decompile APK|decompile XAPK|reverse engineer Android|extract API|analy
 
 Decompile Android APK, XAPK, JAR, and AAR files using jadx and Fernflower/Vineflower, trace call flows through application code and libraries, and produce structured documentation of extracted APIs. Two decompiler engines are supported — jadx for broad Android coverage and Fernflower for higher-quality output on complex Java code — and can be used together for comparison.
 
+> **相关技能（交叉引用）**：CLI 环境下的 APK 解包 / smali 修改 / 重打包 / Frida 动态 Hook，以及跨模块安全任务路由，见 `../reverse-skill-router/SKILL.md`（其中 `apk-reverse/`、`mobile-reverse/` 模块覆盖同一领域）。动态分析须 scope 授权设备。
+
 ## Prerequisites
 
 This skill requires **Java JDK 17+** and **jadx** to be installed. **Fernflower/Vineflower** and **dex2jar** are optional but recommended for better decompilation quality. Run the dependency checker to verify:

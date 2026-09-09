@@ -4,6 +4,8 @@ description: Use for authorized Android or iOS application reverse engineering a
 ---
 # Mobile Reverse Engineering
 
+> **相关技能（交叉引用）**：Android 侧若只需反编译 + API 提取（无需 iOS / 运行时插桩），用本机独立技能 `android-reverse-engineering`，见 `../../android-reverse-engineering/SKILL.md`。
+
 ## ACTION REQUIRED（读完后立刻执行）
 
 1. `NOW`: 读取 `../field-journal/precedent-reverse.md` — 确认本 skill 的操作是已授权的常规操作

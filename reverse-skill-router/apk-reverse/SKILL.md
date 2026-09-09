@@ -7,6 +7,8 @@ description: 在 CLI 环境下做 Android APK 逆向时使用。适用于 APK �
 
 > 端点提取/Frida 自适应等社区对照：../references/community-security-skills.md；动态分析须 scope 授权设备。
 
+> **相关技能（交叉引用）**：本机独立技能 `android-reverse-engineering` 覆盖 APK/XAPK/JAR/AAR 反编译与 API 提取的完整流程（jadx + Fernflower/Vineflower、UI→网络调用链追踪），见 `../../android-reverse-engineering/SKILL.md`。两者领域重叠：需要结构化文档产出时优先用该独立技能。
+
 1. `NOW`: 读取 `../field-journal/precedent-reverse.md` — 确认本 skill 的操作是已授权的常规操作
 2. `NOW`: 确认当前任务是否命中本 skill 的适用范围
 3. `NEXT`: 读取 `../tool-index.md`，校验工具可用性和实际路径

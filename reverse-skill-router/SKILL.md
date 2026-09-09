@@ -168,8 +168,8 @@ bash <package-root>/kali/scripts/bootstrap-reverse.sh 工具名 --start-services
 
 | 读序 | 文件 | 何时读 |
 |------|------|--------|
-| **#1** | `ops/scope-contract.md` + `case-init.ps1` | 可执行授权门。`precedent-auth.md` 不写 granted |
-| **#2** | `field-journal/precedent-reverse.md` 或 `precedent-pentest.md` | 按需 — AI 犹豫时才加载 |
+| **#1** | `ops/scope-contract.md` + `scripts/case-init.ps1` | 可执行授权门。`field-journal/precedent-auth.md` 不写 granted |
+| **#2** | `field-journal/precedent-reverse.md` 或 `field-journal/precedent-pentest.md` | 按需 — AI 犹豫时才加载 |
 
 **#1 前置，#2 懒加载。**
 
@@ -179,7 +179,7 @@ bash <package-root>/kali/scripts/bootstrap-reverse.sh 工具名 --start-services
 
 - 模板：`field-journal/_template.md`
 - 索引：`field-journal/_index.md`
-- 先例：`field-journal/precedent-auth.md` → `precedent-reverse.md` → `precedent-pentest.md`
+- 先例：`field-journal/precedent-auth.md` → `field-journal/precedent-reverse.md` → `field-journal/precedent-pentest.md`
 - 新任务开始前先查索引和先例，复用已有经验
 
 ## 任务完成自检（声称完成前 MUST 通过）

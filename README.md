@@ -33,6 +33,25 @@
 | `autox-scripting` | AutoX.js 自动化脚本编写与调试：截图找色、坐标点击、Shizuku 权限、多线程、常见坑 |
 | `reverse-skill-router` | 逆向/渗透/安全技能路由包：AI 自动路由 + 按需工具链自举 + 自动进化经验库（含 42 个专业子技能 + CTF 侧车） |
 | `android-reverse-engineering` | APK/XAPK/JAR/AAR 反编译（jadx/Fernflower）、提取 API 端点、追踪 UI→网络调用链 |
+| `docx-official` | 生成/读取/转换 Word（.docx）：写报告合同、抽文本结构、填模板 |
+| `pdf-official` | 生成/读取/转换/填写 PDF：抽文本表格、合并裁剪水印、填 AcroForm、OCR |
+| `pptx-official` | 生成/读取/转换 PowerPoint（.pptx）：写幻灯片路演稿、抽结构、填模板 |
+| `xlsx-official` | 生成/读取/清洗 Excel/CSV：建模、加列、公式、图表、导出 |
+| `arxiv` | arXiv 论文检索/阅读/引用/下载：搜主题作者分类、取摘要元数据、BibTeX、跟踪新投稿 |
+| `deep-research` | 深度调研：并行子 agent 多源交叉验证，产出带引用的调研报告 |
+| `super-research` | 自主研究引擎（8 模式）：实验循环调参、量化分析、对比评测、根因排查、论文复现 |
+| `learn-everything` | 把 PDF/论文/书章/URL/主题变成结构化互动课程：分章学习与练习 |
+| `research-paper-writing` | 学术论文撰写/改写/润色：Abstract→Conclusion，中译英、逐段打磨 |
+| `design-blueprint` | 动手做视觉产物前先出结构化设计规格：DESIGN.md + 结构布局 + Decision Trace |
+| `frontend-design` | 新建或改造 UI 的视觉设计指导：配色、排版、环境约束、风格改造 |
+| `html-to-video-pipeline` | HTML/CSS/JS 页面可靠渲染成 MP4：无头浏览器录制 + ffmpeg |
+| `modern-python-toolchain` | 用 uv + ruff + pyright 搭现代 Python 项目：依赖、环境、lint、格式化 |
+| `data-analytics` | 定量分析工作流包（17 子技能）：数据质量、指标诊断、KPI、看板、报告 |
+| `product-design` | 产品设计工作流包（9 子技能）：UX 研究、流程审计、视觉构思、设计 QA |
+| `sales` | 销售工作流包（20 子技能）：会议准备、客户优先级、商机策略、预测 |
+
+> **description 约定**：所有技能 `description` 为**中英双语**——`<中文一句话 + 中文触发词> <官方英文原文>`。
+> 正文语言不强制统一：原有中文技能保持中文，导入的英文技能保持英文。
 
 ## 目录结构
 
@@ -67,6 +86,8 @@ frontmatter 必填 `name`（小写 kebab-case）与 `description`（双引号包
 |------|------|--------|
 | `reverse-skill-router/` | [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) | MIT（核心路由包）+ GPL-3.0（`CTF-Sandbox-Orchestrator/` 侧车） |
 | `android-reverse-engineering/` | [SimoneAvogadro/android-reverse-engineering-skill](https://github.com/SimoneAvogadro/android-reverse-engineering-skill) | Apache-2.0 |
+| `docx-official/` `pdf-official/` `pptx-official/` `xlsx-official/` `frontend-design/` `html-to-video-pipeline/` | MiMoCode 内置技能库（`builtin_skills`） | 随目录携带 LICENSE |
+| `arxiv/` `deep-research/` `super-research/` `learn-everything/` `research-paper-writing/` `design-blueprint/` `modern-python-toolchain/` `data-analytics/` `product-design/` `sales/` | MiMoCode 内置技能库（`builtin_skills`） | 上游未附许可证，本地自用 |
 
 ## License
 

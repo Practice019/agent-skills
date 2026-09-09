@@ -2,6 +2,41 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.8.0] - 2026-09-09
+
+### Added
+- 从 MiMoCode 内置技能库移植 **16 个通用技能**（description 双语，正文保留英文原文，专有运行时依赖已替换为 DSH 说明）：
+  - 文档四件套：`docx-official` / `pdf-official` / `pptx-official` / `xlsx-official`
+  - 研究与学习：`arxiv` / `deep-research` / `super-research` / `learn-everything` / `research-paper-writing`
+  - 设计三件套：`design-blueprint` / `frontend-design` / `html-to-video-pipeline`
+  - 工程与工作流大包：`modern-python-toolchain` / `data-analytics`（17 子技能）/ `product-design`（9 子技能）/ `sales`（20 子技能）
+- 三个工作流大包根 `SKILL.md` 增加 **DSH 运行时说明**：无连接器 / 托管预览运行时，降级运行并明确说明缺哪个能力
+
+### Changed
+- **description 全面双语化**：格式 `<中文一句话 + 中文触发词> <官方英文原文>`，不设长度上限（与官方一致）
+  - 7 个纯英文技能补中文：`build` / `define` / `review` / `ship` / `verify` / `meta` / `reverse-skill-router`
+  - 9 个纯中文技能补英文：`dsh-plugin-development` / `push-project` / `model-training-mindset` / `skill-audit` / `plan` / `autox-scripting` / `feishu-cli` / `browser-harness` / `flow-canvas`
+  - 正文语言**不统一**：已有中文保持中文，导入的英文保持英文
+- `skill-create`：新增「语言规范（description 必须中英双语）」章节
+- `frontend-design` 与 `design-blueprint`：双向加 Boundary 交叉引用
+- `skill-audit/scripts/audit-library.cjs`：新增 `catalog description` 体量报告行（顶层技能数 / 合计字符 / 中文字符 / 平均）
+
+### Fixed
+- 扫描器误报收敛（`_shared/validate-skills.cjs` 与 `skill-audit/scripts/audit-library.cjs` 同步）：
+  - 机器路径规则只对含用户名 / 主目录的绝对路径报错，跳过 `~/` 反例说明与 URL / 域名（如 `arxiv.org/abs/...`）
+  - 运行期产物识别：树状清单行、`deliverable` / `artifact` / `output` / `产物` / `输出` / `生成` 行、创建动词紧邻的 `write` / `keep a \`X.md\`` 行
+  - 点号配置文件（`.app.json`）不再被当作缺失引用
+  - 只有**顶层**技能重名才报错：嵌套子技能（`workflows/index/SKILL.md`）重名无害，DSH 不注册
+  - 非 `SKILL.md` 的第三方文档里未解析的裸文件名降级为 INFO（`SKILL.md` 仍为 ERROR）
+- `pptx-official/SKILL.md`：`soffice_bridge.py` → `scripts/soffice_bridge.py`
+- `data-analytics/workflows/create-data-context/references/automation.md`：裸文件名 → `../plugin-author-config/automation-config.md`
+- 文档四件套中 4 处 MiMo 专有运行时（`MIMO_PYTHON` / `MIMO_SOFFICE` / `MIMO_NODE`）替换为 DSH 环境说明
+
+### Notes
+- 扫描范围仍是**只扫一层**：顶层技能 34 个（原 18 + 新增 16），嵌套子技能作为资源被引用
+- 技能库体量 8.25 MB / 925 文件 / 166 个 `SKILL.md`；`catalog description` 合计 21285 字符
+- 有意**不移植**：`mimocode-docs` / `evolve` / `memory-search` / `loop` / `mate` / `claude-code` / `codex` / `grok-build` / `compose-next`（MiMo 专有）；`playwright`、`skill-creator` 按用户决定跳过
+
 ## [1.7.0] - 2026-09-09
 
 ### Added

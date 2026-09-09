@@ -29,11 +29,8 @@
 | `dsh-plugin-development` | 在 DSH 上开发动态 Cordis 插件的完整指南（Plugin/Run/Host/Client/Slot UI/RPC） |
 | `skill-create` | 创建、校验、安装和发布 DSH Skill 的协议与流程 |
 | `push-project` | 把项目发布到 npm + GitHub：**先确认发布目标（都发 / 只发 npm / 只发 GitHub）**，再走检查清单、token 引导、tag/Release、一键发版 |
-| `python-code-standards` | Python 企业级代码规范：命名/格式/类型标注/NEVER 红线/反 AI 模式 |
 | `model-training-mindset` | 用模型训练思维攻坚多步骤任务：epoch 循环 + checkpoint 回退，子问题逐级固化 |
-| `desktop-router` | macOS/Windows 桌面 UI/UX 任务路由，分发给 desktop-* 子技能（audit/redesign/native feel 等） |
 | `autox-scripting` | AutoX.js 自动化脚本编写与调试：截图找色、坐标点击、Shizuku 权限、多线程、常见坑 |
-| `fun-code-reverse` | 趣味代码逆向收录：把点名的有趣代码片段逆向成可复现提示词，有限验证后收入 fun-code-collection（规则级自进化 playbook） |
 | `reverse-skill-router` | 逆向/渗透/安全技能路由包：AI 自动路由 + 按需工具链自举 + 自动进化经验库（含 42 个专业子技能 + CTF 侧车） |
 | `android-reverse-engineering` | APK/XAPK/JAR/AAR 反编译（jadx/Fernflower）、提取 API 端点、追踪 UI→网络调用链 |
 

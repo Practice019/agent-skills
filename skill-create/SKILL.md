@@ -306,25 +306,25 @@ console.log(fail === 0 ? 'ALL PASS' : 'FAILURES: ' + fail);
 
 ## 九、技能套件组织：路由技能模式
 
-当你要安装/管理**一整套相关技能**（如 13 个 desktop-* 技能）时，有两种模式可选。**首选模式 B（内嵌路由）**——DSH 只扫一层，正好利用这个限制把整个套件收敛成一个入口。
+当你要安装/管理**一整套相关技能**（如 `reverse-skill-router` 下的 40+ 个安全子技能）时，有两种模式可选。**首选模式 B（内嵌路由）**——DSH 只扫一层，正好利用这个限制把整个套件收敛成一个入口。
 
 ### 模式 B（推荐）：子技能物理内嵌进路由技能文件夹
 
 所有子技能目录**移入**路由技能文件夹内部，DSH 只扫描路由表这一个 SKILL.md，路由表用相对路径调度子技能文件，agent 用 `read` 工具读取文件内容执行：
 
 ```text
-~/.dsh/skills/desktop-router/
+~/.dsh/skills/reverse-skill-router/
 ├── SKILL.md                      ← 唯一被 DSH 扫描的路由入口
-├── desktop-taste/SKILL.md        ← 子技能不注册为独立技能，只是路由文件夹内的资源
-├── desktop-design-read/SKILL.md
-├── desktop-art-direction/SKILL.md
-├── desktop-audit/SKILL.md
-└── ...（13 个子技能全部同级内嵌）
+├── apk-reverse/SKILL.md          ← 子技能不注册为独立技能，只是路由文件夹内的资源
+├── mobile-reverse/SKILL.md
+├── firmware-pentest/SKILL.md
+├── ida-reverse/SKILL.md
+└── ...（全部子技能同级内嵌）
 ```
 
 关键点：
 
-1. **入口唯一**：可用技能列表里只出现 `desktop-router` 一个名字，13 个子技能从列表消失（这是预期，不是安装失败）。
+1. **入口唯一**：可用技能列表里只出现 `reverse-skill-router` 一个名字，子技能从列表消失（这是预期，不是安装失败）。
 2. **路由表写路径**：路由表每行对应 `<子技能名>/SKILL.md` 相对路径，附职责速查与触发信号，让 agent 一眼选型。
 3. **执行靠 read**：路由输出块必须给出 `next: read <route>/SKILL.md（相对本技能目录）`，agent 读取文件后按其中指令执行——**不要**写"用 skill 工具加载子技能"（子技能未注册，skill 工具加载不到）。
 4. **职责速查表**：路由技能内保留完整清单表（子技能名、职责、典型触发信号），即使不读文件 agent 也知道该选谁。
@@ -336,13 +336,13 @@ console.log(fail === 0 ? 'ALL PASS' : 'FAILURES: ' + fail);
 
 ```text
 ~/.dsh/skills/
-├── desktop-router/SKILL.md      ← 路由技能（唯一入口，只做路由判断）
-├── desktop-audit/SKILL.md       ← 子技能保持扁平，各自被 DSH 注册
-├── desktop-redesign/SKILL.md
+├── reverse-skill-router/SKILL.md   ← 路由技能（唯一入口，只做路由判断）
+├── apk-reverse/SKILL.md            ← 子技能保持扁平，各自被 DSH 注册
+├── mobile-reverse/SKILL.md
 └── ...
 ```
 
-子技能全部出现在可用技能列表，agent 用 `skill` 工具直接加载。缺点：技能列表被 13 个名字刷屏；套件不内聚。
+子技能全部出现在可用技能列表，agent 用 `skill` 工具直接加载。缺点：技能列表被大量名字刷屏；套件不内聚。
 
 ### 路由技能 SKILL.md 的结构（两种模式通用）
 

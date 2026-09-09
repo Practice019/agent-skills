@@ -55,6 +55,12 @@ const skills = all.filter(p => path.basename(p) === 'SKILL.md');
 const rel = p => path.relative(ROOT, p).replace(/\\/g, '/');
 const md5 = p => crypto.createHash('md5').update(fs.readFileSync(p)).digest('hex');
 
+const READ_WORDS = /(read\b|读取|详见|参见|参考|查阅|加载)/i;
+const TOP_SKILLS = fs.readdirSync(ROOT, { withFileTypes: true })
+  .filter(e => e.isDirectory() && !['.git', '_shared', 'node_modules'].includes(e.name))
+  .map(e => path.join(ROOT, e.name));
+const packRootOf = f => TOP_SKILLS.find(t => f.startsWith(t + path.sep)) || path.dirname(f);
+
 const errors = [], warns = [], infos = [];
 const E = m => errors.push(m), W = m => warns.push(m), I = m => infos.push(m);
 
@@ -117,6 +123,19 @@ for (const f of mds) {
       if (inFence) { I('代码块内的模板/示例引用（跳过）: ' + where + ' -> ' + tok); continue; }
       if (PROSE_DOCS.test(r)) { I('说明文档里的描述性引用（跳过）: ' + where + ' -> ' + tok); continue; }
       E('引用不存在: ' + where + ' -> ' + tok);
+    }
+
+    // 2d. 裸文件名读引用（无 ./ 前缀）：只在「让 agent 去读」的行上检查，两级基准
+    if (!inFence && !PROSE_DOCS.test(r) && READ_WORDS.test(line)) {
+      for (const m of line.matchAll(/`([^`/\\]+\.(?:md|json|ps1|sh|js|cjs|py|ya?ml))`/gi)) {
+        const tok = m[1].trim();
+        if (NON_REPO.some(x => x.test(tok))) continue;
+        const bases = [...new Set([path.dirname(f), packRootOf(f)])];
+        refTotal++;
+        if (!bases.some(b => fs.existsSync(path.resolve(b, tok)))) {
+          E('读引用不存在（裸文件名）: ' + where + ' -> ' + tok);
+        }
+      }
     }
   });
 }

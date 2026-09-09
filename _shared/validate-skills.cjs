@@ -17,6 +17,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const YAML = require('D:/npm-global/node_modules/@deepseek-ai/dsh/node_modules/yaml');
+const LOCAL_USER = (process.env.USERNAME || process.env.USER || '').trim();
 
 // 非仓库引用：技能指示 agent 去读「用户项目」或「运行时」里的东西，仓库内本就不存在
 const NON_REPO = [
@@ -81,11 +82,18 @@ for (const file of files) {
   if (raw.includes('\r\n')) problems.push('CRLF 行尾');
 
   // 5 + 6: 坏路径
+  // 规则说明/反例里的 ~/ 不是缺陷（如「禁止 read ~/…」）
+  const BENIGN_TILDE = /(禁止|不要|不展开|反例|错误|警告|没有|无 `|规范|规则)/;
   lines.forEach((line, i) => {
-    if (/read\s+~\/|读取\s*`~\//.test(line)) problems.push(`line ${i + 1}: read ~/ 路径`);
-    // 用户名泄露：任何位置都不允许
-    if (/C:\\Users\\[0-9a-zA-Z]+/.test(line)) problems.push(`line ${i + 1}: 机器相关绝对路径（含用户名）`);
-    // 个人项目路径：只在不涉及读取时视为「本机配置」放行；一旦是读取引用就报错
+    if (/read\s+~\/|读取\s*`~\//.test(line) && !BENIGN_TILDE.test(line)) {
+      problems.push(`line ${i + 1}: read ~/ 路径`);
+    }
+    // 只查本机真实用户名；靶机路径（C:\Users\Public、C:\Users\user 等）不算缺陷
+    if (LOCAL_USER) {
+      const re = new RegExp('C:\\\\Users\\\\' + LOCAL_USER.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+      if (re.test(line)) problems.push(`line ${i + 1}: 本机用户名绝对路径`);
+    }
+    // 个人项目路径：不涉及读取时视为「本机配置」放行；一旦是读取引用就报错
     if (/D:\\project_GIT/i.test(line) && READ_WORDS.test(line)) {
       problems.push(`line ${i + 1}: 读引用使用了机器相关绝对路径`);
     }

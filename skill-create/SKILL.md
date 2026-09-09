@@ -1,6 +1,6 @@
 ---
 name: skill-create
-description: "在 DSH 中创建、校验、安装和发布本地 Skill 的完整协议与流程。涵盖 SKILL.md frontmatter 规范、命名规则、YAML 安全写法、路径引用规范（禁 ~ / 禁机器绝对路径）、目录位置、校验方法、常见踩坑（冒号空格/CRLF/引号）以及用 skill 工具加载验证与 available_skills 观察法。当用户想新建一个 skill、把流程沉淀为 skill、修复无法被 DSH 扫描到的 skill 时使用本技能。"
+description: "在 DSH 中创建、校验、安装和发布本地 Skill 的完整协议与流程。涵盖 SKILL.md frontmatter 规范、命名规则、YAML 安全写法、路径引用规范（禁 ~ / 禁机器绝对路径）、目录位置、校验方法、常见踩坑（冒号空格/CRLF/引号）以及用 skill 工具加载验证与 available_skills 观察法。当用户想新建一个 skill、把流程沉淀为 skill、修复无法被 DSH 扫描到的 skill 时使用本技能。Create, validate, install, and publish local DSH Skills: SKILL.md frontmatter spec, kebab-case naming, YAML-safe quoting, path reference rules, directory layout, validation commands, and the common traps that make a skill silently unscannable. Use when the user wants to build a new skill, turn a workflow into a skill, or fix a skill DSH cannot load."
 ---
 
 # Skill 制作协议与规范流程（Skill Authoring）
@@ -152,6 +152,31 @@ description: Analyze a project: tech stack, architecture...
 ```
 
 因为 `project: tech` 会被 YAML 当成嵌套映射，导致整个 Skill 被忽略。
+
+### 语言规范（description 必须中英双语）
+
+**规则**：每个技能的 `description` 必须**同时包含中文和英文**，两段都要有可搜索的触发关键词。先后顺序不限。
+
+**为什么**：`description` 是 DSH 自动路由的**唯一依据**（每次会话整份 catalog 注入上下文）。双语 = 中文提问能命中 + 英文提问也能命中 + 对外可读。
+
+格式：
+
+```yaml
+description: "<中文一句话 + 中文触发词>。<English one-liner with trigger keywords>"
+```
+
+示例：
+
+```yaml
+description: "把已确认的规格拆成可验证的小任务：依赖图 / 垂直切片 / 检查点 / tasks/plan.md。当需求明确、准备写代码前需要任务拆解时使用。Plan phase: turn a confirmed spec into small verifiable tasks with dependency order, checkpoints, and tasks/plan.md."
+```
+
+**其他语言规则**：
+
+1. `name` 一律小写 kebab-case 英文（DSH 硬性要求，正则 `^[a-z0-9]+(?:-[a-z0-9]+)*$`）
+2. **正文语言不限**：中文技能保持中文，英文技能保持英文；但**同一个技能内部保持一致**，不要中英混杂成半句话
+3. 从外部（GitHub / 技能市场）导入的技能**不改写其英文原文**，只在 description 里补中文半句
+4. **不设 description 长度上限**——与官方保持一致，不自行加规矩
 
 ## 四、正文编写规范
 

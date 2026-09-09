@@ -19,6 +19,25 @@ const ROOT = path.resolve(__dirname, '..');
 const YAML = require('D:/npm-global/node_modules/@deepseek-ai/dsh/node_modules/yaml');
 const LOCAL_USER = (process.env.USERNAME || process.env.USER || '').trim();
 
+// 收集本文件声明的「运行期产物」文件名：树状清单行、Deliverables/输出目录行。
+// 这些是技能让 agent 去创建的文件，不是库内引用，不该按断链报错。
+function collectArtifacts(lines) {
+  const set = new Set();
+  let inFence = false;
+  for (const line of lines) {
+    if (/^\s*```/.test(line)) { inFence = !inFence; continue; }
+    if (inFence && /[├└│]/.test(line)) {
+      for (const m of line.matchAll(/([A-Za-z0-9_.\-]+\.(?:md|tsv|json|ya?ml|log|txt|py)|[A-Za-z0-9_.\-]+\/)/g)) {
+        set.add(m[1].replace(/\/$/, ''));
+      }
+    }
+    if (/(deliverable|artifact|\boutput\b|产物|输出)/i.test(line)) {
+      for (const m of line.matchAll(/`([^`]+)`/g)) set.add(path.basename(m[1].trim().replace(/\/$/, '')));
+    }
+  }
+  return set;
+}
+
 // 非仓库引用：技能指示 agent 去读「用户项目」或「运行时」里的东西，仓库内本就不存在
 const NON_REPO = [
   /^DESIGN\.md$/i,              // 用户项目的设计契约
@@ -101,6 +120,7 @@ for (const file of files) {
 
   // 4: 读引用可解析（两级基准：技能目录 → 包根）
   const bases = [...new Set([dir, packRootOf(file)])];
+  const ARTIFACTS = collectArtifacts(lines);
   let inFence = false;
   lines.forEach((line, i) => {
     if (/^\s*```/.test(line)) { inFence = !inFence; return; }
@@ -109,6 +129,7 @@ for (const file of files) {
     for (const m of line.matchAll(/`([^`]+)`/g)) {
       const tok = m[1].trim();
       if (!tok || tok.startsWith('/')) continue;
+      if (ARTIFACTS.has(path.basename(tok.replace(/\/$/, '')))) continue;
       if (/[<>*|\s:]/.test(tok)) continue;
       if (/^https?:/i.test(tok)) continue;
       if (/^[a-z0-9-]+(\.[a-z0-9-]+)+\//i.test(tok)) continue; // 域名后的 URL 路径，如 arxiv.org/abs/2601.02780

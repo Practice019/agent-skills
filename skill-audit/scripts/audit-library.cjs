@@ -61,6 +61,25 @@ const TOP_SKILLS = fs.readdirSync(ROOT, { withFileTypes: true })
   .map(e => path.join(ROOT, e.name));
 const packRootOf = f => TOP_SKILLS.find(t => f.startsWith(t + path.sep)) || path.dirname(f);
 
+// 本文件声明的「运行期产物」文件名：树状清单行、Deliverables/输出目录行。
+// 这些是技能让 agent 去创建的文件，不是库内引用。
+function collectArtifacts(lines) {
+  const set = new Set();
+  let inFence = false;
+  for (const line of lines) {
+    if (/^\s*```/.test(line)) { inFence = !inFence; continue; }
+    if (inFence && /[├└│]/.test(line)) {
+      for (const m of line.matchAll(/([A-Za-z0-9_.\-]+\.(?:md|tsv|json|ya?ml|log|txt|py)|[A-Za-z0-9_.\-]+\/)/g)) {
+        set.add(m[1].replace(/\/$/, ''));
+      }
+    }
+    if (/(deliverable|artifact|\boutput\b|产物|输出)/i.test(line)) {
+      for (const m of line.matchAll(/`([^`]+)`/g)) set.add(path.basename(m[1].trim().replace(/\/$/, '')));
+    }
+  }
+  return set;
+}
+
 const errors = [], warns = [], infos = [];
 const E = m => errors.push(m), W = m => warns.push(m), I = m => infos.push(m);
 
@@ -100,6 +119,7 @@ for (const f of mds) {
   if (raw.includes('\r\n') && !isSkill && !isGenerated) W('CRLF 行尾（内容文件，建议 LF）: ' + r);
 
   const lines = raw.split('\n');
+  const ARTIFACTS = collectArtifacts(lines);
   let inFence = false;
   lines.forEach((line, i) => {
     if (/^\s*```/.test(line)) { inFence = !inFence; return; }
@@ -129,6 +149,7 @@ for (const f of mds) {
     if (!inFence && !PROSE_DOCS.test(r) && READ_WORDS.test(line)) {
       for (const m of line.matchAll(/`([^`/\\]+\.(?:md|json|ps1|sh|js|cjs|py|ya?ml))`/gi)) {
         const tok = m[1].trim();
+        if (ARTIFACTS.has(path.basename(tok.replace(/\/$/, '')))) continue;
         if (NON_REPO.some(x => x.test(tok))) continue;
         const bases = [...new Set([path.dirname(f), packRootOf(f)])];
         refTotal++;

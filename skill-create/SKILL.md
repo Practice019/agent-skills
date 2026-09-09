@@ -180,10 +180,14 @@ description: Analyze a project: tech stack, architecture...
 - 技能加载时 harness 会注入 `Base directory for this skill: <绝对路径>`，并明确要求「按 base directory 解析相对路径」——相对路径是唯一既正确又可移植的写法。
 - 机器相关绝对路径（如 `C:\Users\<用户名>\...`）在别人机器上必然失效；本项目历史上已清理过一轮这类残留。
 
+**适用范围**：本条约束的是**要求 agent 去 `read`/加载的路径**。用 `~/.dsh/skills/` 描述技能安装位置（纯文档说明）不受此限，仍可保留。
+
 **自检**（在技能目录下执行，应零命中）：
 
 ```powershell
-Select-String -Path SKILL.md -Pattern '~/'
+# 只查「让 agent 去读」的 ~ 路径（排除位置说明与本节的禁止写法反例）
+Select-String -Path SKILL.md -Pattern 'read\s+~/|读取\s*`~/'
+# 机器相关绝对路径
 Select-String -Path SKILL.md -Pattern 'C:\\Users\\[0-9a-zA-Z]+'
 ```
 
@@ -322,7 +326,7 @@ console.log(fail === 0 ? 'ALL PASS' : 'FAILURES: ' + fail);
 
 1. **入口唯一**：可用技能列表里只出现 `desktop-router` 一个名字，13 个子技能从列表消失（这是预期，不是安装失败）。
 2. **路由表写路径**：路由表每行对应 `<子技能名>/SKILL.md` 相对路径，附职责速查与触发信号，让 agent 一眼选型。
-3. **执行靠 read**：路由输出块必须给出 `next: read ~/.dsh/skills/desktop-router/<route>/SKILL.md`，agent 读取文件后按其中指令执行——**不要**写"用 skill 工具加载子技能"（子技能未注册，skill 工具加载不到）。
+3. **执行靠 read**：路由输出块必须给出 `next: read <route>/SKILL.md（相对本技能目录）`，agent 读取文件后按其中指令执行——**不要**写"用 skill 工具加载子技能"（子技能未注册，skill 工具加载不到）。
 4. **职责速查表**：路由技能内保留完整清单表（子技能名、职责、典型触发信号），即使不读文件 agent 也知道该选谁。
 5. **固定路由流程**：边界判断 → 关键维度判断 → 路由决策 → read 子技能文件执行。
 

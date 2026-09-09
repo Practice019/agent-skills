@@ -164,6 +164,29 @@ description: Analyze a project: tech stack, architecture...
 
 保持内容“像操作手册”，不要写成代码讲解或项目报告。
 
+### 路径引用规范（DSH 实测，务必遵守）
+
+正文里引用文件时，一律用**相对本技能目录**的路径。
+
+| 场景 | 正确写法 | 禁止写法 |
+|------|---------|---------|
+| 引用本技能内的文件 | `planning-and-task-breakdown.md`、`references/x.md` | `~/.dsh/skills/<name>/x.md` |
+| 引用其他技能的文件 | `../<其他技能>/x.md` | 机器相关绝对路径 |
+| 说明解析基准 | 在段落里写一句「相对本技能目录」 | 假定读者知道当前工作目录 |
+
+**为什么**：
+
+- `read` 工具**不展开 `~`**。实测 `read ~/.dsh/skills/plan/x.md` 会被解析成 `<当前工作目录>~/.dsh/skills/plan/x.md`，直接 `not found`。
+- 技能加载时 harness 会注入 `Base directory for this skill: <绝对路径>`，并明确要求「按 base directory 解析相对路径」——相对路径是唯一既正确又可移植的写法。
+- 机器相关绝对路径（如 `C:\Users\<用户名>\...`）在别人机器上必然失效；本项目历史上已清理过一轮这类残留。
+
+**自检**（在技能目录下执行，应零命中）：
+
+```powershell
+Select-String -Path SKILL.md -Pattern '~/'
+Select-String -Path SKILL.md -Pattern 'C:\\Users\\[0-9a-zA-Z]+'
+```
+
 ## 五、校验流程（重要）
 
 写完 Skill 后必须验证，否则可能被 DSH 静默忽略。

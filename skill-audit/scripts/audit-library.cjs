@@ -73,8 +73,13 @@ function collectArtifacts(lines) {
         set.add(m[1].replace(/\/$/, ''));
       }
     }
-    if (/(deliverable|artifact|\boutput\b|产物|输出)/i.test(line)) {
+    if (/(deliverable|artifact|产物|输出|\boutput\b(?!\.\w))/i.test(line)) {
       for (const m of line.matchAll(/`([^`]+)`/g)) set.add(path.basename(m[1].trim().replace(/\/$/, '')));
+    }
+    // 创建动词紧邻的路径：write/keep a `X.md` —— X 是 agent 要产出的文件
+    for (const m of line.matchAll(/(?:write|create|save|keep|generate|log|emit|记录|保存|写入|生成)\s+(?:a\s+|the\s+)?`([^`]+)`/gi)) {
+      const t = m[1].trim();
+      if (/\.(md|tsv|json|ya?ml|log|txt|csv|html)$/i.test(t) && !t.includes('://')) set.add(path.basename(t.replace(/\/$/, '')));
     }
   }
   return set;

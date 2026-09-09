@@ -31,8 +31,13 @@ function collectArtifacts(lines) {
         set.add(m[1].replace(/\/$/, ''));
       }
     }
-    if (/(deliverable|artifact|\boutput\b|产物|输出)/i.test(line)) {
+    if (/(deliverable|artifact|产物|输出|\boutput\b(?!\.\w))/i.test(line)) {
       for (const m of line.matchAll(/`([^`]+)`/g)) set.add(path.basename(m[1].trim().replace(/\/$/, '')));
+    }
+    // 创建动词紧邻的路径：write/keep a `X.md` —— X 是 agent 要产出的文件
+    for (const m of line.matchAll(/(?:write|create|save|keep|generate|log|emit|记录|保存|写入|生成)\s+(?:a\s+|the\s+)?`([^`]+)`/gi)) {
+      const t = m[1].trim();
+      if (/\.(md|tsv|json|ya?ml|log|txt|csv|html)$/i.test(t) && !t.includes('://')) set.add(path.basename(t.replace(/\/$/, '')));
     }
   }
   return set;
@@ -129,7 +134,7 @@ for (const file of files) {
     for (const m of line.matchAll(/`([^`]+)`/g)) {
       const tok = m[1].trim();
       if (!tok || tok.startsWith('/')) continue;
-      if (ARTIFACTS.has(path.basename(tok.replace(/\/$/, '')))) continue;
+      if (!tok.startsWith('.') && ARTIFACTS.has(path.basename(tok.replace(/\/$/, '')))) continue;
       if (/[<>*|\s:]/.test(tok)) continue;
       if (/^https?:/i.test(tok)) continue;
       if (/^[a-z0-9-]+(\.[a-z0-9-]+)+\//i.test(tok)) continue; // 域名后的 URL 路径，如 arxiv.org/abs/2601.02780

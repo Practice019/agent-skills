@@ -176,7 +176,7 @@ description: Analyze a project: tech stack, architecture...
 
 **为什么**：
 
-- `read` 工具**不展开 `~`**。实测 `read ~/.dsh/skills/plan/x.md` 会被解析成 `<当前工作目录>~/.dsh/skills/plan/x.md`，直接 `not found`。
+- `read` 工具**不展开 `~`**。实测：把以 `~/` 开头的路径传给 `read`，会被解析成 `<当前工作目录>~/.dsh/skills/...`，直接 `not found`。
 - 技能加载时 harness 会注入 `Base directory for this skill: <绝对路径>`，并明确要求「按 base directory 解析相对路径」——相对路径是唯一既正确又可移植的写法。
 - 机器相关绝对路径（如 `C:\Users\<用户名>\...`）在别人机器上必然失效；本项目历史上已清理过一轮这类残留。
 

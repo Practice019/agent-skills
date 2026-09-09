@@ -21,7 +21,7 @@ description: "Meta skill for discovering and routing to the right agent-skill ca
    - 验证/调试 → `verify`
    - 合并前审查 → `review`
    - 上线发布 → `ship`
-3. 加载对应分类入口（`skill_load define` / `skill_load build` 等）。
+3. 用 `skill` 工具加载对应分类入口（如 `skill define`、`skill build`）。本 harness 只有按名加载的 `skill` 工具，没有 `skill_search` / `skill_load`。
 
 ## 子模块
 

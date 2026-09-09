@@ -1,13 +1,13 @@
 ---
 name: skill-create
-description: "在 DSH 中创建、校验、安装和发布本地 Skill 的完整协议与流程。涵盖 SKILL.md frontmatter 规范、命名规则、YAML 安全写法、目录位置、校验方法、常见踩坑（冒号空格/CRLF/引号）以及 skill_search/skill_load 验证流程。当用户想新建一个 skill、把流程沉淀为 skill、修复无法被 DSH 扫描到的 skill 时使用本技能。"
+description: "在 DSH 中创建、校验、安装和发布本地 Skill 的完整协议与流程。涵盖 SKILL.md frontmatter 规范、命名规则、YAML 安全写法、路径引用规范（禁 ~ / 禁机器绝对路径）、目录位置、校验方法、常见踩坑（冒号空格/CRLF/引号）以及用 skill 工具加载验证与 available_skills 观察法。当用户想新建一个 skill、把流程沉淀为 skill、修复无法被 DSH 扫描到的 skill 时使用本技能。"
 ---
 
 # Skill 制作协议与规范流程（Skill Authoring）
 
 ## 目标与边界
 
-**做**：帮助用户按照 DSH 官方约定创建本地 Skill，确保它能被 `skill_search` 发现、被 `skill_load` 加载。
+**做**：帮助用户按照 DSH 官方约定创建本地 Skill，确保它能被 DSH 扫描到、能被 `skill` 工具按名加载。
 
 **不做**：
 - ❌ 不深入某个具体 Skill 的业务内容
@@ -133,7 +133,7 @@ my-skill-1.0
 ### description 编写要求
 
 1. 必须是一句话，清晰说明“何时使用、解决什么问题”
-2. 建议包含可搜索关键词，方便 `skill_search` 命中
+2. 建议包含可搜索关键词，便于模型按 description 路由到本技能
 3. **必须保证 YAML 安全**：
    - 避免在未加引号的纯文本里出现 `: `（冒号 + 空格）
    - 推荐直接用双引号包裹整个值
@@ -226,14 +226,14 @@ p.write_bytes(p.read_bytes().replace(b'\r\n', b'\n'))
 
 ### 3. 用 DSH 工具验证
 
-在当前 DSH 会话中执行：
+在当前 DSH 会话中执行两步：
 
 ```text
-skill_search <关键词>
-skill_load <skill-name>
+1) 用 skill 工具按名加载：skill <skill-name>
+2) 观察本会话 system-reminder 的 available_skills 列表是否出现新技能名
 ```
 
-能搜到、能加载，才算成功。另外 DSH 会把新技能自动注入本会话的"可用技能目录"（system-reminder 中的 available_skills 列表）——看到新技能名出现即 watcher 扫描成功，是最快的验证信号。
+**能加载 + 名字出现在 available_skills，才算成功。** 注意：本 harness **只有按名加载的 `skill` 工具**，没有 `skill_search` / `skill_load`；不要按旧文档的这两个名字去找工具。第 2 步是最快的扫描成功信号——DSH 的 watcher 扫到新技能后会把它注入本会话的可用技能目录。
 
 ### 4. 批量校验脚本（安装多个技能时用）
 
@@ -271,10 +271,10 @@ console.log(fail === 0 ? 'ALL PASS' : 'FAILURES: ' + fail);
 
 | 现象 | 原因 | 修复 |
 |------|------|------|
-| `skill_search` 搜不到 | frontmatter 缺少 `name` / `description` | 补全必填字段 |
-| `skill_search` 搜不到 | YAML 解析失败 | 检查 `: `、引号、特殊字符 |
-| `skill_search` 搜不到 | 文件名不是 `SKILL.md` | 改为 `SKILL.md` |
-| `skill_load` 找不到 | 目录名与 `name` 不一致 | 保持一致 |
+| 不出现在 available_skills | frontmatter 缺少 `name` / `description` | 补全必填字段 |
+| 不出现在 available_skills | YAML 解析失败 | 检查 `: `、引号、特殊字符 |
+| 不出现在 available_skills | 文件名不是 `SKILL.md` | 改为 `SKILL.md` |
+| `skill <name>` 加载不到 | 目录名与 `name` 不一致 | 保持一致 |
 | 加载后行为不对 | 正文缺少明确流程 | 补全步骤、边界、模板 |
 | 别的 Skill 覆盖了它 | 同名 Skill 优先级更高 | 换唯一名称或调整位置 |
 

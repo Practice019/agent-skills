@@ -21,7 +21,7 @@ _shared/
 | `<技能>/<模块>.md` | `../_shared/references/security-checklist.md` |
 | `<技能>/support/<模块>/<文件>.md` | `../../../_shared/references/security-checklist.md` |
 
-## 单一来源裁决（2026-09-10）
+## 单一来源裁决（2026-09-09）
 
 这 7 个文件此前被复制到 7–10 个位置（共 57 份 / 474 KB），并已出现版本漂移。现统一到本目录，权威版本判定依据如下：
 

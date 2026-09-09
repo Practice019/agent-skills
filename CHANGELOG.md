@@ -2,6 +2,32 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.7.0] - 2026-09-09
+
+### Added
+- `_shared/`：跨技能共享资源目录（**不是技能**——无 `SKILL.md`，DSH 不注册）
+  - `_shared/references/`：7 个共享清单的**唯一权威版本**（accessibility / definition-of-done / observability / orchestration / performance / security / testing）
+  - `_shared/validate-skills.cjs`：技能库校验器（只读）——frontmatter 可解析、`name` kebab-case 且与目录名一致、无 CRLF、读引用可解析、无 `read ~/`、无含用户名的绝对路径
+  - `_shared/README.md`：引用写法与单一来源裁决依据
+- `reverse-skill-router/RULES.md`：补回缺失的全局规则文件（源自上游 `RULES_zh.md`，剥离 `skills/` 前缀并适配本地路径），修复 17 个文件对它的引用
+- `skill-create`：新增「路径引用规范（DSH 实测）」章节——`read` 不展开 `~`，技能内引用一律相对技能目录，跨技能用 `../<技能>/…`
+
+### Changed
+- 7 个阶段技能（build / define / plan / review / ship / verify / meta）：共享清单引用统一指向 `../_shared/references/`，**删除 59 个重复副本**（-474.2 KB）；全库 8.65 MB → 6.65 MB
+- `meta`、`skill-create`：`skill_load` / `skill_search`（本 harness 不存在）→ 按名加载的 `skill` 工具 + 观察 `available_skills` 的验证法
+- `plan`（9 处）、`desktop-router`（3 处）、`skill-create`（1 处）：`~` 路径改为相对技能目录
+- `android-reverse-engineering` ↔ `reverse-skill-router`（`apk-reverse/`、`mobile-reverse/`）：建立交叉引用（不物理合并，保留上游归属）
+- `reverse-skill-router/tool-index.{md,json}`：机器特定生成物，加入 `.gitignore`
+
+### Fixed
+- **17 处 `../../references/*.md` 断链**：该写法解析到从不存在的 `skills/references/`，现统一为 `../_shared/references/`
+- `reverse-skill-router/SKILL.md`：操作先例库表 `precedent-*.md`、`case-init.ps1` 裸名 → 补 `field-journal/`、`scripts/` 前缀
+- `reverse-skill-router/firmware-pentest`：`patterns-hardware.md`（不存在）→ `reverse-engineering/platforms-hardware.md`
+- 机器相关绝对路径：`python-code-standards`（同源仓库路径去绝对化）、`fun-code-reverse`（收录目标标注为本机可配置项）
+
+### Verified
+- `validate-skills.cjs`：119 个 `SKILL.md` 全部通过；共享清单引用 25/25 可解析；7 个共享文件名全库仅存 `_shared` 一份
+
 ## [1.6.0] - 2026-09-10
 
 ### Removed

@@ -43,7 +43,17 @@
 ~/.dsh/skills/
 ├── <skill-name>/
 │   └── SKILL.md              # 入口：YAML frontmatter（name/description）+ 使用流程
+├── _shared/                  # 跨技能共享资源（不是技能：无 SKILL.md，不会被注册）
+│   ├── references/           # 7 个共享清单的唯一权威版本
+│   ├── validate-skills.cjs   # 技能库校验器（只读）
+│   └── README.md             # 引用写法与单一来源裁决依据
 └── README.md                 # 本文件：技能总览
+```
+
+校验整个技能库（frontmatter / name / CRLF / 引用可解析 / 无 `~` 与机器绝对路径）：
+
+```powershell
+node "$env:USERPROFILE\.dsh\skills\_shared\validate-skills.cjs"
 ```
 
 ## 新建技能

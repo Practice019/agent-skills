@@ -28,7 +28,7 @@ Common flags: `--max N` (result count), `--sort relevance|date|updated`, `--star
 
 ## Reading Paper Content
 
-After finding a paper, read it with the `webfetch` tool:
+After finding a paper, read it with the `tavily_extract` tool (DSH; the original skill called this `webfetch`):
 
 - Abstract page (fast, metadata + abstract): `https://arxiv.org/abs/2601.02780`
 - Full paper as HTML (best for reading, when available): `https://arxiv.org/html/2601.02780`
@@ -42,7 +42,7 @@ If HTML is unavailable and the PDF must be processed locally, `download` it firs
 1. `search "topic" --sort date --max 15` — recent work
 2. `search "topic" --max 15` — seminal work (relevance-sorted)
 3. Cross-check impact: `python scripts/arxiv.py get ID` then `cites ID --max 5` for citation counts
-4. Read the top candidates via `webfetch` on the abs/html URLs
+4. Read the top candidates via `tavily_extract` on the abs/html URLs
 5. `bibtex ID1,ID2,...` for the papers you keep
 
 **Deep-dive a single paper**
@@ -50,7 +50,7 @@ If HTML is unavailable and the PDF must be processed locally, `download` it firs
 2. `refs ID` — what it builds on
 3. `cites ID` — follow-up work (sorted by citation count)
 4. `similar ID` — related papers you might have missed
-5. `webfetch` the HTML/PDF for full text
+5. `tavily_extract` the HTML/PDF for full text
 
 **Stay current in a field**
 - `new cs.AI --max 20` — latest submissions in a category

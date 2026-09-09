@@ -7,3 +7,7 @@ node_modules/
 .claude/
 .DS_Store
 Thumbs.db
+
+# reverse-skill-router: 机器特定产物（由 scripts/refresh-tool-index.ps1 生成，含本机绝对路径）
+reverse-skill-router/tool-index.md
+reverse-skill-router/tool-index.json

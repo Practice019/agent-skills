@@ -1,6 +1,6 @@
 ---
 name: meta
-description: "Meta skill for discovering and routing to the right agent-skill category. Use when starting a session, when unsure which skill applies, or when you need the shared operating rules for this skill pack."
+description: "元技能：发现并路由到正确的技能类别，提供本技能包的共享操作规则。会话开始时、不确定该用哪个技能时、或需要共享规则时使用。 Meta skill for discovering and routing to the right agent-skill category. Use when starting a session, when unsure which skill applies, or when you need the shared operating rules for this skill pack."
 ---
 
 # Meta（元技能）

@@ -1,6 +1,6 @@
 ---
 name: browser-harness
-description: "用 browser-harness（CDP 直连 Chrome）控制浏览器完成网页自动化任务的完整手册。当用户要求打开网页、抓取网站内容、登录网站、分析页面、浏览器自动化、复刻网页、爬数据时使用。"
+description: "用 browser-harness（CDP 直连 Chrome）控制浏览器完成网页自动化任务的完整手册。当用户要求打开网页、抓取网站内容、登录网站、分析页面、浏览器自动化、复刻网页、爬数据时使用。 The complete manual for driving a real browser with browser-harness (CDP straight to Chrome) to finish web automation tasks. Use when the user asks to open pages, scrape site content, log in to a site, analyze a page, automate the browser, clone a web page, or crawl data."
 whenToUse: "用户提出任何需要真实浏览器操作的请求：抓取整站、逐页分析、登录操作、爬取数据、验证网页渲染、研究网站设计。优先于 Stagehand 使用。"
 user-invocable: true
 disable-model-invocation: false

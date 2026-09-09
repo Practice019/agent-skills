@@ -1,6 +1,6 @@
 ---
 name: verify
-description: "Verify phase: prove behavior in real runtime and recover from failures. Use when testing, debugging, or verifying browser behavior (equivalent to /test)."
+description: "Verify 阶段：在真实运行环境里证明行为正确，并在失败时恢复（对应 /test）。当要测试、调试或验证浏览器行为时使用。 Verify phase: prove behavior in real runtime and recover from failures. Use when testing, debugging, or verifying browser behavior (equivalent to /test)."
 ---
 
 # Verify（验证阶段）

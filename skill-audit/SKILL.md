@@ -1,6 +1,6 @@
 ---
 name: skill-audit
-description: "审计并修复整个 DSH 技能库：跑硬门禁与宽口径扫描（frontmatter / name / CRLF / 引用可解析 / 机器路径 / 重复内容 / description 质量），自动归类已知误报，再按 epoch 循环逐个原子修复并复验。当用户要求审查技能、检查 skill 规范、技能库体检、修复 skill、批量修技能、skill 有没有问题、清理技能库时使用。"
+description: "审计并修复整个 DSH 技能库：跑硬门禁与宽口径扫描（frontmatter / name / CRLF / 引用可解析 / 机器路径 / 重复内容 / description 质量），自动归类已知误报，再按 epoch 循环逐个原子修复并复验。当用户要求审查技能、检查 skill 规范、技能库体检、修复 skill、批量修技能、skill 有没有问题、清理技能库时使用。 Audit and repair the entire DSH skill library: run the hard gate and the wide scan (frontmatter, name, CRLF, resolvable references, machine paths, duplicate content, description quality), auto-classify known false positives, then fix atomically one at a time in an epoch loop with re-verification. Use when the user asks to audit skills, check skill conventions, run a skill-library health check, repair skills, bulk-fix skills, or clean up the library."
 whenToUse: "用户说「审查我全部的 skill」「检查技能规范」「修复 skill」「技能库体检」「skill 是不是都规范了」「清理技能库」时；技能库有较大改动后也可定期自查。"
 user-invocable: true
 ---

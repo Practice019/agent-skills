@@ -1,6 +1,6 @@
 ---
 name: define
-description: "Define phase: clarify what to build before writing code. Use when starting a new project/feature, requirements are vague, or the user wants a spec-first workflow (equivalent to /spec)."
+description: "Define 阶段：写代码前先把要做什么讲清楚，产出规格（对应 /spec）。当新项目/新功能启动、需求模糊、或用户想要规格先行的工作流时使用。 Define phase: clarify what to build before writing code. Use when starting a new project/feature, requirements are vague, or the user wants a spec-first workflow (equivalent to /spec)."
 ---
 
 # Define（定义阶段）

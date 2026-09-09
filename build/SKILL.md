@@ -1,6 +1,6 @@
 ---
 name: build
-description: "Build phase: implement incrementally with tests, context, and source verification. Use when writing code for a planned task (equivalent to /build)."
+description: "Build 阶段：按计划任务增量实现，边写边测、校验来源（对应 /build）。当进入某个已规划任务的编码实现时使用。 Build phase: implement incrementally with tests, context, and source verification. Use when writing code for a planned task (equivalent to /build)."
 ---
 
 # Build（构建阶段）

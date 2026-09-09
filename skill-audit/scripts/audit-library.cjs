@@ -213,6 +213,20 @@ console.log('files=' + all.length + '  .md=' + mds.length + '  SKILL.md=' + skil
 console.log('引用检查=' + refTotal + '  唯一技能名=' + seenNames.size +
   '  description 最短=' + (descLens.length ? Math.min(...descLens.map(x => x.len)) : 'n/a') +
   '  完全重复组=' + dupGroups + '（浪费 ' + waste + 'B）');
+
+// catalog 体量：DSH 只把顶层技能的 description 注入 available_skills
+const topSkills = skills.filter(s => rel(s).split('/').length === 2);
+let catTotal = 0, catCn = 0;
+for (const s of topSkills) {
+  const fm = fs.readFileSync(s, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  const raw = fm ? (fm[1].match(/^description:\s*([\s\S]*?)(?=\r?\n[a-zA-Z][a-zA-Z0-9]*:|\s*$)/m) || [null, ''])[1] : '';
+  const clean = raw.trim().replace(/^["']|["']$/g, '');
+  catTotal += clean.length;
+  catCn += (clean.match(/[\u4e00-\u9fff]/g) || []).length;
+}
+console.log('catalog description: 顶层技能=' + topSkills.length + '  合计=' + catTotal +
+  ' 字符（中文 ' + catCn + '）  平均=' + Math.round(catTotal / (topSkills.length || 1)));
+
 out('[ERROR] 必须修复', errors);
 out('[WARN] 建议修复', warns);
 out('[INFO] 已自动归类为误报/跳过', infos);

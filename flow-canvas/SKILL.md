@@ -1,6 +1,6 @@
 ---
 name: flow-canvas
-description: "分析代码项目并生成 Flow Canvas 流程链路文件（flow.json），以文字节点无限画布展示项目工作流程。当用户要求分析项目、生成项目链路、在画布上看项目流程时使用。"
+description: "分析代码项目并生成 Flow Canvas 流程链路文件（flow.json），以文字节点无限画布展示项目工作流程。当用户要求分析项目、生成项目链路、在画布上看项目流程时使用。 Analyze a code project and generate a Flow Canvas pipeline file (flow.json) that shows the project workflow as text nodes on an infinite canvas. Use when the user asks to analyze a project, generate a project pipeline, or view project flow on a canvas."
 whenToUse: "用户给出一个项目路径并要求『分析这个项目』『生成流程链路』『画布展示』，或要求为 Flow Canvas 产出 flow.json 时。"
 ---
 

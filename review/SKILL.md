@@ -1,6 +1,6 @@
 ---
 name: review
-description: "Review phase: quality gates before merge. Use when reviewing code, simplifying, hardening security, or optimizing performance (equivalent to /review, /code-simplify, /webperf)."
+description: "Review 阶段：合并前的质量门禁——代码评审、简化、安全加固、性能优化（对应 /review、/code-simplify、/webperf）。当要评审代码或做上线前质量把关时使用。 Review phase: quality gates before merge. Use when reviewing code, simplifying, hardening security, or optimizing performance (equivalent to /review, /code-simplify, /webperf)."
 ---
 
 # Review（审查阶段）

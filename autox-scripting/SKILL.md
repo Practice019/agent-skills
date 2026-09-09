@@ -1,6 +1,6 @@
 ---
 name: autox-scripting
-description: "编写、调试 AutoX.js（Auto.js 分支）自动化脚本：截图、找图找色、坐标点击、Shizuku 权限、多线程、文件操作等 API 用法与常见坑。当用户需要在 AutoX/Auto.js 里写自动化脚本、找图点击、或遇到无障碍/截图/Shizuku/找图不中问题时使用。"
+description: "编写、调试 AutoX.js（Auto.js 分支）自动化脚本：截图、找图找色、坐标点击、Shizuku 权限、多线程、文件操作等 API 用法与常见坑。当用户需要在 AutoX/Auto.js 里写自动化脚本、找图点击、或遇到无障碍/截图/Shizuku/找图不中问题时使用。 Write and debug AutoX.js (an Auto.js fork) automation scripts: screenshots, image/color finding, coordinate taps, Shizuku permissions, threading, file I/O, plus the common API traps. Use when the user needs AutoX/Auto.js automation scripts, image-based tapping, or hits accessibility, screenshot, Shizuku, or findImage problems."
 whenToUse: "用户要求写 AutoX/Auto.js 脚本；用户在做手机自动化（找图点击、游戏辅助、自动点击）；用户报告 AutoX 无障碍被删、截图失败、screencap 卡死、findImage 匹配不上、Shizuku 用法等问题。"
 ---
 

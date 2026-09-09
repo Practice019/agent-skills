@@ -1,6 +1,6 @@
 ---
 name: dsh-plugin-development
-description: 在 DeepSeek Harness (DSH) 上创建、修改、调试动态 Cordis 插件的完整指南。涵盖插件的协议与生命周期（Plugin/Package/Run、Host 半与 Client 半、apply(ctx)/inject、服务与事件、Slot UI、主题、Client→Host 私有 RPC、动态 Tool、版本与审批）。当用户想给 DSH 写一个插件、扩展运行时能力、注册 UI 或动态工具、或修复/升级已有插件时，使用本技能。
+description: "在 DeepSeek Harness (DSH) 上创建、修改、调试动态 Cordis 插件的完整指南。涵盖插件的协议与生命周期（Plugin/Package/Run、Host 半与 Client 半、apply(ctx)/inject、服务与事件、Slot UI、主题、Client→Host 私有 RPC、动态 Tool、版本与审批）。当用户想给 DSH 写一个插件、扩展运行时能力、注册 UI 或动态工具、或修复/升级已有插件时，使用本技能。 Build, modify, debug, and extend dynamic Cordis plugins on DeepSeek Harness (DSH): plugin protocol and lifecycle (Plugin/Package/Run, Host and Client halves, apply(ctx)/inject, services and events, Slot UI, theme, Client-to-Host private RPC, dynamic Tools, versions and approval). Use when the user wants to write a DSH plugin, extend runtime capabilities, register UI or dynamic tools, or repair/upgrade an existing plugin."
 ---
 
 # DSH 动态插件开发（Dynamic Cordis Plugin Development）

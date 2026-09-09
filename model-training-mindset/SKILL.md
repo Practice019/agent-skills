@@ -1,6 +1,6 @@
 ---
 name: model-training-mindset
-description: "用模型训练思维攻坚多步骤任务:先把大问题分解为带完成标准的小子问题并向用户确认,再对每个子问题跑 epoch 训练循环(基线 commit → 每轮一个原子改进 → 真实验证 → 通过则 commit 固化 / 失败则 reset 回退换思路),子问题之间逐级固化衔接,直到大任务完成。当用户点名模型训练思维、训练循环、epoch 循环,或需要带 checkpoint 与回退的逐步攻坚任务时使用。"
+description: "用模型训练思维攻坚多步骤任务:先把大问题分解为带完成标准的小子问题并向用户确认,再对每个子问题跑 epoch 训练循环(基线 commit → 每轮一个原子改进 → 真实验证 → 通过则 commit 固化 / 失败则 reset 回退换思路),子问题之间逐级固化衔接,直到大任务完成。当用户点名模型训练思维、训练循环、epoch 循环,或需要带 checkpoint 与回退的逐步攻坚任务时使用。 Attack multi-step tasks with a model-training mindset: decompose the big problem into sub-problems with explicit completion criteria, confirm with the user, then run an epoch training loop on each (baseline commit -> one atomic improvement per round -> real verification -> commit on pass / reset and change approach on fail), freezing each sub-problem before moving on. Use when the user names the training loop or epoch loop, or when a long task needs git checkpoints, rollback, and independently verifiable steps."
 whenToUse: "用户要求以模型训练/训练循环/epoch 方式工作,或长任务需要 git checkpoint、可回滚、每步可独立验证时。"
 user-invocable: true
 disable-model-invocation: false

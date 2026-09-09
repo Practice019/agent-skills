@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Ship phase: deploy with confidence. Use when preparing production release, setting up CI/CD, deprecating, documenting, or launching (equivalent to /ship)."
+description: "Ship 阶段：带着信心部署——生产发布、CI/CD、废弃下线、文档、正式上线（对应 /ship）。当准备发版或上线时使用。 Ship phase: deploy with confidence. Use when preparing production release, setting up CI/CD, deprecating, documenting, or launching (equivalent to /ship)."
 ---
 
 # Ship（发布阶段）

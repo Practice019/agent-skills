@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Plan 阶段：把已确认的规格拆成小而可验证的任务，画出依赖顺序、标出可并行组、插入检查点，产出 tasks/plan.md。当需求已明确或已有 SPEC/PRD、准备写代码之前需要任务拆解、排期、依赖排序、并行划分、验收标准设计时使用（对应 /plan）。任务太大不知从哪开始、要多人或多 agent 并行、要跟人沟通范围时也用本技能。"
+description: "Plan 阶段：把已确认的规格拆成小而可验证的任务，画出依赖顺序、标出可并行组、插入检查点，产出 tasks/plan.md。当需求已明确或已有 SPEC/PRD、准备写代码之前需要任务拆解、排期、依赖排序、并行划分、验收标准设计时使用（对应 /plan）。任务太大不知从哪开始、要多人或多 agent 并行、要跟人沟通范围时也用本技能。 Plan phase: turn a confirmed spec into small verifiable tasks — dependency order, parallelizable groups, checkpoints, and tasks/plan.md. Use when requirements are settled (or a SPEC/PRD exists) and task breakdown, sequencing, parallelism, or acceptance-criteria design is needed before writing code (equivalent to /plan). Also use when a task is too large to start, when multiple people or agents will work in parallel, or when scope must be communicated."
 whenToUse: "上游 define 已产出规格（或需求已被复述确认）、下游 build 即将动手之间的拆解环节。不适用于：单文件小改动、规格里已自带清晰任务列表、纯探索性调研。"
 user-invocable: true
 disable-model-invocation: false

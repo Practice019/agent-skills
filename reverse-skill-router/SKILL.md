@@ -1,6 +1,6 @@
 ---
 name: reverse-skill-router
-description: Routes reverse engineering, exploitation, penetration testing, malware, mobile, firmware, browser automation, documentation, and security tasks to the appropriate specialist skill. Use when a task spans modules or the correct reverse-skill entrypoint is unclear.
+description: "逆向工程与安全工作流的路由器：把逆向、漏洞利用、渗透测试、恶意样本、移动端、固件、浏览器自动化、文档与安全类任务分派到对应的专项技能。当任务跨模块、或不确定该走哪个逆向入口时使用。 Routes reverse engineering, exploitation, penetration testing, malware, mobile, firmware, browser automation, documentation, and security tasks to the appropriate specialist skill. Use when a task spans modules or the correct reverse-skill entrypoint is unclear."
 ---
 # Reverse Engineering Skills Master Control
 

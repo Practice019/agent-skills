@@ -1,6 +1,6 @@
 ---
 name: feishu-cli
-description: "用 lark-cli 命令行工具操作飞书：读写文档、编辑内容（含表格行列级块编辑）、搜索、上传下载文件、电子表格、多维表格、消息、日历、邮件等。当用户需要查看/编辑/创建飞书文档、在表格中增删行、操作飞书云空间或调用飞书开放平台能力时使用。"
+description: "用 lark-cli 命令行工具操作飞书：读写文档、编辑内容（含表格行列级块编辑）、搜索、上传下载文件、电子表格、多维表格、消息、日历、邮件等。当用户需要查看/编辑/创建飞书文档、在表格中增删行、操作飞书云空间或调用飞书开放平台能力时使用。 Operate Feishu/Lark from the command line with lark-cli: read and write documents, edit content (including row/column-level table blocks), search, upload and download files, spreadsheets, bitables, messages, calendar, and mail. Use when the user needs to view, edit, or create Feishu docs, add or remove table rows, manage Feishu cloud space, or call Feishu Open Platform APIs."
 whenToUse: "用户提到飞书/Lark 文档的读取、编辑、创建、搜索，或云空间文件管理、表格操作、消息发送等，且机器上已安装 lark-cli 时使用。"
 user-invocable: true
 disable-model-invocation: false

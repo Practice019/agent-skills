@@ -45,7 +45,7 @@ disable-model-invocation: false
 ### 2. 读详细方法
 
 ```text
-read ~/.dsh/skills/plan/planning-and-task-breakdown.md
+read planning-and-task-breakdown.md   # 相对本技能目录
 ```
 
 该文件给出完整方法：依赖图推导、垂直切片、任务结构模板、检查点写法、并行化边界、反模式清单。**本文件只给执行骨架，细节以它为准。**
@@ -190,15 +190,15 @@ read ~/.dsh/skills/plan/planning-and-task-breakdown.md
 
 ## 关联资源
 
-按需 `read`，不要全部加载：
+按需 `read`，不要全部加载。下列路径**相对本技能目录**解析（技能加载时会注入 `Base directory for this skill: ...`，以它为基准拼接——`read` 不展开 `~`）：
 
-- `~/.dsh/skills/plan/planning-and-task-breakdown.md` — 完整方法（**必读**）
-- `~/.dsh/skills/plan/references/definition-of-done.md` — 项目级"完成"的定义
-- `~/.dsh/skills/plan/references/testing-patterns.md` — 验收标准怎么写才可测
-- `~/.dsh/skills/plan/references/security-checklist.md` — 拆任务时补安全横切要求
-- `~/.dsh/skills/plan/references/performance-checklist.md` — 有性能要求时
-- `~/.dsh/skills/plan/references/accessibility-checklist.md` — 有 UI 时
-- `~/.dsh/skills/plan/references/observability-checklist.md` — 需要日志/指标/追踪时
-- `~/.dsh/skills/plan/references/orchestration-patterns.md` — 多 agent 并行编排时
+- `planning-and-task-breakdown.md` — 完整方法（**必读**）
+- `references/definition-of-done.md` — 项目级"完成"的定义
+- `references/testing-patterns.md` — 验收标准怎么写才可测
+- `references/security-checklist.md` — 拆任务时补安全横切要求
+- `references/performance-checklist.md` — 有性能要求时
+- `references/accessibility-checklist.md` — 有 UI 时
+- `references/observability-checklist.md` — 需要日志/指标/追踪时
+- `references/orchestration-patterns.md` — 多 agent 并行编排时
 
 > 加载方式：本 harness 用 `read` 读取上述路径（没有 `skill_load` 工具）；这些子文件不注册为独立技能。

@@ -193,12 +193,12 @@ read planning-and-task-breakdown.md   # 相对本技能目录
 按需 `read`，不要全部加载。下列路径**相对本技能目录**解析（技能加载时会注入 `Base directory for this skill: ...`，以它为基准拼接——`read` 不展开 `~`）：
 
 - `planning-and-task-breakdown.md` — 完整方法（**必读**）
-- `references/definition-of-done.md` — 项目级"完成"的定义
-- `references/testing-patterns.md` — 验收标准怎么写才可测
-- `references/security-checklist.md` — 拆任务时补安全横切要求
-- `references/performance-checklist.md` — 有性能要求时
-- `references/accessibility-checklist.md` — 有 UI 时
-- `references/observability-checklist.md` — 需要日志/指标/追踪时
-- `references/orchestration-patterns.md` — 多 agent 并行编排时
+- `../_shared/references/definition-of-done.md` — 项目级"完成"的定义
+- `../_shared/references/testing-patterns.md` — 验收标准怎么写才可测
+- `../_shared/references/security-checklist.md` — 拆任务时补安全横切要求
+- `../_shared/references/performance-checklist.md` — 有性能要求时
+- `../_shared/references/accessibility-checklist.md` — 有 UI 时
+- `../_shared/references/observability-checklist.md` — 需要日志/指标/追踪时
+- `../_shared/references/orchestration-patterns.md` — 多 agent 并行编排时
 
 > 加载方式：本 harness 用 `read` 读取上述路径（没有 `skill_load` 工具）；这些子文件不注册为独立技能。

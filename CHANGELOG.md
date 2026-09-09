@@ -2,6 +2,19 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.5.0] - 2026-09-09
+
+### Changed
+- `push-project`：新增**强制发布目标确认**（工作流第 0 步）——进入技能后先问「npm + GitHub 都发 / 只发 npm / 只发 GitHub」，再按目标只执行对应章节
+  - 新增章节路由表（目标 → 执行章节 / 跳过章节），npm 与 GitHub 章节顶部加执行条件标注
+  - 新增补充规则：含糊表述必须提问、未确认的一侧绝不动、只发 GitHub 时 `npm version` 需先征得同意
+  - 常见坑新增 2 行（"push 到 GitHub 却顺手 npm publish"、"发布一下两边都发"）；输出模板增加「发布目标」字段与 `⏭️ 本次未选择` 标注
+  - frontmatter `description` / `whenToUse` 同步声明"使用前必须先确认发布目标"
+- `feishu-cli`：修正 frontmatter `name`（`lark-cli` → `feishu-cli`），与目录名一致，避免技能扫描识别不一致
+
+### Fixed
+- 移除机器信息残留（真实用户名绝对路径 → `C:\Users\<用户名>`）：`dsh-plugin-development`（7 处）、`fun-code-reverse`（2 处）
+
 ## [1.4.0] - 2026-09-08
 
 ### Added

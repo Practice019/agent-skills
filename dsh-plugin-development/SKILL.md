@@ -14,7 +14,7 @@ description: 在 DeepSeek Harness (DSH) 上创建、修改、调试动态 Cordis
 所有本地开发/固化到磁盘的 DSH 插件，**统一存放**在：
 
 ```text
-C:\Users\21877\.dsh\profiles\web\plugins\
+C:\Users\<用户名>\.dsh\profiles\web\plugins\
 ```
 
 ### 目录规范
@@ -22,7 +22,7 @@ C:\Users\21877\.dsh\profiles\web\plugins\
 每个插件一个独立文件夹，命名使用小写字母 + 中划线，例如：
 
 ```text
-C:\Users\21877\.dsh\profiles\web\plugins\
+C:\Users\<用户名>\.dsh\profiles\web\plugins\
 ├── doubao-dsh-plugin\
 │   ├── package.json
 │   ├── cordis.patch.yml
@@ -53,7 +53,7 @@ C:\Users\21877\.dsh\profiles\web\plugins\
 然后执行：
 
 ```bash
-cd C:\Users\21877\.dsh\profiles\web
+cd C:\Users\<用户名>\.dsh\profiles\web
 pnpm install
 ```
 
@@ -70,7 +70,7 @@ dsh plugin --profile web add ./plugins/<plugin-name>
 - 修改源码后需要重新同步：
 
 ```bash
-cd C:\Users\21877\.dsh\profiles\web
+cd C:\Users\<用户名>\.dsh\profiles\web
 pnpm install
 ```
 
@@ -82,14 +82,14 @@ dsh plugin --profile web add ./plugins/<plugin-name>
 
 ### 卸载/清理
 
-1. 从 `C:\Users\21877\.dsh\profiles\web\plugins\` 删除对应插件文件夹。
+1. 从 `C:\Users\<用户名>\.dsh\profiles\web\plugins\` 删除对应插件文件夹。
 2. 从 profile 的 `package.json` 中移除：
    - `dependencies` 里的 `<plugin-name>`
    - `dsh.profile.bundles` 里的 `<plugin-name>`
 3. 执行：
 
 ```bash
-cd C:\Users\21877\.dsh\profiles\web
+cd C:\Users\<用户名>\.dsh\profiles\web
 pnpm install
 ```
 
@@ -99,7 +99,7 @@ pnpm install
 - 当用户要求“固化/正式安装/重启后仍然存在”时，必须把插件落到：
 
 ```text
-C:\Users\21877\.dsh\profiles\web\plugins\<plugin-name>\
+C:\Users\<用户名>\.dsh\profiles\web\plugins\<plugin-name>\
 ```
 
 并按照上面的规范安装。

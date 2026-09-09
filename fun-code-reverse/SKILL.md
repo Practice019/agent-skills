@@ -86,8 +86,8 @@ disable-model-invocation: false
 
 ### 第 7 步：同步双副本
 本 skill 存在两份内容必须完全一致的副本：
-- 主副本：`C:\Users\21877\.dsh\skills\fun-code-reverse\`（git 管理）
-- 副本：`C:\Users\21877\.zcode\skills\fun-code-reverse\`
+- 主副本：`C:\Users\<用户名>\.dsh\skills\fun-code-reverse\`（git 管理）
+- 副本：`C:\Users\<用户名>\.zcode\skills\fun-code-reverse\`
 
 任何一次对 SKILL.md / playbook.md 的修改完成后，把整个目录同步到另一份；主副本的改动按其所在仓库惯例提交 git。
 

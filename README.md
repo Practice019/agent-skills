@@ -29,7 +29,7 @@
 | `hallmark` | 反 AI 味设计：落地页、重设计、设计审计（Anti-AI-slop） |
 | `dsh-plugin-development` | 在 DSH 上开发动态 Cordis 插件的完整指南（Plugin/Run/Host/Client/Slot UI/RPC） |
 | `skill-create` | 创建、校验、安装和发布 DSH Skill 的协议与流程 |
-| `push-project` | 把项目发布到 npm + GitHub：检查清单、token 引导、tag/Release、一键发版 |
+| `push-project` | 把项目发布到 npm + GitHub：**先确认发布目标（都发 / 只发 npm / 只发 GitHub）**，再走检查清单、token 引导、tag/Release、一键发版 |
 | `python-code-standards` | Python 企业级代码规范：命名/格式/类型标注/NEVER 红线/反 AI 模式 |
 | `model-training-mindset` | 用模型训练思维攻坚多步骤任务：epoch 循环 + checkpoint 回退，子问题逐级固化 |
 | `quicker-skill` | 开发/部署/发布 Quicker 动作（Roslyn v2 引擎）：JSON 配置、C# 逻辑、Markdown 简介 |

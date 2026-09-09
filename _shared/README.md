@@ -38,7 +38,7 @@ _shared/
 ## 校验器
 
 ```powershell
-node C:\Users\21877\.dsh\skills\_shared\validate-skills.cjs
+node "$env:USERPROFILE\.dsh\skills\_shared\validate-skills.cjs"
 ```
 
 检查项：frontmatter 可解析 / `name` 为 kebab-case 且与目录名一致 / 无 CRLF / 「指示 agent 去读」的仓库内引用可解析 / 无 `read ~/` / 无含用户名的绝对路径。退出码 `0` = 全绿。

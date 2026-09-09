@@ -2,6 +2,27 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.10.0] - 2026-09-10
+
+### Added
+- 从 OpenSquilla 内置技能库（`AppData\Roaming\uv\tools\opensquilla\Lib\site-packages\opensquilla\skills\bundled`，75 个技能）移植 **4 个技能**（源侧 12 个技能收敛）：
+  - `github-cli`（1 文件）：`gh` CLI 操作 GitHub —— PR/CI 状态、issue 增删查、workflow run 日志、`gh api` + `--jq` 查询（源：`github`，MIT）
+  - `video-post-production`（10 文件）：短视频后期五件套 —— 编号分段拼接与 xfade 转场、SRT 烧录（libass + CJK）、静图转 Ken-Burns 短片、脚本转 SRT、片头/片尾卡 PNG（源：`video-merger` MIT-0 + `subtitle-burner`/`video-still-animator`/`srt-from-script`/`title-card-image` Apache-2.0）
+  - `stack-trace-triage`（1 文件）：堆栈排障 —— 语言识别表 + Python/JS-TS/Go/Rust/未知 五段探针 + 统一输出契约（源：5 个 `stack-trace-*-probe`，Apache-2.0）
+  - `latex-compile`（2 文件）：LaTeX 多遍构建（xelatex → bibtex → xelatex ×2）+ 日志尾部/页数/警告信号，可选 `--min-pages` / `--min-refs` 门禁（源：`latex-compile`，Apache-2.0）
+
+### Changed
+- `video-post-production` 按 `skill-create` 模式 B 组织：单一入口 `SKILL.md` + 内嵌 `scripts/` 与 `src/`（`merge.py` 依赖 `src/video_merger.py`，保持原相对布局）；OpenSquilla 专有环境变量改名 `VIDEO_FONTS_DIR` / `VIDEO_POST_FFMPEG_INSTALLER` / `VIDEO_POST_SKIP_PYTHON_CHECK`
+- `latex-compile` 由上游「meta-paper-write 步骤」改写为通用编译器：不再重写输入 `.tex`、不再注入固定作者行、不再从同级 `abstract.tex`/`method.tex` 拼装正文；页数与引用门禁改为可选开关。保留四遍构建顺序、末遍才硬失败、页数解析与日志尾部策略
+- `stack-trace-triage` 把 5 个 1 KB 同模板孤儿技能（父技能 `meta-stack-trace-investigator` 不在 bundle 内，且被标为不可调用）合并为 1 个可调用技能
+
+### Notes
+- 移植规范沿用 1.8.0/1.9.0 惯例：frontmatter 只留 `name`/`description`（双语）/`whenToUse`/`metadata`；`name` = kebab-case = 目录名；正文语言与上游一致（英文）；路径一律相对本技能目录；`provenance` 记录许可证与上游技能名；LF 行尾
+- 源库 75 个技能中 **63 个有意不移植**：43 个依赖 OpenSquilla 专有运行时（`entrypoint`+Jinja、`{{ outputs.* }}` DAG、`tts`/`music_generate`/`voice_*`、`cron`/`memory`、`skill_exec`、能力租约、`import opensquilla`）、13 个与 DSH 已有技能等价（docx/xlsx/pptx/pdf-toolkit/web-search/multi-search-engine/deep-research/skill-creator/sub-agent 等）、7 个列为待拍板灰色项（`html-to-pdf`/`nano-banana-pro`/`seedance-2-prompt`/`ai-video-script`/`html-coder`/`weather`/`git-diff`，本轮按用户决定全部不做）
+- 顶层技能 36 → 40；`SKILL.md` 168 → 172；技能库 948 文件 / 660 `.md`；catalog description 合计 24787 字符（中文 2656）
+- 验证：`_shared/validate-skills.cjs` → `passed=172 failed=0`；`skill-audit/scripts/audit-library.cjs` → `ERROR=0 WARN=0 INFO=34`；4 个技能均出现在 `available_skills` 并按名加载成功
+- 实机端到端验证：`build_srt.py` 生成时间码正确的 SRT；`render_title_card.py` 产出 CJK 片头卡 PNG（字形校验通过）。本机**未安装 ffmpeg/ffprobe**，`merge.py`/`burn.py`/`animate.py` 仅完成 CLI 与语法验证——使用时须先跑 `install.ps1` 或自装 ffmpeg ≥ 5.0
+
 ## [1.9.0] - 2026-09-09
 
 ### Added

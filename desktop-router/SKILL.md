@@ -13,7 +13,7 @@ disable-model-invocation: false
 ## 目录结构（全部在本技能文件夹内）
 
 ```text
-~/.dsh/skills/desktop-router/
+desktop-router/   ← 本技能目录（下列路径均相对它解析）
 ├── SKILL.md                      ← 本文件：路由表（DSH 只扫这一层）
 ├── desktop-taste/SKILL.md        ← 原仓库入口：边界定义与原始流程
 ├── desktop-design-read/SKILL.md  ← brief gate：编码前产出 Desktop Read
@@ -56,7 +56,7 @@ disable-model-invocation: false
 2. **平台深度**：`macOS-first`（可深入 Liquid Glass、SwiftUI scene/window、AppKit 边界）/ `Windows-first`（保留 title bar、command bar、context menu、Fluent/Mica/Acrylic、系统主题）/ `cross-platform desktop`。明确记录，macOS 规则不自动套 Windows。
 3. **证据目标**：现有 `DESIGN.md`、截图、运行中窗口、UI 代码路径、tokens/样式/组件、平台参考、用户约束、已选 visual draft / art direction。证据目标不要求 ImageGen/Figma；只有缺视觉目标或用户要求视觉探索时才路由到 art direction / visual draft。
 4. **路由决策**：按下表选出主路由技能；若同时命中多项，按 先 brief → 再方向/布局/细节 → 最后 QA/文档 的顺序组合，不要同时展开全部。
-5. **读取并执行**：用 `read` 工具读取 `~/.dsh/skills/desktop-router/<子技能名>/SKILL.md`，把该文件的完整指令纳入当前任务执行。路由只负责"选"，执行以子技能文件内容为准。
+5. **读取并执行**：用 `read` 工具读取 `<子技能名>/SKILL.md`（**相对本技能目录**；技能加载时会注入 `Base directory for this skill: ...`，以它为基准拼接——`read` 不展开 `~`），把该文件的完整指令纳入当前任务执行。路由只负责"选"，执行以子技能文件内容为准。
 6. **收尾**：涉及已实现 UI 交付时补 `desktop-qa`；需要长期契约时补 `desktop-design-md`。
 
 ## 主路由表
@@ -86,7 +86,7 @@ Desktop Router:
 - platform_depth: macOS-first / Windows-first / cross-platform desktop
 - evidence_target: screenshot / runtime / code / DESIGN.md / reference / art direction / visual draft / user description
 - route: <desktop-taste / desktop-design-read / desktop-art-direction / desktop-visual-draft / desktop-native-feel / desktop-layout-composition / desktop-typography-density / desktop-motion-interaction / desktop-brand-system / desktop-audit / desktop-redesign / desktop-qa / desktop-design-md>
-- next: read ~/.dsh/skills/desktop-router/<route>/SKILL.md 并按其中指令执行
+- next: read <route>/SKILL.md（相对本技能目录）并按其中指令执行
 ```
 
 `applies: no` 时停止路由，直接说明应使用什么能力处理原任务。

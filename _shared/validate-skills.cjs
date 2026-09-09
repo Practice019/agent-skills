@@ -111,6 +111,7 @@ for (const file of files) {
       if (!tok || tok.startsWith('/')) continue;
       if (/[<>*|\s:]/.test(tok)) continue;
       if (/^https?:/i.test(tok)) continue;
+      if (/^[a-z0-9-]+(\.[a-z0-9-]+)+\//i.test(tok)) continue; // 域名后的 URL 路径，如 arxiv.org/abs/2601.02780
       if (tok.startsWith('~')) continue;
       const looksPath = tok.includes('/') || /\.(md|ps1|sh|json|mjs|js|cjs|py|txt|yaml|yml)$/i.test(tok);
       if (!looksPath) continue;

@@ -2,6 +2,50 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.13.0] - 2026-09-10
+
+本次是「大规模移植 + 结构收敛」双主题：新增 16 个技能/子模块，同时把顶层技能从 60 收敛到 46。
+
+### Added
+
+- `aihot`（1 文件）：aihot.virxact.com 中文 AI 资讯查询（模型/产品/行业/论文/技巧精选），免 API Key；补 Windows/PowerShell 时间窗写法
+- `awesome-design-md`（76 文件）：74 份真实网站 DESIGN.md 设计系统参考（Vercel / Stripe / Linear / Claude / Apple / Tesla 等），按品牌复用 tokens
+- `myagents-router`（27 文件）：MyAgents 套件统一入口，内嵌 4 个子技能 —— 任务对齐 / 任务执行（UserProxy）/ 资源下载 / 多 AI 并行研究；子技能不注册为独立技能
+- B 组 7 个（workbuddy 移植）：`diagnose` / `tdd` / `handoff` / `zoom-out` / `canvas-design` / `agent-team-orchestration` / `multi-search-engine`（16 引擎免 Key 搜索）
+- C 组 5 个（含依赖落地）：`github-trending-cn` / `github-ai-trends`（python stdlib，token 运行时注入）/ `perplexity`（未配置密钥，标注不可用）/ `web-search-exa`（Exa MCP 已写入 mcp.json）/ `cli-anything-hub`（uv tool 隔离安装 0.4.1）
+- `teach`（5 文件）：把工作区变成有状态学习项目（MISSION.md / learning-records / lessons / assets），跨会话持续教学
+- `define/grilling.md`：动手前的设计树拷问（frontier 轮次 + 每问带推荐答案）—— 来自 mattpocock/skills（MIT）
+- `plan/codebase-design.md` + `DEEPENING.md` + `DESIGN-IT-TWICE.md`：深模块设计语言（Module / Interface / Depth / Seam）
+- 新路由 `office-docs`：pdf / docx / xlsx / pptx 四套内嵌（66 文件）
+- 新路由 `video`：HTML→MP4 生成 + 离线后期两套内嵌（21 文件）
+
+### Changed
+
+- **结构收敛：顶层技能 60 → 46**，全部按「阶段路由拥有自己的步骤」统一组织：
+  - `tdd` → `build/test-driven-development.md`（独有段并入，消除同主题两份实现）
+  - `zoom-out` → `plan/zoom-out.md`；`design-blueprint` → `define/design-blueprint/`
+  - `find-skills` → `meta/find-skills.md`
+  - `push-project` → `ship/push-project/`（发布触发词已提升到 `ship` 的 description，避免折叠后失去命中）
+  - `stack-trace-triage` → `verify/stack-trace-triage.md`（verify description 同步补 traceback / panic 触发词）
+  - `deep-research` → `super-research` 的「并行子 agent 深度调研」模式（3 份模板移入 references）
+  - `android-reverse-engineering` / `browser-harness` / `autox-scripting` → `reverse-skill-router/` 内嵌
+- `diagnose` 补 `## Redact`（展示命令/输出/抓包前先脱敏）与「Completion criterion: a tight loop that goes red」——本机版本此前缺这两段
+- `feishu-cli` 融合 lark-unified：安装解析、`config show` 判据、禁止命令（需 TTY）、Device Flow 硬化（`authorization_pending` 正常 / 轮询需长于 device code 有效期 / 复用同一 code）、fail-fast 授权错误表、按本机 1.0.31 实测重建的 13 域 shortcut 表
+- `meta/using-agent-skills.md`：决策树、Lifecycle Sequence（重编号 1–18）、Quick Reference 同步 grilling / codebase-design
+- `.gitattributes` LF 规则扩到 `*.sh` / `*.json` / `*.yaml` / `*.yml` / `*.py` / `*.js` / `*.mjs` / `*.cjs`
+- `README.md`：技能总览与第三方来源表同步，新增「结构收敛记录」一节
+
+### Fixed
+
+- 内嵌搬迁导致的断链 6 处：`apk-reverse` / `mobile-reverse` 指向 android 技能的 `../../`、`android-reverse-engineering` 自身指向旧顶层路径、`ship` → `push-project`、`verify` ← `stack-trace-triage`、`teach` 里被误判为技能内文件的 workspace 路径
+- GitHub trending 两个脚本在 Windows 上因 GBK 控制台输出 emoji 崩溃（`UnicodeEncodeError`）→ 脚本内 `reconfigure(encoding='utf-8')`
+- `push-project/` 折叠后 `ship/SKILL.md` 引用未同步（首轮恢复顶层、二次折叠时修正）
+
+### Notes
+
+- 全程以三级扫描器为门禁：`validate-skills.cjs` / `audit-library.cjs` / `audit-skill.cjs`，每次结构改动后复验
+- 本版本为**文档型发布**：无运行时依赖，回滚 = `git revert` 对应提交
+
 ## [1.12.0] - 2026-09-10
 
 ### Added

@@ -1,17 +1,8 @@
----
-name: stack-trace-triage
-description: "堆栈/回溯排障：从 traceback、panic、backtrace 里定位根因、给出最小复现与补丁目标，覆盖 Python / JS-TS / Go / Rust / 语言未知五种形态。当用户贴出报错堆栈、崩溃日志、panic、回溯，要「这个错怎么修」「帮我定位根因」「怎么复现」时使用。 Triage a stack trace into root-cause checks, a minimal reproducer, defensive patch targets, and a verification command. Use for a Python traceback, a JS/TS error stack, a Go panic, a Rust backtrace, or an unlabeled crash dump. Merged from the OpenSquilla stack-trace-{python,js,go,rust,generic}-probe helpers."
-whenToUse: "用户贴出任何形式的崩溃/异常堆栈（Python traceback、Node 错误栈、Go panic、Rust backtrace、Java/其他语言或语言不明）并要求定位根因、复现、修复时。"
-metadata:
-  provenance:
-    origin: opensquilla-original
-    license: Apache-2.0
-    upstream_skills: "stack-trace-python-probe, stack-trace-js-probe, stack-trace-go-probe, stack-trace-rust-probe, stack-trace-generic-probe"
-    ported_from: opensquilla-bundled-skills
-    note: "Five 1 KB sibling probes merged into one skill; the upstream parent meta-stack-trace-investigator is not part of the bundled set."
----
+# Stack Trace Triage（堆栈/回溯排障）
 
-# Stack Trace Triage
+> 原顶层技能 `stack-trace-triage`，作为本技能（verify）的子模块内嵌；相对本技能目录读取。
+> 适用：用户直接贴出一段 traceback / panic / backtrace / 崩溃日志，要先定位根因再谈验证。
+
 
 Turn a pasted stack trace into four things the user can act on: what to check, how to reproduce it
 minimally, where to patch, and how to verify the fix. No guessing at files that were not shown.

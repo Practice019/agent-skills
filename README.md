@@ -23,7 +23,7 @@
 | `plan` | 把规格拆成可验证的小任务：依赖图 / 垂直切片 / 检查点 / `tasks/plan.md`（对应 `/plan`） |
 | `build` | 按计划增量实现 + 测试（对应 `/build`） |
 | `verify` | 真实运行验证与调试恢复（对应 `/test`） |
-| `stack-trace-triage` | 堆栈/回溯排障：Python / JS-TS / Go / Rust / 未知五形态，定位根因、给最小复现与补丁目标 |
+| `verify`（含 `stack-trace-triage.md`） | 堆栈/回溯排障：Python / JS-TS / Go / Rust / 未知五形态，定位根因、给最小复现与补丁目标 |
 | `review` | 合并前质量门禁：正确性/可读性/架构/安全/性能（对应 `/review`） |
 | `ship` | 上线发布：CI/CD、版本管理、文档（对应 `/ship`） |
 | `github-cli` | 用 `gh` CLI 操作 GitHub：PR/CI 状态、issue、workflow run 日志、`gh api` 查询 |

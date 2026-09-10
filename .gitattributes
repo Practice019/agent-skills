@@ -3,3 +3,6 @@ SKILL.md text eol=lf
 
 # other text files keep default behavior
 *.md text eol=lf
+
+# shell scripts must stay LF on checkout (CRLF breaks bash under Git Bash/WSL)
+*.sh text eol=lf

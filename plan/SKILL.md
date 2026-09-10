@@ -50,19 +50,32 @@ read planning-and-task-breakdown.md   # 相对本技能目录
 
 该文件给出完整方法：依赖图推导、垂直切片、任务结构模板、检查点写法、并行化边界、反模式清单。**本文件只给执行骨架，细节以它为准。**
 
-### 3. 画依赖图
+### 3. 定模块与接缝（有架构改动时）
+
+```text
+read codebase-design.md   # 相对本技能目录
+```
+
+只要这次改动涉及**新模块、接口重划、或"这块要能测"**，先用深模块词汇（Module / Interface / Implementation / Depth / Seam / Adapter）把接口和接缝定下来，再切任务。接口没定就切任务 = 任务描述里塞满设计决策，必然漂移。
+
+- 找深化机会 → 另读 `DEEPENING.md`
+- 想比较两种接口方案 → 另读 `DESIGN-IT-TWICE.md`
+
+纯增量改动（加个字段、改个文案）可跳过本步。
+
+### 4. 画依赖图
 
 按"底层先建"的顺序：数据模型 → 类型/接口 → 服务端逻辑 → API → 客户端 → UI。
 把"谁阻塞谁"写出来，而不是凭感觉排。
 
-### 4. 垂直切片
+### 5. 垂直切片
 
 每个任务端到端交付一条**能跑通的路径**。
 
 - ❌ 横向：任务1 写完整个数据库 → 任务2 写完所有 API → 任务3 写完所有 UI
 - ✅ 垂直：任务1 用户能注册（表+API+页面）→ 任务2 用户能登录（…）→ 任务3 用户能建任务（…）
 
-### 5. 写任务
+### 6. 写任务
 
 每条任务必须包含：
 
@@ -88,7 +101,7 @@ read planning-and-task-breakdown.md   # 相对本技能目录
 **规模**：[XS / S / M / L]
 ```
 
-### 6. 排序与检查点
+### 7. 排序与检查点
 
 1. 依赖先满足（地基在前）
 2. 每个任务结束时系统仍处于**可运行**状态
@@ -103,13 +116,13 @@ read planning-and-task-breakdown.md   # 相对本技能目录
 - [ ] 人工确认后再继续
 ```
 
-### 7. 落盘 + 同步
+### 8. 落盘 + 同步
 
 - 写 `tasks/plan.md`（目录不存在则创建）—— 跨会话、抗压缩的持久记忆
 - 用 `todo_write` 把任务列表写进当前会话 —— 本轮可见、可跟踪进度
 - 若项目指定了外部 tracker（GitHub Issues / Jira / Linear / beads），`tasks/plan.md` 里只保留**有序索引**（ID 或链接），不要两处都维护同一份清单
 
-### 8. 人工确认
+### 9. 人工确认
 
 把计划交给用户过一遍，确认后才进入 `build`。**不要跳过确认直接开工。**
 
@@ -193,6 +206,9 @@ read planning-and-task-breakdown.md   # 相对本技能目录
 按需 `read`，不要全部加载。下列路径**相对本技能目录**解析（技能加载时会注入 `Base directory for this skill: ...`，以它为基准拼接——`read` 不展开 `~`）：
 
 - `planning-and-task-breakdown.md` — 完整方法（**必读**）
+- `codebase-design.md` — 深模块词汇（Module/Interface/Depth/Seam）与接缝设计；涉架构改动时读
+- `DEEPENING.md` — 按依赖类别找深化机会
+- `DESIGN-IT-TWICE.md` — 并行设计两版接口再比较
 - `../_shared/references/definition-of-done.md` — 项目级"完成"的定义
 - `../_shared/references/testing-patterns.md` — 验收标准怎么写才可测
 - `../_shared/references/security-checklist.md` — 拆任务时补安全横切要求

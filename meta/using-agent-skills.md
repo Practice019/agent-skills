@@ -13,6 +13,7 @@ Task arrives
     │
     ├── Don't know what you want yet? ──────→ interview-me
     ├── Have a rough concept, need variants? → idea-refine
+    ├── Plan/design exists but nobody challenged it? → grilling
     ├── New project/feature/change? ──→ spec-driven-development
     ├── Have a spec, need tasks? ──────→ planning-and-task-breakdown
     ├── Implementing code? ────────────→ incremental-implementation
@@ -139,20 +140,22 @@ For a complete feature, the typical skill sequence is:
 ```
 1.  interview-me                → Extract what the user actually wants
 2.  idea-refine                 → Refine vague ideas
-3.  spec-driven-development     → Define what we're building
-4.  planning-and-task-breakdown → Break into verifiable chunks
-5.  context-engineering         → Load the right context
-6.  source-driven-development   → Verify against official docs
-7.  incremental-implementation  → Build slice by slice
-8.  observability-and-instrumentation → Instrument as you build (runs parallel with 7-9, not after)
-9.  doubt-driven-development    → Cross-examine non-trivial decisions in-flight
-10. test-driven-development     → Prove each slice works
-11. code-review-and-quality     → Review before merge
-12. code-simplification         → Reduce unnecessary complexity while preserving behavior
-13. git-workflow-and-versioning → Clean commit history
-14. documentation-and-adrs      → Document decisions
-15. deprecation-and-migration   → Retire old systems and move users safely when needed
-16. shipping-and-launch         → Deploy safely
+3.  grilling                    → Stress-test the plan before committing to it
+4.  spec-driven-development     → Define what we're building
+5.  planning-and-task-breakdown → Break into verifiable chunks
+6.  codebase-design             → Fix module interfaces and seams before slicing tasks
+7.  context-engineering         → Load the right context
+8.  source-driven-development   → Verify against official docs
+9.  incremental-implementation  → Build slice by slice
+10. observability-and-instrumentation → Instrument as you build (runs parallel with 9-11, not after)
+11. doubt-driven-development     → Cross-examine non-trivial decisions in-flight
+12. test-driven-development      → Prove each slice works
+13. code-review-and-quality      → Review before merge
+14. code-simplification          → Reduce unnecessary complexity while preserving behavior
+15. git-workflow-and-versioning  → Clean commit history
+16. documentation-and-adrs       → Document decisions
+17. deprecation-and-migration    → Retire old systems and move users safely when needed
+18. shipping-and-launch          → Deploy safely
 ```
 
 Not every task needs every skill. A bug fix might only need: `debugging-and-error-recovery` → `test-driven-development` → `code-review-and-quality`.
@@ -163,8 +166,10 @@ Not every task needs every skill. A bug fix might only need: `debugging-and-erro
 |-------|-------|-----------------|
 | Define | interview-me | Surface what the user actually wants before any plan, spec, or code exists |
 | Define | idea-refine | Refine ideas through structured divergent and convergent thinking |
+| Define | grilling | Relentless design-tree interview: settle the whole frontier before committing |
 | Define | spec-driven-development | Requirements and acceptance criteria before code |
 | Plan | planning-and-task-breakdown | Decompose into small, verifiable tasks |
+| Plan | codebase-design | Deep modules: small interfaces on clean seams, testable through that interface |
 | Build | incremental-implementation | Thin vertical slices, test each before expanding |
 | Build | source-driven-development | Verify against official docs before implementing |
 | Build | doubt-driven-development | Adversarial fresh-context review of every non-trivial decision |

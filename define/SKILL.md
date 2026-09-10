@@ -16,16 +16,19 @@ description: "Define 阶段：写代码前先把要做什么讲清楚，产出�
 
 1. 如果需求很模糊，先读取 `interview-me.md`，用一次一问的方式澄清真实意图。
 2. 如果只有一个粗略想法，读取 `idea-refine.md` 做发散/收敛，把它变成可执行的概念。
-3. 需求清晰后，读取 `spec-driven-development.md`，输出 PRD / SPEC.md。
-4. 与用户确认规格后再进入 Plan 阶段。
+3. 如果方案/设计已经成形但没人挑战过，读取 `grilling.md` 做设计树拷问（按 frontier 轮次推进，每问必带推荐答案；事实自己查，决定留给用户）。
+4. 需求清晰后，读取 `spec-driven-development.md`，输出 PRD / SPEC.md。
+5. 与用户确认规格后再进入 Plan 阶段。
 
 ## 子模块
 
 - `interview-me.md` — 澄清需求的访谈流程。
 - `idea-refine.md` — 把模糊想法打磨成具体方案。
+- `grilling.md` — 动手前的方案压力测试（设计树 + frontier 轮次）。
 - `spec-driven-development.md` — 输出结构化 PRD/规格的流程。
 
 ## 注意
 
 - 不要跳过访谈直接写方案。
+- 方案里存在非平凡决策、或用户说「拷问我 / grill me」时，先走 `grilling.md` 再写规格。
 - 规格必须经过用户确认，才能进入下一阶段。

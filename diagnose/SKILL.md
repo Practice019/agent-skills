@@ -11,11 +11,21 @@ A discipline for hard bugs. Skip phases only when explicitly justified.
 
 When exploring the codebase, use the project's domain glossary to get a clear mental model of the relevant modules, and check ADRs in the area you're touching.
 
+## Redact
+
+This skill has you show commands, outputs and captured artifacts. **Redact every secret first**: write `<REDACTED>` in its place. Build loops against env vars, so the credential stays in the environment rather than in what you show. Captured artifacts carry auth headers: quote only the lines that carry the signal.
+
+If the redacted output is not enough to diagnose the bug, say so and ask the user.
+
 ## Phase 1 — Build a feedback loop
 
 **This is the skill.** Everything else is mechanical. If you have a fast, deterministic, agent-runnable pass/fail signal for the bug, you will find the cause — bisection, hypothesis-testing, and instrumentation all just consume that signal. If you don't have one, no amount of staring at code will save you.
 
 Spend disproportionate effort here. **Be aggressive. Be creative. Refuse to give up.**
+
+### Completion criterion: a tight loop that goes red
+
+Don't move to Phase 2 until the loop is **tight**: it goes red on _this_ bug, fast enough to run hundreds of times, and deterministic enough that red means the bug and green means it's gone. A loose loop (slow, flaky, or red for other reasons) will send you chasing ghosts for hours. Tighten it _before_ you hypothesise — tightening the loop usually reveals the cause on its own.
 
 ### Ways to construct one — try them in roughly this order
 

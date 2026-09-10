@@ -6,3 +6,8 @@ SKILL.md text eol=lf
 
 # shell scripts must stay LF on checkout (CRLF breaks bash under Git Bash/WSL)
 *.sh text eol=lf
+
+# data/config files: keep LF so tools reading them see clean text
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf

@@ -11,3 +11,9 @@ SKILL.md text eol=lf
 *.json text eol=lf
 *.yaml text eol=lf
 *.yml text eol=lf
+
+# script sources: keep LF (CRLF inside scripts causes stray \r in output/paths)
+*.py text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf

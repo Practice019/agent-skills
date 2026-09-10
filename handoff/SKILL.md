@@ -42,10 +42,10 @@ Links or paths to artifacts that provide context — don't inline their content 
 ## Suggested skills
 Skills the next session should load. For each, one line explaining why:
 - `diagnose` — if there is an unresolved bug to investigate
-- `tdd` — if the next task is implementing a feature with tests
+- `build`（其 `test-driven-development.md`）— if the next task is implementing a feature with tests
 - `to-issues` — if a plan needs to be broken into tickets
-- `grill-me` or `grill-with-docs` — if a design decision still needs to be resolved
-- `zoom-out` — if the next session will enter unfamiliar code
+- `define`（其 `grilling.md`）— if a design decision still needs to be resolved
+- `plan`（其 `zoom-out.md`）— if the next session will enter unfamiliar code
 - `handoff` — if the session will need to hand off again
 Only list skills relevant to the actual next steps; omit the rest.
 ```

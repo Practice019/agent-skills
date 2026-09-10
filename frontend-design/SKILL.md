@@ -5,7 +5,7 @@ description: "为新建或改造 UI 提供有辨识度的视觉设计指导：�
 
 # Frontend Design
 
-> **Boundary with `design-blueprint`** (`../design-blueprint/SKILL.md`): if the task still has no spec — no DESIGN.md, no structural layout, no decision record — start there first. This skill covers visual direction, typography, environment constraints, and implementation polish once the blueprint exists.
+> **Boundary with `design-blueprint`** (`../define/design-blueprint/SKILL.md`): if the task still has no spec — no DESIGN.md, no structural layout, no decision record — start there first. This skill covers visual direction, typography, environment constraints, and implementation polish once the blueprint exists.
 
 Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
 

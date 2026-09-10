@@ -391,3 +391,65 @@ After completing any implementation:
 - [ ] Coverage hasn't decreased (if tracked)
 
 **Note:** Run each test command after a change that could affect the result. After a clean run, don't repeat the same command unless the code has changed since — re-running on unchanged code adds no confidence.
+
+## Appendix — Mocking Boundaries, Slicing, and Per-Cycle Checklist
+
+> 来自 mattpocock/skills（MIT）的 `tdd` 技能，2026-09-10 并入本文件；顶层 `tdd` 技能已移除（同一主题不再保留两份）。
+
+### Mocking guidelines
+
+- Mock at system boundaries only (network, filesystem, external services)
+- Never mock internal collaborators or private implementation details
+- Prefer real implementations over mocks when the cost of running them is acceptable
+- If you need to mock something internal, that's a signal the code needs better seam design
+
+## Anti-Pattern: Horizontal Slices
+
+**DO NOT write all tests first, then all implementation.** This is "horizontal slicing" - treating RED as "write all tests" and GREEN as "write all code."
+
+This produces **crap tests**:
+
+- Tests written in bulk test _imagined_ behavior, not _actual_ behavior
+- You end up testing the _shape_ of things (data structures, function signatures) rather than user-facing behavior
+- Tests become insensitive to real changes - they pass when behavior breaks, fail when behavior is fine
+- You outrun your headlights, committing to test structure before understanding the implementation
+
+**Correct approach**: Vertical slices via tracer bullets. One test → one implementation → repeat. Each test responds to what you learned from the previous cycle. Because you just wrote the code, you know exactly what behavior matters and how to verify it.
+
+```
+WRONG (horizontal):
+  RED:   test1, test2, test3, test4, test5
+  GREEN: impl1, impl2, impl3, impl4, impl5
+
+RIGHT (vertical):
+  RED→GREEN: test1→impl1
+  RED→GREEN: test2→impl2
+  RED→GREEN: test3→impl3
+  ...
+```
+
+## Checklist Per Cycle
+
+```
+[ ] Test describes behavior, not implementation
+[ ] Test uses public interface only
+[ ] Test would survive internal refactor
+[ ] RED confirmed by actually running the test (not assumed)
+[ ] Code is minimal for this test
+[ ] GREEN confirmed by actually running the test
+[ ] No speculative features added
+```
+
+---
+
+## DSH 工具映射（本副本补充）
+
+| 上游 | DSH |
+|---|---|
+| Read | `read` |
+| Write / Edit | `write` / `edit` |
+| Bash（跑测试） | `pwsh`——例如 `npm test` / `pytest -q` / `cargo test` / `go test ./...` |
+| Grep / Glob | `grep` / `glob` |
+| Task / Agent | `subagent` / `subagent_fork` |
+
+"RED confirmed by actually running the test" 与 "GREEN confirmed by actually running the test" 是硬要求：必须在 `pwsh` 里真跑一次并看到输出，不得凭推断勾选。

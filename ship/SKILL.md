@@ -20,6 +20,7 @@ description: "Ship 阶段：带着信心部署——生产发布、CI/CD、废�
 4. 如果涉及架构决策或文档，读取 `documentation-and-adrs.md`。
 5. 读取 `observability-and-instrumentation.md`，确认日志、指标、追踪、告警。
 6. 最后读取 `shipping-and-launch.md`，执行上线检查清单并准备回滚方案。
+7. 如果是**把本地项目发布到 npm / GitHub**（打 tag、Release、topics、自动化发版），读 `push-project/SKILL.md`——它的第 0 步是强制确认发布目标，按目标只执行对应章节。
 
 ## 子模块
 
@@ -29,3 +30,4 @@ description: "Ship 阶段：带着信心部署——生产发布、CI/CD、废�
 - `documentation-and-adrs.md` — 文档与 ADR。
 - `observability-and-instrumentation.md` — 可观测性与埋点（日志、RED 指标、OpenTelemetry 追踪、告警）。
 - `shipping-and-launch.md` — 发布与上线清单。
+- `push-project/SKILL.md` — npm/GitHub 具体发布流程（含 `scripts/release-github.ps1`）。

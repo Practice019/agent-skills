@@ -27,7 +27,7 @@
 | `review` | 合并前质量门禁：正确性/可读性/架构/安全/性能（对应 `/review`） |
 | `ship` | 上线发布：CI/CD、版本管理、文档（对应 `/ship`） |
 | `github-cli` | 用 `gh` CLI 操作 GitHub：PR/CI 状态、issue、workflow run 日志、`gh api` 查询 |
-| `ship`（含 `push-project/`） | 发布阶段：CI/CD、上线清单、回滚；`push-project/` 负责 npm + GitHub 具体发布（**先确认发布目标**） |
+| `push-project` | 把项目发布到 npm + GitHub：**先确认发布目标（都发 / 只发 npm / 只发 GitHub）**，再走检查清单、token 引导、tag/Release、一键发版 |
 | `reverse-skill-router`（含 `browser-harness/`） | CDP 直连 Chrome 操控浏览器：抓站、登录、爬数据、复刻网页 |
 | `dsh-plugin-development` | 在 DSH 上开发动态 Cordis 插件的完整指南（Plugin/Run/Host/Client/Slot UI/RPC） |
 | `skill-create` | 创建、校验、安装和发布 DSH Skill 的协议与流程 |

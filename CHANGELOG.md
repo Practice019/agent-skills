@@ -2,6 +2,26 @@
 
 本仓库所有版本变化（技能库为文档型发布，无代码依赖，回滚 = `git revert <tag>` 对应提交）。
 
+## [1.12.0] - 2026-09-10
+
+### Added
+- `fun-code-reverse`（2 文件）：把用户点名的有趣代码**介绍清楚**并收录进 `fun-code-collection` 收藏库 —— 条目 README 讲透机制，配一个 **30 行内、单文件零依赖、可直接跑**的最小 demo；从原代码摘的 10~40 行关键片段留作「我没编」的佐证。三部件分工固定：讲解管「为什么妙」、片段管「我没编」、demo 管「你能跑」。不写复刻提示词——demo 本身就是可执行的说明书。同附 `playbook.md` 泛化经验库（P0~P6，含流程经济 5 条）
+- `60fps-animation`（3 文件）：修卡顿动画 —— 把逐帧触发重排/重绘的动画属性（`width`/`height`/`top`/`left`/`box-shadow`/`filter`）改成 `transform`/`opacity`，含 FLIP、`height auto`、滚动与 hover 抖动的排查改法；附件 `references/patterns-and-profiling.md`
+- `find-skills`（1 文件）：在开源技能生态里发现并安装技能（Skills CLI：`npx skills find` / `add` / `update`）
+
+### Fixed
+- `60fps-animation/SKILL.md` 与 `references/patterns-and-profiling.md` CRLF → LF（硬门禁 `CRLF 行尾` 失败项，修复后 `passed=175 failed=0`）
+- `60fps-animation` description 补中文半句（库规范要求中英双语，原为纯英文；单技能体检由 WARN 转 PASS）
+
+### Changed
+- `README.md` 技能总览补齐 **10 个漏列技能**（本次新增 3 个 + 历史遗留 7 个：`feishu-cli` / `flow-canvas` / `github-cli` / `latex-compile` / `skill-audit` / `stack-trace-triage` / `video-post-production`），表内技能行 33 → 43，与顶层技能目录数一致
+- `package.json` 版本 1.11.0 → 1.12.0
+
+### Notes
+- 发布目标：**只发 GitHub**（按 `push-project` 第 0 步确认），本次不含 `npm publish`，npm 侧仍停在 1.4.0
+- 发版前三级扫描全过：硬门禁 `scanned=175 passed=175 failed=0`；宽口径 `ERROR=0 WARN=0 INFO=35`；单技能体检三个新技能 `PASS=3 WARN=0 FAIL=0`
+- 技能库自检：顶层技能 43 / `SKILL.md` 175 / 956 文件 / 8.5 MB
+
 ## [1.11.0] - 2026-09-10
 
 ### Added

@@ -56,6 +56,9 @@ description: "逆向工程与安全工作流的路由器：把逆向、漏洞利
 | **DSL 虚拟机逆向** | `reverse-engineering/dsl-vm-reverse/` | JS 自定义指令集 VM（IIFE + switch-case opcode）；风控/验证码引擎等 |
 | **作战契约 ops** | `ops/` | Scope / 证据链 / 角色 / 时间线 / 身份 / skill 供应链安全 |
 | **社区 skill 对照** | `references/community-security-skills.md` | 外部安全 skill 索引与借鉴规则（禁止盲装） |
+| **Android 应用逆向（完整流程）** | `android-reverse-engineering/SKILL.md` | APK/XAPK/JAR/AAR 反编译（jadx / Fernflower）、提取 HTTP API 端点、UI→网络调用链追踪 |
+| **浏览器自动化（CDP 手册）** | `browser-harness/SKILL.md` | CDP 直连 Chrome：打开页面、抓取内容、登录、分析、复刻、爬数据 |
+| **AutoX.js 脚本** | `autox-scripting/SKILL.md` | 安卓端 AutoX/Auto.js 自动化：截图、找图找色、坐标点击、Shizuku、多线程与常见坑 |
 | **Skill 供应链** | `ops/skill-supply-chain.md` | 外部 skill/MCP 安装门闩（AST10 精简） |
 | **RE 阶段门闩** | `reverse-engineering/references/re-agent-workflow.md` | triage→static→dynamic→synthesis |
 | **授权侦察管线** | `pentest-tools/references/recon-pipeline.md` | scope 门 + 命中≠验证 |

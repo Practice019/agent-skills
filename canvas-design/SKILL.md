@@ -138,7 +138,7 @@ To create additional pages when requested, create more creative pages along the 
 - **本技能不绑定画布工具**：DSH 没有内置画布渲染器，产出 PNG/PDF 要自己选实现路径——
   - 纯矢量/排版：写 SVG 或 HTML/CSS，再用浏览器截图或矢量工具导出（可配合 `visualizer` 技能）
   - 程序化绘图：Python + Pillow / ReportLab / cairosvg（先确认本机 python 与依赖）
-  - 文档型 PDF：走 `pdf-official` 技能
+  - 文档型 PDF：走 `office-docs` 技能（其 `pdf-official/SKILL.md` 子技能）
   - 只交付"设计哲学"这一层（.md）也是合法产出——上游本身就把它当作两步中的第一步
 - **只输出** .md / .pdf / .png 三类文件，不要塞中间产物到用户项目。
 - **授权**：上游 frontmatter 里 `license` 指向的 LICENSE.txt 未随包提供，本副本未附带该文件；正文内容按原样保留。

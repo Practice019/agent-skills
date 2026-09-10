@@ -78,4 +78,4 @@ next: read <subskill-name>/SKILL.md（相对本技能目录）
 4. **`task-alignment` ↔ `task-implement` 是强顺序**：`.task/` 目录由对齐阶段生成；没有它时执行阶段会直接走「建议先对齐」分支。
 5. **DSH 工具差异**：子技能里写的 Bash / Agent / WebSearch 等名字，按各自文末的「DSH 适配」小节映射到 `pwsh` / `subagent` / `web_search` 等。`ultra-research` 依赖的 Playwright MCP 本机没有，走 `browser-harness` 技能。
 6. **Windows**：`download-anything` 的 `.sh` 脚本需要 Git Bash 或 WSL；中文路径建议在其下执行。
-7. **与其他技能的分工**：通用深度调研可优先用 `deep-research`/`super-research`（本机原生、不依赖浏览器登录态）；`ultra-research` 的价值在于**用你已登录的多个 AI 服务**并行取证，需要浏览器通道可用。
+7. **与其他技能的分工**：通用深度调研可优先用 `super-research`（其「并行子 agent 深度调研」模式即原 `deep-research`）（本机原生、不依赖浏览器登录态）；`ultra-research` 的价值在于**用你已登录的多个 AI 服务**并行取证，需要浏览器通道可用。

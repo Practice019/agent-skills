@@ -8,7 +8,7 @@
 不用记任何安装步骤——技能已就位。需要时直接说或输入：
 
 ```text
-/skill <技能名>       # 例如 /skill push-project
+/skill <技能名>       # 例如 /skill ship（发布）或 /skill office-docs（文档四件套）
 ```
 
 也可以直接描述需求（如"把项目发布到 GitHub"），模型会自动路由到对应技能。
@@ -27,33 +27,33 @@
 | `review` | 合并前质量门禁：正确性/可读性/架构/安全/性能（对应 `/review`） |
 | `ship` | 上线发布：CI/CD、版本管理、文档（对应 `/ship`） |
 | `github-cli` | 用 `gh` CLI 操作 GitHub：PR/CI 状态、issue、workflow run 日志、`gh api` 查询 |
-| `push-project` | 把项目发布到 npm + GitHub：**先确认发布目标（都发 / 只发 npm / 只发 GitHub）**，再走检查清单、token 引导、tag/Release、一键发版 |
-| `browser-harness` | CDP 直连 Chrome 操控浏览器：抓站、登录、爬数据、复刻网页 |
+| `ship`（含 `push-project/`） | 发布阶段：CI/CD、上线清单、回滚；`push-project/` 负责 npm + GitHub 具体发布（**先确认发布目标**） |
+| `reverse-skill-router`（含 `browser-harness/`） | CDP 直连 Chrome 操控浏览器：抓站、登录、爬数据、复刻网页 |
 | `dsh-plugin-development` | 在 DSH 上开发动态 Cordis 插件的完整指南（Plugin/Run/Host/Client/Slot UI/RPC） |
 | `skill-create` | 创建、校验、安装和发布 DSH Skill 的协议与流程 |
 | `skill-audit` | 审计并修复整个技能库：库级两级扫描 + 单技能纵深体检，按 epoch 循环原子修复并复验 |
-| `find-skills` | 在开源技能生态里发现并安装技能（Skills CLI：`npx skills find` / `add` / `update`） |
+| `meta`（含 `find-skills.md`） | 元技能：阶段路由 + 在开源生态里发现并安装技能（Skills CLI） |
 | `model-training-mindset` | 用模型训练思维攻坚多步骤任务：epoch 循环 + checkpoint 回退，子问题逐级固化 |
-| `autox-scripting` | AutoX.js 自动化脚本编写与调试：截图找色、坐标点击、Shizuku 权限、多线程、常见坑 |
+| `reverse-skill-router`（含 `autox-scripting/`） | AutoX.js 自动化脚本：截图找色、坐标点击、Shizuku、多线程与常见坑 |
 | `reverse-skill-router` | 逆向/渗透/安全技能路由包：AI 自动路由 + 按需工具链自举 + 自动进化经验库（含 42 个专业子技能 + CTF 侧车） |
 | `fun-code-reverse` | 把点名的有趣代码讲清楚并收录进收藏库：条目 README 讲透机制 + 30 行内单文件可跑 demo + 原代码关键片段佐证 |
-| `android-reverse-engineering` | APK/XAPK/JAR/AAR 反编译（jadx/Fernflower）、提取 API 端点、追踪 UI→网络调用链 |
-| `docx-official` | 生成/读取/转换 Word（.docx）：写报告合同、抽文本结构、填模板 |
-| `pdf-official` | 生成/读取/转换/填写 PDF：抽文本表格、合并裁剪水印、填 AcroForm、OCR |
-| `pptx-official` | 生成/读取/转换 PowerPoint（.pptx）：写幻灯片路演稿、抽结构、填模板 |
-| `xlsx-official` | 生成/读取/清洗 Excel/CSV：建模、加列、公式、图表、导出 |
+| `reverse-skill-router`（含 `android-reverse-engineering/`） | APK/XAPK/JAR/AAR 反编译、提取 API 端点、追踪 UI→网络调用链 |
+| `office-docs`（含 `docx-official/`） | Word（.docx）：写报告合同、抽文本结构、填模板 |
+| `office-docs`（含 `pdf-official/`） | PDF：抽文本表格、合并裁剪水印、填 AcroForm、OCR |
+| `office-docs`（含 `pptx-official/`） | PowerPoint（.pptx）：写幻灯片路演稿、抽结构、填模板 |
+| `office-docs`（含 `xlsx-official/`） | Excel/CSV：建模、加列、公式、图表、导出 |
 | `feishu-cli` | 用 `lark-cli` 操作飞书：读写文档、表格行列编辑、上传下载、云空间、多维表格、消息日历邮件 |
 | `arxiv` | arXiv 论文检索/阅读/引用/下载：搜主题作者分类、取摘要元数据、BibTeX、跟踪新投稿 |
-| `deep-research` | 深度调研：并行子 agent 多源交叉验证，产出带引用的调研报告 |
+| `super-research`（并入模式） | 深度调研：并行子 agent 多源交叉验证，产出带引用报告（原 `deep-research` 已并入其「并行子 agent 深度调研」模式） |
 | `super-research` | 自主研究引擎（8 模式）：实验循环调参、量化分析、对比评测、根因排查、论文复现 |
 | `learn-everything` | 把 PDF/论文/书章/URL/主题变成结构化互动课程：分章学习与练习 |
 | `research-paper-writing` | 学术论文撰写/改写/润色：Abstract→Conclusion，中译英、逐段打磨 |
 | `latex-compile` | LaTeX 多遍构建（xelatex → bibtex → xelatex ×2）+ 日志尾部/页数/警告信号，可选 `--min-pages` / `--min-refs` 门禁 |
-| `design-blueprint` | 动手做视觉产物前先出结构化设计规格：DESIGN.md + 结构布局 + Decision Trace |
+| `define`（含 `design-blueprint/`） | 动手做视觉产物前先出设计规格：DESIGN.md + 结构布局 + Decision Trace |
 | `frontend-design` | 新建或改造 UI 的视觉设计指导：配色、排版、环境约束、风格改造 |
 | `60fps-animation` | 修卡顿动画：把逐帧重排/重绘的属性改成 `transform`/`opacity`，含 FLIP、`height auto`、滚动与 hover 抖动 |
-| `html-to-video-pipeline` | HTML/CSS/JS 页面可靠渲染成 MP4：无头浏览器录制 + ffmpeg |
-| `video-post-production` | 短视频后期：分段拼接与 xfade 转场、SRT 烧录、静图 Ken-Burns 短片、脚本站本 SRT、片头片尾卡 |
+| `video`（含 `html-to-video-pipeline/`） | HTML/CSS/JS 页面可靠渲染成 MP4：无头浏览器录制 + ffmpeg |
+| `video`（含 `video-post-production/`） | 短视频后期：分段拼接与 xfade、SRT 烧录、静图 Ken-Burns、片头片尾卡 |
 | `modern-python-toolchain` | 用 uv + ruff + pyright 搭现代 Python 项目：依赖、环境、lint、格式化 |
 | `flow-canvas` | 分析代码项目生成 `flow.json` 流程链路，在文字节点无限画布上看项目流程 |
 | `data-analytics` | 定量分析工作流包（17 子技能）：数据质量、指标诊断、KPI、看板、报告 |
@@ -97,10 +97,28 @@ frontmatter 必填 `name`（小写 kebab-case）与 `description`（双引号包
 | 目录 | 上游 | 许可证 |
 |------|------|--------|
 | `reverse-skill-router/` | [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) | MIT（核心路由包）+ GPL-3.0（`CTF-Sandbox-Orchestrator/` 侧车） |
-| `android-reverse-engineering/` | [SimoneAvogadro/android-reverse-engineering-skill](https://github.com/SimoneAvogadro/android-reverse-engineering-skill) | Apache-2.0 |
-| `docx-official/` `pdf-official/` `pptx-official/` `xlsx-official/` `frontend-design/` `html-to-video-pipeline/` | MiMoCode 内置技能库（`builtin_skills`） | 随目录携带 LICENSE |
-| `arxiv/` `deep-research/` `super-research/` `learn-everything/` `research-paper-writing/` `design-blueprint/` `modern-python-toolchain/` `data-analytics/` `product-design/` `sales/` | MiMoCode 内置技能库（`builtin_skills`） | 上游未附许可证，本地自用 |
+| `reverse-skill-router/android-reverse-engineering/` | [SimoneAvogadro/android-reverse-engineering-skill](https://github.com/SimoneAvogadro/android-reverse-engineering-skill) | Apache-2.0 |
+| `office-docs/{docx,pdf,pptx,xlsx}-official/` `frontend-design/` `video/html-to-video-pipeline/` | MiMoCode 内置技能库（`builtin_skills`） | 随目录携带 LICENSE |
+| `arxiv/` `super-research/`（含原 `deep-research` 模式） `learn-everything/` `research-paper-writing/` `design-blueprint/` `modern-python-toolchain/` `data-analytics/` `product-design/` `sales/` | MiMoCode 内置技能库（`builtin_skills`） | 上游未附许可证，本地自用 |
 | `3d-creation/` `visualizer/` | MiMo Desktop 引擎配置技能（`engine-config/skills`） | 上游未附许可证，本地自用 |
+
+## 结构收敛记录（2026-09-10）
+
+为减少顶层技能数量、消除同一主题的多份实现，做了两轮归位（每轮都过三级扫描器后提交）：
+
+| 原顶层技能 | 现位置 |
+|---|---|
+| `tdd` | `build/test-driven-development.md`（独有段并入） |
+| `zoom-out` | `plan/zoom-out.md` |
+| `design-blueprint` | `define/design-blueprint/` |
+| `push-project` | `ship/push-project/` |
+| `find-skills` | `meta/find-skills.md` |
+| `{pdf,docx,xlsx,pptx}-official` | `office-docs/`（新路由） |
+| `video-post-production` + `html-to-video-pipeline` | `video/`（新路由） |
+| `deep-research` | `super-research` 的「并行子 agent 深度调研」模式 |
+| `android-reverse-engineering` / `browser-harness` / `autox-scripting` | `reverse-skill-router/` 内嵌模块 |
+
+顶层技能：**60 → 47**。子技能不注册是模式 B 的预期行为，用 `read <子技能>/SKILL.md` 读取。
 
 ## License
 

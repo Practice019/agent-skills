@@ -88,3 +88,52 @@ Every mode ends with a compact final report (plain markdown, delivered as your f
 - **Where to look**: pointer to the log file, branch, and any generated artifacts.
 
 Keep it under a page. The point isn't storytelling — it's letting a human verify your work in five minutes and know what to look at next.
+
+---
+
+## Merged mode — parallel-subagent deep research (原 `deep-research`)
+
+原顶层技能 `deep-research` 于 2026-09-10 并入本技能。它是一条**明确的 5 阶段流水线**：并行子 agent 做调研，**写作单点收口**（绝不让多个 agent 各写一段报告）。
+
+### 何时用本模式
+
+- 主题调研类任务、要"多方求证 + 带引用报告"
+- **1-2 次搜索就能答的问题不要用**（直接 `web_search`）
+- 枚举型任务（N 项 × M 字段，如"对比 20 个框架"）→ 用表格式分解，每个子 agent 负责一批
+
+### 深度预算（硬上限）
+
+| 模式 | 首轮子 agent | 最多追问轮次 | 来源目标 |
+|---|---|---|---|
+| quick | 2-3 | 0 | 8+ |
+| standard（默认） | 3-5 | 1 | 15+ |
+| deep | 5-8 | 2 | 25+ |
+
+### 工作区（跨压缩持久）
+
+所有状态落盘，不要只留在上下文里：
+
+```text
+research/<slug>/
+├── brief.md         # 研究简报：所有阶段唯一对齐依据
+├── findings/        # F1.md, F2.md ... 每个子 agent 一份结构化证据
+└── REPORT.md        # 最终交付物
+```
+
+恢复时：重读 `brief.md` + 列出 `findings/`，跳过已完成角度继续。
+
+### 五个阶段
+
+1. **Scope** —— 最多一轮澄清（受众 / 时间范围 / 地区 / 要支撑的决策）；意图明确就直接把假设写进 `brief.md`，不要为问而问。
+2. **Plan** —— 把简报拆成 3-8 个**互相独立**的角度（核心事实 / 近 12 个月进展 / 量化数据 / 反方与失败案例 / 一线实践 / 学术 / 关键玩家）；角度列表写入 `brief.md` 的 `## Angles`。
+3. **Parallel** —— **同一条消息里**按角度并行起子 agent；提示词用 `references/deep-research/subagent-prompt.md` 的模板逐字复制，只替换 `{变量}`。每个子 agent 只研究一个角度，结构化写入 `findings/F<n>.md`（claim / quote / URL / date / confidence），**只回 3-5 行摘要**——原始页面内容不得进入主上下文。
+4. **Reflect** —— 读遍 `findings/*.md`，对照 `brief.md` 找：哪些部分没有证据？哪些结论只靠单一来源？哪里来源互相冲突？有缺口且预算未尽 → 用更窄的 delta 查询再起一轮。
+5. **Write（单点）** —— 只有你本人按 `references/deep-research/report.md` 一次成稿；每条非平凡结论带 `[n]` 引用且 URL 只来自 findings 文件（**不许凭记忆写**）；冲突来源并列呈现并标日期；单源结论标 `[single source]`，推测标 `[speculative]`；结尾给 Open questions 与编号 Sources（含访问日期）。deep 模式再补一遍怀疑式自审。
+
+### 资源位置
+
+- `references/deep-research/subagent-prompt.md` —— 子 agent 提示词模板（逐字复制）
+- `references/deep-research/sources.md` —— 免 key 的免费数据端点清单
+- `references/deep-research/report.md` —— 报告结构模板
+
+> 说明：上游版本还提到一个外部脚本路径（`/Users/mi/...` 的 workflow 脚本），那是作者本机的文件，**本副本不引用**；需要无人值守运行就用 DSH 的 `workflow` 工具，脚本以 `script` 参数内联传入。

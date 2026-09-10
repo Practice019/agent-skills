@@ -1,6 +1,6 @@
 ---
 name: feishu-cli
-description: "用 lark-cli 命令行工具操作飞书：读写文档、编辑内容（含表格行列级块编辑）、搜索、上传下载文件、电子表格、多维表格、消息、日历、邮件等。当用户需要查看/编辑/创建飞书文档、在表格中增删行、操作飞书云空间或调用飞书开放平台能力时使用。 Operate Feishu/Lark from the command line with lark-cli: read and write documents, edit content (including row/column-level table blocks), search, upload and download files, spreadsheets, bitables, messages, calendar, and mail. Use when the user needs to view, edit, or create Feishu docs, add or remove table rows, manage Feishu cloud space, or call Feishu Open Platform APIs."
+description: "用 lark-cli 命令行工具操作飞书：读写文档、编辑内容（含表格行列级块编辑）、搜索、上传下载文件、电子表格、多维表格、消息、日历、邮件等；含安装、应用配置、Device Flow 授权与权限排障。当用户需要查看/编辑/创建飞书文档、在表格中增删行、操作飞书云空间或调用飞书开放平台能力时使用。 Operate Feishu/Lark from the command line with lark-cli: read and write documents, edit content (including row/column-level table blocks), search, upload and download files, spreadsheets, bitables, messages, calendar, and mail. Covers install, app config, device-flow auth, and permission troubleshooting. Use when the user needs to view, edit, or create Feishu docs, add or remove table rows, manage Feishu cloud space, or call Feishu Open Platform APIs."
 whenToUse: "用户提到飞书/Lark 文档的读取、编辑、创建、搜索，或云空间文件管理、表格操作、消息发送等，且机器上已安装 lark-cli 时使用。"
 user-invocable: true
 disable-model-invocation: false
@@ -15,6 +15,14 @@ disable-model-invocation: false
 ### 1. 检查安装与版本
 
 ```powershell
+# 确认命令可用；没有则安装
+Get-Command lark-cli -ErrorAction SilentlyContinue
+# 未找到时（NODE_OPTIONS 会干扰全局安装，先清掉）：
+$env:NODE_OPTIONS=$null; npm install -g @larksuite/cli
+# 装完仍找不到 -> 去 npm 全局目录里找实际路径
+$npmPrefix = (npm prefix -g)
+Get-ChildItem "$env:APPDATA\npm\lark-cli*", "$npmPrefix\lark-cli*" -ErrorAction SilentlyContinue
+
 lark-cli --version
 lark-cli doctor
 ```
@@ -22,11 +30,33 @@ lark-cli doctor
 - `doctor` 输出各项检查。`cli_update` 为 warn 时建议先升级：`lark-cli update`
 - 若提示 "Check the installed lark-doc skill first; if it is not the v2 skill, run `lark-cli update`"，先执行 `lark-cli update`（升级 CLI，同时更新配套 lark-doc 等 agent skills）
 
+### 1b. 检查应用配置（与授权是两回事）
+
+```powershell
+lark-cli config show
+```
+
+**判据：输出里出现 `appId` 才算已配置**——不要用退出码判断（配置缺失时它未必非零）。
+
+- 有 `appId` → 应用配置就绪，去看 §2 授权状态
+- 没有 `appId` → 需要初始化应用配置，但**只能用非交互方式**（见 §5 禁止命令）
+
+> ⚠️ **应用配置完成 ≠ 用户已登录**。`config show` 通过只说明应用凭证在，个人资源（用户文档、日历、邮件、任务、聊天记录）还需要 §3 的用户授权。两步要连着做完，不要停在申请配置这一步。
+
 ### 2. 检查授权状态
 
 ```powershell
 lark-cli auth status
 ```
+
+`auth status` 关键字段的读法：
+
+| 字段 | 含义 | 处理 |
+|---|---|---|
+| `identity` | 当前默认身份（`user` / 无用户时才会回退 bot） | 要读个人资源必须是 `user` |
+| `tokenStatus` | `valid` / `needs_refresh` / `expired` | `needs_refresh` 会在下次调用时自动刷新，正常；`expired` 才要重新登录 |
+| `expiresAt` / `refreshExpiresAt` | access token / refresh token 到期时间 | 看 `refreshExpiresAt` 判断要不要重新走 Device Flow |
+| `scope` | 已授权的 scope 列表 | 权限报错时先来这儿对照缺哪个 scope |
 
 - `token expired` → 重新登录（见下）
 - `no token` → 首次登录
@@ -70,7 +100,76 @@ lark-cli auth logout                 # 登出
 lark-cli config show                 # 查看当前应用配置
 ```
 
+### 5. 禁止执行的命令（会挂住会话）
+
+以下命令**任何情况下都不要跑**——它们需要 TTY，非交互环境下会输出坏掉的二维码并一直阻塞：
+
+| 禁止命令 | 原因 |
+|---|---|
+| `lark-cli config init --new` | 交互式，需 TTY |
+| `lark-cli config init` | 同上（不带 `--new` 也会进交互） |
+| `lark-cli config set-default` | 交互式选择，需 TTY |
+
+要初始化应用配置时，走非交互路径；不要用上面三条试探。
+
+### 6. Device Flow 硬化规则（超时、重试、复用）
+
+`auth login --no-wait` 拿到 `device_code` 后，轮询阶段有三条硬规则：
+
+1. **`authorization_pending` 是正常状态，不是错误**。它在 HTTP 层可能表现为 400，含义是「用户还没在浏览器点完授权」。继续等，不要重新发起。
+2. **轮询命令的存活时间必须长于 device code 有效期**。device code 常见有效期为 10 分钟，所以轮询要跑 **≥11 分钟**（工具超时给 700000 ms 以上），或干脆放到后台跑。
+3. **轮询被工具超时打断、但 device code 还没过期时，复用同一个 `device_code` 继续轮询**，不要重新 `--no-wait` 生成新码。只有出现 `expired_token`、`invalid_grant`，或确认已过有效期，才重新发起一次登录。
+
+同时：**同一时刻只跑一个轮询**。上一个轮询还在 `authorization_pending` 时，不要并行开新的 setup 或 login 流程。
+
+### 7. 首次连接的用户提示语
+
+首次使用需要两步连接时，先跟用户说清楚，避免他以为在重复授权：
+
+> 第一次使用飞书套件需要完成两步连接：先初始化飞书 CLI 应用配置，再授权访问你有权限的飞书数据。两步完成后我会自动继续当前任务；这不是重复授权。
+
+**补充授权（不是重连）**的话术——飞书权限按能力拆分，跑更具体的操作（文档搜索、云盘检索、导出等）时可能要追加 scope：
+
+> 当前任务需要补充授权：飞书文档搜索权限 `search:docs:read`。授权后，后续搜索飞书文档不会再次要求这个权限。
+
+补充授权时用显式 scope 登录，**且 `--scope` 不能与 `--domain`、`--recommend` 同时使用**（三者互斥）。除非有意收窄 token，否则不要用一小撮显式 scope 替换掉推荐范围登录。
+
 ## 常用命令速查
+
+> 写法分两类：**shortcut**（`+xxx`，高层封装，优先用）与 **原始 API**（`lark-cli <domain> <resource> <method>`）。用原始 API 前**先跑一次 `lark-cli schema <domain>.<resource>.<method>`** 看准参数结构，别照记忆拼 `--data`。
+
+### 域与 shortcut 速览（本机 lark-cli 1.0.31 实测）
+
+| 域 | 用途 | 实测 shortcut |
+|---|---|---|
+| `im` | 消息、群、聊天记录、附件、话题、书签 | `+messages-send`、`+messages-search`、`+messages-reply`、`+messages-resources-download`、`+chat-list`、`+chat-create`、`+chat-search`、`+chat-messages-list`、`+threads-messages-list`、`+flag-list` |
+| `docs` | 新版文档读写、搜索、媒体 | `+fetch`、`+create`、`+update`、`+search`、`+media-insert`、`+media-download`、`+whiteboard-update` |
+| `drive` | 云空间文件、导入导出、权限、评论、目录镜像 | `+upload`、`+download`、`+search`、`+export`、`+export-download`、`+import`、`+create-folder`、`+add-comment`、`+push`、`+pull`、`+status`、`+task_result` |
+| `sheets` | 电子表格读写、查找替换、行列增删、样式、浮动图片 | `+read`、`+write`、`+append`、`+create`、`+find`、`+replace`、`+info`、`+insert-dimension`、`+delete-dimension`、`+export`、`+set-style` |
+| `base` | 多维表格记录/字段/视图/仪表盘/工作流/表单 | `+base-create`、`+table-list`、`+field-list`、`+record-list`、`+record-search`、`+record-batch-create`、`+record-batch-update`、`+record-upsert`、`+record-upload-attachment`、`+data-query`、`+view-list`、`+workflow-list` |
+| `calendar` | 日程、空闲、会议时间建议、会议室 | `+agenda`、`+create`、`+update`、`+freebusy`、`+suggestion`、`+rsvp`、`+room-find` |
+| `task` | 任务、清单、提醒、评论、附件 | `+create`、`+get-my-tasks`、`+get-related-tasks`、`+search`、`+complete`、`+update`、`+comment`、`+reminder`、`+tasklist-create`、`+tasklist-search` |
+| `mail` | 收发、草稿、线程、全文检索 | `+send`、`+draft-create`、`+reply`、`+reply-all`、`+forward`、`+message`、`+thread`、`+triage`、`+watch` |
+| `wiki` | 知识库节点、移动、空间删除 | `+node-create`、`+move`、`+delete-space` |
+| `vc` | 会议记录、录制、纪要、bot 入会 | `+search`、`+notes`、`+recording`、`+meeting-join`、`+meeting-events`、`+meeting-leave` |
+| `contact` | 用户搜索与资料（需 `--as user`） | `+search-user`、`+get-user` |
+| `minutes` | 妙记搜索、媒体下载、上传生成 | `+search`、`+download`、`+upload` |
+| `whiteboard` | 画板查询 / 用 mermaid·plantuml·DSL 更新 | `+query`、`+update` |
+
+> ⚠️ **shortcut 名随版本变化**：网上某些移植文档写的是 `+calendars-list`、`+events-list`、`+spreadsheets-read`、`+tables-records-list`、`+documents-create` 这类名字，在本机 1.0.31 上**不存在**（calendar 实际是 `+agenda` / `+freebusy` 等，sheets 是 `+read`，base 是 `+record-list`）。**一律以 `lark-cli <domain> --help` 的实际输出为准**，不要照抄外部文档。
+
+### 常用实体 ID
+
+| 实体 | ID 形态 |
+|---|---|
+| 用户 | `open_id`（`ou_xxx`）/ `user_id` / email |
+| 群聊 | `chat_id`（`oc_xxx`） |
+| 消息 | `message_id`（`om_xxx`） |
+| 话题 | `thread_id` |
+| 文档 | `document_id`（docx token） |
+| 文件 | `file_key` / `file_id` |
+| 多维表格 | `base_id`（`app_xxx`）+ `table_id`（`tbl_xxx`） |
+| 日程 | `event_id` |
 
 ### 文档（docs）
 
@@ -286,10 +385,22 @@ lark-cli docs +search --query "周报" -q '.data.items[].url'
 | `--file/--content must be a relative path` | `@file` 只接受当前目录内的相对路径 | 临时文件写进工作区，用 `@./file.json` |
 | `Unknown service: docx`（schema 命令） | schema 不覆盖 docx | docx 参数查官方文档（「官方块级 API」一节有链接） |
 | 表格要加行/改单元格，`+update` 做不到 | CLI 只有整段 Markdown 粒度 | 走官方块级 PATCH/batch_update（见「官方块级 API」一节） |
+| `need_user_authorization` / `No user logged in` / `failed to get access token` | 用户未登录或 token 过期 | **停止重试业务接口**，走 device flow 登录并复用同一 device_code 轮询，再 `auth status` 确认 |
+| `forbidden`（配 `--as bot`） | bot/应用不是该资源协作者 | 停止用 bot 重试；改用 `--as user`，或请用户把应用加为文档/资源协作者 |
+| `App scope not enabled` / `required scope ...` | 应用没在开放平台开通该 scope，用户授权也补不上 | 停止重试；告知用户/管理员需在开发者后台开通的**具体 scope 名**，开通后重授权再重试一次 |
+| `authorization_pending` | 用户还没在浏览器点完授权 | 保持当前轮询，不要开新流程 |
+| `expired_token` / `invalid_grant` | device code 过期 | 重新发起**一次**登录，把新 URL 给用户 |
+
+**熔断规则（fail-fast）**：业务接口报授权/权限错误后，**只允许诊断一次**，然后切到对应的授权步骤。不要反复换 `--as user` / `--as bot` / `--format` 等无关变体重试同一接口。
 
 ## 注意事项
 
-1. **身份选择**：`--as user`（用户身份，访问用户有权限的资源）或 `--as bot`（应用身份）。大多数个人文档操作用 user 身份。
+1. **身份选择**：
+   - 默认 `--as auto`：有登录用户就用用户身份，否则回退到应用（bot）身份。
+   - 个人资源（用户能打开的文档、日历、邮件、任务、聊天记录）在 `auth status` 有效时**优先显式 `--as user`**。
+   - `--as bot` 只用于应用自身操作，或 bot 明确是成员/协作者的资源；不是协作者时给它 `--as bot` 只会拿到 `forbidden`。
+   - **文档归属**：用户要的文档/表格默认用 `--as user` 创建，这样归属用户本人；只有用户明确要应用归属内容时才用 `--as bot`。
+   - bot 建的文档要分享给用户，需要 `docs:permission.member:create`；该 scope 未开通时**停下来找管理员开通**，不要绕路。
 2. **Risk 标记**：`+fetch`/`+search` 是 read；`+create`/`+update`/`+delete` 是 write。写操作前确认目标正确。
 3. **dry-run**：加 `--dry-run` 只打印请求不执行，可用来验证参数。
 4. **大文件/长内容**：优先走 `@file` 方式传内容，避免命令行长度限制和转义坑。

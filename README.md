@@ -32,7 +32,8 @@
 | `dsh-plugin-development` | 在 DSH 上开发动态 Cordis 插件的完整指南（Plugin/Run/Host/Client/Slot UI/RPC） |
 | `skill-create` | 创建、校验、安装和发布 DSH Skill 的协议与流程 |
 | `skill-audit` | 审计并修复整个技能库：库级两级扫描 + 单技能纵深体检，按 epoch 循环原子修复并复验 |
-| `meta`（含 `find-skills.md`） | 元技能：阶段路由 + 在开源生态里发现并安装技能（Skills CLI） |
+| `find-skills` | 在开源技能生态里发现并安装技能（Skills CLI：`npx skills find` / `add` / `update`），含 DSH 四目录扫描位置表 |
+| `meta` | 元技能：阶段路由 + 共享操作规则 |
 | `model-training-mindset` | 用模型训练思维攻坚多步骤任务：epoch 循环 + checkpoint 回退，子问题逐级固化 |
 | `reverse-skill-router`（含 `autox-scripting/`） | AutoX.js 自动化脚本：截图找色、坐标点击、Shizuku、多线程与常见坑 |
 | `reverse-skill-router` | 逆向/渗透/安全技能路由包：AI 自动路由 + 按需工具链自举 + 自动进化经验库（含 42 个专业子技能 + CTF 侧车） |
@@ -112,13 +113,27 @@ frontmatter 必填 `name`（小写 kebab-case）与 `description`（双引号包
 | `zoom-out` | `plan/zoom-out.md` |
 | `design-blueprint` | `define/design-blueprint/` |
 | `ship`（含 `push-project/`） | 发布阶段：CI/CD、上线清单、回滚；`push-project/` 负责 npm + GitHub 具体发布（**先确认发布目标**） |
-| `find-skills` | `meta/find-skills.md` |
+| `find-skills` | _(已恢复为顶层技能)_ |
 | `{pdf,docx,xlsx,pptx}-official` | `office-docs/`（新路由） |
 | `video-post-production` + `html-to-video-pipeline` | `video/`（新路由） |
 | `deep-research` | `super-research` 的「并行子 agent 深度调研」模式 |
 | `android-reverse-engineering` / `browser-harness` / `autox-scripting` | `reverse-skill-router/` 内嵌模块 |
 
-顶层技能：**60 → 47**。子技能不注册是模式 B 的预期行为，用 `read <子技能>/SKILL.md` 读取。
+顶层技能：**60 → 46**。子技能不注册是模式 B 的预期行为，用 `read <子技能>/SKILL.md` 读取。
+
+## 重复审计与路由聚合（2026-09-12）
+
+对全库做过一轮功能重复审计（按职能归簇 + 逐行比对），处理如下：
+
+| 动作 | 对象 | 依据 |
+|---|---|---|
+| **恢复顶层** | `find-skills` | 项目级 `.agents/skills/find-skills` 含完整流程 + DSH 四目录位置表；`meta/find-skills.md` 无 frontmatter、内容更旧，降级为历史说明 |
+| **合并** | `github-ai-trends` → `github-trending-cn --mode ai` | 两者同一 API、同一输出结构、同一参数集，前者是后者严格子集（仅多一份 AI 关键词表）|
+| **补交叉引用** | `teach` ↔ `learn-everything` | 均命中「教我 X」；按「素材 vs 长期目标」划界 |
+| **补交叉引用** | `agent-team-orchestration` ↔ `myagents-router` | 方法论 vs 路由器，层次不同；已写明工具选择判据与有意分歧 |
+| **保持独立** | `search` 三件套 / 设计四件套 / 逆向路由包 | 通道、产物或聚合度不同，非重复 |
+
+顶层技能：**47 → 47**（删 1 增 1）。
 
 ## License
 

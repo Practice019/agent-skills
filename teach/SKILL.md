@@ -7,6 +7,15 @@ disable-model-invocation: true
 ---
 The user has asked you to teach them something. This is a stateful request - they intend to learn the topic over multiple sessions.
 
+## 与 `learn-everything` 的分工
+
+两者都能承接「教我 X」，按**输入形态**二选一，不要混用：
+
+- **有素材**（PDF / 论文 / 书章 / URL 或指定主题要成体系）→ 走 `learn-everything`（`skill learn-everything`）：它按素材切章，带练习、测验与评分。
+- **长期工作区**（在当前目录跨多次会话持续学一个主题、沉淀速查资料）→ 留在本技能：`MISSION.md` + `learning-records/` + `lessons/` 是有状态的文件结构，比一次性课程更耐久。
+
+判据：用户给的是**一份材料**还是一个**长期目标**。
+
 ## Teaching Workspace
 
 Treat the current directory as a teaching workspace. The state of their learning is captured in this directory in several files:

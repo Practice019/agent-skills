@@ -7,6 +7,15 @@ description: "把 PDF/论文/书章/URL 或一个主题变成结构化互动课�
 
 Convert source material or a topic into an adaptive course that alternates explanation, retrieval, application, feedback, and review.
 
+## 与 `teach` 的分工
+
+两者都能承接「教我 X」，按**输入形态**二选一，不要混用：
+
+- **有素材**（PDF / 论文 / 书章 / URL）或要一份可完成的课程（含测验 / 评分 / 复习队列）→ 留在本技能。
+- **长期工作区**（用户要在某个目录里跨多次会话持续学一个主题，靠文件状态推进）→ 转 `teach`（`skill teach`）：它用 `MISSION.md` + `learning-records/` + `lessons/` 维护跨会话状态。
+
+判据：用户给的是**一份材料**还是一个**长期目标**。
+
 ## Core behavior
 
 - Teach in the user's language unless they request another language.

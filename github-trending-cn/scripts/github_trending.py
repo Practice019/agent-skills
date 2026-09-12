@@ -29,6 +29,10 @@ LANGUAGES = [
     "java", "cpp", "c", "swift", "kotlin", "ruby", "php",
 ]
 
+# AI 榜单关键词（原 github-ai-trends 技能并入）：按关键词 + topic 双路召回
+AI_KEYWORDS = ["ai", "llm", "gpt", "agent", "transformer", "diffusion", "rag", "ml"]
+AI_TOPICS = ["artificial-intelligence", "llm", "generative-ai", "ai-agent"]
+
 
 def gh_search(query: str, per_page: int = 30, token: str = None) -> list:
     params = urllib.parse.urlencode({
@@ -61,12 +65,40 @@ def gh_search(query: str, per_page: int = 30, token: str = None) -> list:
 
 
 def fetch_trending(period: str = "weekly", limit: int = 25,
-                   language: str = "", token: str = None) -> list:
+                   language: str = "", token: str = None,
+                   mode: str = "general") -> list:
+    """mode="general" 走 pushed+stars+语言补充；mode="ai" 走 AI 关键词+topic 召回。"""
     days = PERIOD_DAYS.get(period, 7)
     since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
 
     seen: set = set()
     results: list = []
+
+    if mode == "ai":
+        # 关键词路：name/description 命中 AI 词
+        for kw in AI_KEYWORDS:
+            if len(results) >= limit * 2:
+                break
+            items = gh_search(
+                f"{kw} in:name,description pushed:>={since} stars:>=10",
+                per_page=30, token=token)
+            for item in items:
+                if item["full_name"] not in seen:
+                    seen.add(item["full_name"])
+                    results.append(item)
+        # topic 路：补齐关键词漏掉的
+        for topic in AI_TOPICS:
+            if len(results) >= limit * 3:
+                break
+            items = gh_search(f"topic:{topic} pushed:>={since} stars:>=10",
+                              per_page=30, token=token)
+            for item in items:
+                if item["full_name"] not in seen:
+                    seen.add(item["full_name"])
+                    results.append(item)
+
+        results.sort(key=lambda r: r.get("stargazers_count", 0), reverse=True)
+        return results[:limit]
 
     # 构建语言过滤词
     lang_filter = f" language:{language}" if language else ""
@@ -100,15 +132,17 @@ def fmt_num(n: int) -> str:
     return str(n)
 
 
-def format_output(repos: list, period: str, language: str = "") -> str:
+def format_output(repos: list, period: str, language: str = "",
+                  mode: str = "general") -> str:
     label = PERIOD_LABELS.get(period, period)
     emoji = PERIOD_EMOJI.get(period, "📊")
     tz_cst = timezone(timedelta(hours=8))
     now = datetime.now(tz_cst).strftime("%Y-%m-%d %H:%M CST")
     lang_tag = f" · {language}" if language else ""
+    title = "GitHub AI 趋势榜" if mode == "ai" else "GitHub Trending"
 
     lines = [
-        f"{emoji} **GitHub Trending — {label}{lang_tag}**",
+        f"{emoji} **{title} — {label}{lang_tag}**",
         f"数据时间：{now}  |  共 {len(repos)} 个项目",
         "",
     ]
@@ -161,14 +195,21 @@ def main():
         help="GitHub Personal Access Token（或设置 GITHUB_TOKEN 环境变量）",
     )
     parser.add_argument(
+        "--mode", "-m",
+        choices=["general", "ai"],
+        default="general",
+        help="榜单模式：general=综合热门（默认），ai=AI/LLM 项目榜（原 github-ai-trends 技能并入）",
+    )
+    parser.add_argument(
         "--json",
         action="store_true",
         help="输出原始 JSON",
     )
     args = parser.parse_args()
 
-    print(f"[INFO] 正在获取 GitHub {args.period} trending...", file=sys.stderr)
-    repos = fetch_trending(args.period, args.limit, args.language, args.token)
+    print(f"[INFO] 正在获取 GitHub {args.period} {args.mode} trending...", file=sys.stderr)
+    repos = fetch_trending(args.period, args.limit, args.language, args.token,
+                           mode=args.mode)
 
     if not repos:
         print("[ERROR] 未获取到数据，请检查网络或 GitHub API 限额", file=sys.stderr)
@@ -192,7 +233,7 @@ def main():
         ]
         json.dump(output, sys.stdout, ensure_ascii=False, indent=2)
     else:
-        print(format_output(repos, args.period, args.language))
+        print(format_output(repos, args.period, args.language, mode=args.mode))
 
 
 if __name__ == "__main__":

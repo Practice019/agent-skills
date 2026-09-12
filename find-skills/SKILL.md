@@ -1,9 +1,9 @@
-# Find Skills（发现并安装外部技能）
+---
+name: find-skills
+description: "帮助用户在开源技能生态里发现并安装 Agent 技能：当用户问「有没有能做 X 的技能」「帮我找个 skill」「怎么实现 X」或想扩展能力时使用，走 Skills CLI（npx skills find / add / update）。Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. Use when the user is looking for functionality that might exist as an installable skill."
+---
 
-> **已恢复为顶层技能 `find-skills`**，本文件保留作历史说明。
-> 请用 `skill find-skills` 加载，或读 `../find-skills/SKILL.md`（含 DSH 环境适配一节）。
-> 别再以本文件为执行入口——它不含四目录扫描位置表与安装校验流程。
-
+# Find Skills
 
 This skill helps you discover and install skills from the open agent skills ecosystem.
 

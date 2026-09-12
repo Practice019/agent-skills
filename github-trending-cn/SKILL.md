@@ -1,6 +1,6 @@
 ---
 name: github-trending-cn
-description: "获取 GitHub 今日/本周/本月热门项目，支持语言过滤 GitHub Trending Monitor. Fetch GitHub trending repos by daily/weekly/monthly period using real GitHub Search API. Runs scripts/github_trending.py (no pip deps, stdlib only). Use when user asks for 今日热门, 本周热门, 本月热门, GitHub trending, 开源动态, or popular repos. Supports language filter (python/javascript/go/rust etc.) and GITHUB_TOKEN for higher rate limits. 触发词：GitHub、trending、开源、热门项目."
+description: "获取 GitHub 今日/本周/本月热门项目，支持语言过滤 GitHub Trending Monitor. Fetch GitHub trending repos by daily/weekly/monthly period using real GitHub Search API. Runs scripts/github_trending.py (no pip deps, stdlib only). Use when user asks for 今日热门, 本周热门, 本月热门, GitHub trending, 开源动态, or popular repos, AI 项目趋势, AI 排行榜, or AI/LLM repo trends. Supports language filter (python/javascript/go/rust etc.) and an AI/LLM leaderboard mode (`--mode ai`, absorbs the former `github-ai-trends` skill) and GITHUB_TOKEN for higher rate limits. 触发词：GitHub、trending、开源、热门项目、AI 趋势、AI 榜单."
 user-invocable: true
 ---
 
@@ -20,6 +20,9 @@ python scripts/github_trending.py --period weekly --limit 25
 # 本月热门，只看 Python 项目
 python scripts/github_trending.py --period monthly --language python
 
+# AI/LLM 项目榜（原 github-ai-trends 技能并入）
+python scripts/github_trending.py --mode ai --period weekly --limit 20
+
 # 输出 JSON（方便进一步处理）
 python scripts/github_trending.py --period daily --json
 ```
@@ -33,6 +36,7 @@ python scripts/github_trending.py --period daily --json
 | `--language` | `-l` | 全部 | 编程语言过滤，如 `python`、`go`、`rust` |
 | `--token` | `-t` | 环境变量 | GitHub PAT，也可设置 `GITHUB_TOKEN` |
 | `--json` | — | 否 | 输出原始 JSON |
+| `--mode` | `-m` | `general` | `general`=综合热门；`ai`=AI/LLM 项目榜（原 `github-ai-trends` 技能并入） |
 
 ## 提高 API 限额
 

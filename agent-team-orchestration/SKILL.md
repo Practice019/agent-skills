@@ -129,6 +129,20 @@ The orchestrator routes and tracks — it doesn't build. The moment you start "j
 
 This skill is for **sustained team workflows** — recurring collaboration patterns where agents depend on each other's output over multiple tasks.
 
+## 与 `myagents-router` 的分工（不要混用）
+
+两者都涉及多 agent，但**层次不同**，不是重复项：
+
+| | 本技能 | `myagents-router` |
+|---|---|---|
+| 层面 | **方法论**：角色 / 生命周期 / 交接协议 / 评审门禁 | **路由**：把一句用户意图分派到 4 个子技能 |
+| 形态 | 无状态 playbook，跨项目通用 | 有状态（`.task/<MMDD_slug>/` 4 份文档） |
+| 角色数 | 多角色（Orchestrator / Builder / Reviewer / Ops） | 单角色 UserProxy，自己决定何时委派 |
+
+**选哪个**：要**设计一支团队或定协作规范** → 用本技能。要**执行一件已对齐的具体任务** → 走 `myagents-router` → `task-implement`。
+
+> ⚠️ 方法论有意分歧，别互相覆盖：本技能要求「Orchestrator 不亲自干活」（保持监督视野）；而 `task-implement` 要求 UserProxy **亲自处理**强耦合改动（因为它没有团队可指挥）。按当前实际有无团队择一执行。
+
 ---
 
 ## DSH 工具映射与运行说明（本副本补充）

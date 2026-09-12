@@ -26,4 +26,4 @@ description: "元技能：发现并路由到正确的技能类别，提供本技
 ## 子模块
 
 - `using-agent-skills.md` — 全局使用规则与 Skill 发现方法。
-- `find-skills.md` — 在开源技能生态里发现并安装外部技能（Skills CLI：`npx skills find` / `add` / `update`）；本机技能库缺某能力时先走它。
+- `find-skills.md` — 历史说明（已恢复为顶层技能）。发现并安装外部技能请加载**顶层** `find-skills`（`skill find-skills` 或读 `../find-skills/SKILL.md`），它含 DSH 四目录扫描位置表与安装校验流程。

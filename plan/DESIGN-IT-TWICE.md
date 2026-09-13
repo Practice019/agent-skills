@@ -39,7 +39,7 @@ Prompt each sub-agent with a separate technical brief (file paths, coupling deta
 **Every brief must end with the same hard constraint:**
 
 ```text
-⛔ 不要写代码、不要改文件、不要碰 git ——
+⛔ 不要写代码、不要改文件、不要写 git ——
    接口与示例**只写在你的回复正文里**，不要产生任何磁盘文件。
 ```
 

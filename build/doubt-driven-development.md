@@ -100,9 +100,9 @@ CONTRACT: <paste contract>
 
 **Pass ARTIFACT + CONTRACT only. Do NOT pass the CLAIM.** Handing the reviewer your conclusion biases it toward agreement. The reviewer must independently determine whether the artifact satisfies the contract.
 
-In Claude Code, the role-based reviewers in `agents/` start with isolated context by design and are usable here — see `agents/` for the roster and per-domain match.
+**在 DSH 里，这个 reviewer 就是一个「评审档」子代理** —— 干净上下文、只读、只回问题。 派法与提示词模板见 `subagent-tasks.md` 的「评审」一节。
 
-**The adversarial prompt above takes precedence over the persona's default response shape.** Personas like `code-reviewer` are written to produce balanced verdicts with both strengths and weaknesses; doubt-driven needs issues-only output. Paste the adversarial prompt verbatim into the invocation so it overrides the persona's default. If a persona's response shape can't be overridden cleanly, fall back to a generic subagent with the adversarial prompt.
+**The adversarial prompt above takes precedence over any default reviewer style.** Generic reviewers tend to produce balanced verdicts with both strengths and weaknesses; doubt-driven needs issues-only output. Paste the adversarial prompt verbatim into the subagent's prompt so the brief overrides whatever default shape it would otherwise produce.
 
 #### Cross-model escalation
 

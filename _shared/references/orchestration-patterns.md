@@ -1,5 +1,16 @@
 # Orchestration Patterns
 
+> ⚠️ **范围声明：本文件描述的是「persona / slash command」范式（Claude Code 生态），
+> 不是 `plan` + `build` 两个技能使用的模型。**
+>
+> 那两个技能现在的模型是：**主脑自己写代码、自己碰 git、自己拍板；
+> 子代理只做三类轻量任务（探索 / 讨论 / 评审），不写代码、不改文件、不写 git** ——
+> 见 `../../build/subagent-tasks.md`。
+>
+> **本文件目前没有任何技能路由到它**（保留作为历史参考）。
+> 读的时候请把「persona / Agent Teams / parallel fan-out」当作**别的生态的做法**，
+> 不要套用到本工作流上 —— 本工作流已经删除并发派发与 join。
+
 Reference catalog of agent orchestration patterns this repo endorses, plus anti-patterns to avoid. Read this before adding a new slash command that coordinates multiple personas, or before introducing a new persona that "wraps" existing ones.
 
 The governing rule: **the user (or a slash command) is the orchestrator. Personas do not invoke other personas.** Skills are mandatory hops inside a persona's workflow.

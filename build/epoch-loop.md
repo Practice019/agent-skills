@@ -77,8 +77,8 @@ Implement → Test → Verify → Commit → 下一片。它知道"失败很痛"
    先写 `.gitignore` 把追踪范围收窄到交付物路径，再提交基线
 3. 首次 commit = 本任务的起点 checkpoint
 
-> **谁执行 git**：**只有主脑**。子代理不碰 git，也不改任何文件
-> （见 `subagent-tasks.md` 的「三条禁令」）。
+> **谁执行 git**：**写操作只有主脑**。子代理不执行写 git（只读 `log`/`diff`/`status` 可以），
+> 也不改任何文件（见 `subagent-tasks.md` 的「三条禁令」）。
 
 ## 1. 第一层：任务分解（先确认，后执行）
 

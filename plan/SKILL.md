@@ -158,7 +158,31 @@ read codebase-design.md   # 相对本技能目录
 
 ### 9. 落盘 + 同步
 
-- 写 `tasks/plan.md`（目录不存在则创建）—— 跨会话、抗压缩的持久记忆
+**产出两样东西**：人读的索引 + 机器可认领的队列。
+
+**① `tasks/plan.md`** —— 总览：概述、架构决策、任务索引、检查点、风险、能力盘点汇总。
+跨会话、抗压缩的持久记忆。
+
+**② `tasks/queue/pending/`** —— **一项一文件**，供多 agent 认领：
+
+```text
+tasks/
+  plan.md                    ← 总览（人读）
+  queue/
+    pending/   NNN-slug.md   ← 建 plan 时全部落在这里
+    claimed/   review/  blocked/  done/   ← 建空目录，执行时才有内容
+```
+
+**每条任务一个文件**，文件名 `NNN-slug.md`（零填充三位，`NNN` 全局递增）。
+**认领机制、状态机、任务文件格式见 `../build/team-orchestration.md` 的「任务队列与认领」** ——
+不要在 plan 里复制一份，单一来源。
+
+> **为什么拆成一文件一任务**：多 agent 并行时，**同一个 plan.md 被多个 agent 同时改会冲突**。
+> 拆成一文件一任务后，各自认领各自的文件，互不干扰。
+>
+> **编号即优先级**：`NNN` 全局一次分配，执行时**总是认领编号最小的** ——
+> 不需要额外排序逻辑，也不用维护单独的优先级队列。
+
 - 用 `todo_write` 把任务列表写进当前会话 —— 本轮可见、可跟踪进度
 - 若项目指定了外部 tracker（GitHub Issues / Jira / Linear / beads），`tasks/plan.md` 里只保留**有序索引**（ID 或链接），不要两处都维护同一份清单
 

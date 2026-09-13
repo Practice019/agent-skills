@@ -277,3 +277,45 @@ git 历史:<commit 数>,自 <首 hash> 至 <末 hash>,每步可追溯可回滚
   那条讲"改动要易于 revert"（事前设计），本条讲"revert 之后怎么想"（事后动作）
 - **交付物所在目录不是 git 仓库时**，先为它 `git init` 并提交基线，
   否则本文件的全部纪律在该目标上静默失效（见第 0 节）
+
+## 7. DSH 等待语义速查（实测校正）
+
+> **为什么在本文件**：本节是**运行时事实**，不是编排方法论。
+> 它与 epoch 循环是同一个问题的两面 —— **轮内能不能收束**。
+> 其他技能也用得上，故不放在 `team-orchestration.md` 里独占。
+
+| 工具 | 是否阻塞当前轮 | 能否本轮拿到结果 | 适用 |
+|---|---|---|---|
+| **`subagent(run_in_background: false)`** | ✅ **阻塞** —— 不返回直到跑完 | ✅ **能** | **默认首选**；同一轮发多个 = 真并行 |
+| `workflow(...)` | ✅ 前台阻塞 —— 脚本跑完才返回 | ✅ 能 | 大批量 + 脚本化/结构化汇总 |
+| `subagent(run_in_background: true)` | ❌ 不阻塞，立即返回 id | ❌ **不能**（靠推送通知，下一轮） | 不需要本轮结果时 |
+| ~~`job_output(job_id, wait: true)`~~ | ⚠️ 阻塞，但**只对 job id** | — | **实测对子代理无效**（`Error: unknown job`） |
+| `send_message(agent_id, ...)` | 不阻塞（仅投递） | — | 中途 steer；也可唤醒 idle 子代理 |
+| `interrupt_agent(agent_id)` | 立即返回（请求取消） | — | 超时兜底 |
+
+### 实测记录（本机验证，勿凭推断覆盖）
+
+```text
+① 同一轮发 2 个 subagent(run_in_background: false)，各 sleep 20s：
+     A start=14:14:07.978 end=14:14:27.995
+     B start=14:14:08.620 end=14:14:28.645
+   → start 差 0.64s / end 差 0.65s / 总耗时 20s（非 40s）
+   → 结论：默认模式天然并行，且全部完成后才返回
+
+② subagent(run_in_background: true) 返回：
+     "started subagent 4d5d7a4f-..."
+   → 只给 id，无结果；结果随后由 runtime 推通知
+
+③ job_output("cf1c9d11-...", wait:true) 其中 id 来自 subagent：
+     Error: unknown job cf1c9d11-...
+   → 结论：subagent id ≠ job id，job_output 不能用于子代理
+```
+
+**关键区分**：`job_output` 的 id 来自"**启动了后台作业的那个工具**"
+（例如 `pwsh(run_in_background: true)`）；而 `subagent` 返回的是 **subagent id**，
+**两者不通用**。
+
+> **要并行又要在本轮拿到结果 → 同一轮发多个 `run_in_background: false`。**
+> 不要用 `true` 然后再想办法"等" —— 那个"等"不存在。
+
+**没有"跳过本轮"的信号** —— 这正是必须在轮内 join 的原因。

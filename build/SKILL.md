@@ -389,6 +389,7 @@ L3 的清单有**两类**，处理方式不同：
 | **决定开几个 agent / 派发数量** | `team-orchestration.md` 的「并发数量」 |
 | **该不该问人 / 内部决策怎么定** | `team-orchestration.md` 的「决策权分层」 |
 | **崩溃后 / 会话中断后恢复** | `team-orchestration.md` 的「孤儿任务恢复」 |
+| **哪个工具会阻塞 / 本轮能否拿到结果** | `epoch-loop.md` 的「DSH 等待语义速查」（第 7 节） |
 | **任务声称完成前的项目级验收** | `../_shared/references/definition-of-done.md` |
 | 任务触及认证 / 输入 / 数据出口 | `../_shared/references/security-checklist.md` |
 | 有性能指标要求 | `../_shared/references/performance-checklist.md` |
@@ -586,8 +587,8 @@ L3 的清单有**两类**，处理方式不同：
 |---|---|
 | `incremental-implementation.md` | 增量实现主流程（薄垂直切片、切片策略、实现规则） |
 | `test-driven-development.md` | 测试驱动开发（RED-GREEN-REFACTOR、Prove-It、测试金字塔） |
-| `epoch-loop.md` | **通用外层循环**（git 基线、任务分解、双粒度 checkpoint、失败回退）**每次都用** |
-| `team-orchestration.md` | **多智能体编排**（角色、**任务队列与认领**、**并发数量**、Git 归属、生命周期、交接、评审、goal/join 纪律） |
+| `epoch-loop.md` | **通用外层循环**（git 基线、任务分解、三级验证、失败回退、**DSH 等待语义速查**）**每次都用** |
+| `team-orchestration.md` | **多智能体编排**（**12 步执行骨架**、角色、两类子代理、决策权分层、任务队列与认领、依赖处理、孤儿恢复、并发数量、评审门禁、goal/join、委派模板） |
 | `context-engineering.md` | 上下文工程 |
 | `source-driven-development.md` | 基于官方文档开发 |
 | `doubt-driven-development.md` | 对抗性复查 |

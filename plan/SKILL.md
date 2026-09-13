@@ -443,7 +443,7 @@ create_goal(objective="<见下方模板>")
 - [ ] 用户已确认计划
 - [ ] **任务数 ≥2 时已 `create_goal`，且 objective 内含「每轮先读任务清单」纪律**
 - [ ] **每个任务标出了它要过的非功能清单**（安全/性能/可观测/无障碍，按特征挂载；
-      任何任务都过 `definition-of-done.md`）—— 「完成 = 已验证」见该文件的完成定义
+      任何任务都过 `../_shared/references/definition-of-done.md`）—— 「完成 = 已验证」见该文件的完成定义
 
 ## 常见坑
 

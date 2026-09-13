@@ -4,7 +4,7 @@ When the user wants to explore alternative interfaces for a chosen deepening can
 
 Uses the vocabulary in [codebase-design.md](codebase-design.md): **module**, **interface**, **seam**, **adapter**, **leverage**.
 
-> ⛔ **子代理只回文字。** 派出去的子代理**不写代码、不改文件、不碰 git** ——
+> ⛔ **子代理只回文字。** 派出去的子代理**不写代码、不改文件、不写 git**（只读 git 可以）——
 > 接口签名与用法示例写在**回复正文里**，由主脑自己落笔实现
 > （见 `../build/subagent-tasks.md`）。
 

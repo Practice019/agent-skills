@@ -35,6 +35,12 @@ _shared/
 | `security-checklist.md` | 10 | **内容差异**：`build/references/` 版多出 `Threat Modeling (Start Here)`、`Install-Script Gate`、`AI / LLM Security`、`OWASP Top 10 for LLMs` 四节 | `build/references/`（超集） |
 | `testing-patterns.md` | 8 | **内容差异**：`build/references/` 版使用新版 Playwright 选择器（`getByRole` / `getByLabel`），`build/support/` 版是旧的 `page.fill('[name=...]')` | `build/references/`（更新） |
 
+> ⚠️ **上表「取用版本」列的 `build/references/` 已不存在。**
+> 那是 2026-09-09 做单一来源裁决**当时**的取用来源。
+> 这 7 个文件**现已统一落在本目录**（`_shared/references/`），
+> 各技能一律用 `../_shared/references/<文件>` 引用。
+> **上表保留为裁决记录，不是当前路径 —— 不要按它去找 `build/references/`。**
+
 ## 校验器
 
 ```powershell

@@ -1,7 +1,7 @@
 ---
 name: build
 description: "Build 路由技能：**主脑自己写代码**实现已规划的任务 —— 先挂持久目标（多轮或跨轮推进时立刻 create_goal，不要问），再建 git 基线、套 epoch 训练循环（原子改进→真实验证→通过 commit 固化 / 失败 reset 换思路，子问题级与轮次级双粒度 checkpoint），验证分 L1/L2/L3 三级。子代理**只做轻量任务**：探索代码、讨论方案、对抗评审 —— 全部只读、只回文字；**子代理不写代码、不改文件、不碰 git**，代码由主脑自己敲。当进入某个已规划任务的编码实现时使用；也用于任何挂持久目标（goal）、需要派子代理探索或讨论、或长任务跨轮推进的场景。（触发词：写代码、实现、build、git 基线、epoch 循环、挂 goal、创建目标、持久目标、子代理、探索、调研、讨论、评审、拿不准、多个方案、长任务、一直循环、空转、继续这个任务。）Build router: the orchestrator writes the code itself, after attaching a persistent goal for multi-round work (call create_goal immediately when the task spans rounds — do not ask), establishing a git baseline, and running the epoch loop (atomic improvement -> real verification -> commit on pass / reset and change approach on fail). Three verification tiers: L1/L2/L3. Subagents do lightweight work only — explore the codebase, discuss options, adversarially review — always read-only and text-only; they never write code, never edit files, and never touch git. Use when implementing an already-planned task, when a persistent goal is attached, when a subagent should explore or be consulted, or when a long task spans multiple rounds. Covers incremental implementation, TDD triage, context engineering, source-driven development, and doubt-driven review."
-whenToUse: "上游 plan 已产出 tasks/plan.md、准备动手实现时。含：单任务实现、跨轮 epoch 推进、以及需要子代理讨论定夺的技术决策。不适用于：需求还没拆（回 plan）、只是问答（无 goal 无计划）。"
+whenToUse: "上游 plan 已产出 tasks/plan.md、准备动手实现时。含：单任务实现、跨轮 epoch 推进、以及需要子代理探索或讨论定夺的技术决策（单任务通常不建 goal，也照走）。不适用于：需求还没拆（回 plan）、纯问答不改文件的（无计划）。"
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -58,7 +58,7 @@ disable-model-invocation: false
 > ★ **探索是子代理最主要的用途** —— 让子代理去读 20 个文件、只带回 5 行结论，
 > 主脑的上下文里就只多了那 5 行。**这是主脑省上下文的关键手段。**
 
-> ⛔ **子代理的三条禁令**：不写代码、不改文件、不碰 git。
+> ⛔ **子代理的三条禁令**：不写代码、不改文件、**不写 git**（只读 git 可以）。
 > 违反了就是角色越界 —— 主脑会失去对工作区的唯一写权。
 > 完整规则（三类任务、提示词模板、决策权分层）见 `subagent-tasks.md`。
 

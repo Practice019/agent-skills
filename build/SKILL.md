@@ -223,6 +223,12 @@ for 子问题 in 分解出的序列:
 | 高风险/不确定决策，需要对抗性复查 | `doubt-driven-development.md` |
 | **多 agent 并行 / 派发子代理 / 任务认领 / 队列** | `team-orchestration.md` 的「任务队列与认领」 |
 | **决定开几个 agent / 派发数量** | `team-orchestration.md` 的「并发数量」 |
+| **崩溃后 / 会话中断后恢复** | `team-orchestration.md` 的「孤儿任务恢复」 |
+| **任务声称完成前的项目级验收** | `../_shared/references/definition-of-done.md` |
+| 任务触及认证 / 输入 / 数据出口 | `../_shared/references/security-checklist.md` |
+| 有性能指标要求 | `../_shared/references/performance-checklist.md` |
+| 需要日志 / 指标 / 追踪 | `../_shared/references/observability-checklist.md` |
+| 碰前端 UI | `../_shared/references/accessibility-checklist.md` |
 | 失败，需要系统排查 | `../verify/debugging-and-error-recovery.md` |
 
 **切片内的执行顺序**（降级为单 agent 时，或作为 Builder 子代理时）：

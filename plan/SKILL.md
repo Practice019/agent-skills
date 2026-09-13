@@ -332,6 +332,9 @@ create_goal(objective="<见下方模板>")
 - [ ] 已写入 `tasks/plan.md`，并同步到会话 todo 列表
 - [ ] 用户已确认计划
 - [ ] **任务数 ≥2 时已 `create_goal`，且 objective 内含「每轮必读队列」纪律**
+- [ ] **每个任务标出了它要过的非功能清单**（安全/性能/可观测/无障碍，按特征挂载；
+      任何任务都过 `definition-of-done.md`）—— 见 `../build/team-orchestration.md`
+      的「完成 = 已验证（含非功能项）」
 
 ## 常见坑
 

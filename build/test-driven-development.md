@@ -309,7 +309,9 @@ describe('TaskService', () => {
 For anything that runs in a browser, unit tests alone aren't enough — you need runtime verification.
 
 > ⚠️ **前提：本环境确实有浏览器自动化工具**（DevTools MCP / Playwright / 同类能力）。
-> 没有的话，**别假装做过浏览器验证** —— 把这一项如实写进「交给人验收」的清单，
+> 没有的话，**先看主脑自己能不能截** —— 无头 Chrome / playwright 本机可用
+> （见 `SKILL.md` 的「最后一次：交给人跑端到端」）。**视觉验证是 agent 能做的事，
+> 不该推给人。**只有真的截不了，才如实写进「请人跑一次端到端」的清单，
 > 或先按 `../verify/browser-testing-with-devtools.md` 把工具装上。
 > **本工作流里最严重的错误就是「声称验过但没验」。**
 

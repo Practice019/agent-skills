@@ -119,11 +119,17 @@ Arrange tasks so that:
 Add explicit checkpoints to the plan document:
 
 ```markdown
-> **Checkpoint: after T1–T3** — all must hold, then **get human confirmation before continuing**
-> - [ ] All tests pass
+> **Checkpoint: after T1–T3** — an **agent-run gate, not a human stop**
+> - [ ] All tests pass (run L2: affected packages ∪ reverse deps)
 > - [ ] Application builds without errors
-> - [ ] Core user flow works end-to-end
-> - [ ] **Human confirmed** — do not continue until this one holds
+> - [ ] Core user flow **runs — verify it yourself** (for any UI: screenshot + `read_image`)
+> - [ ] `tasks/plan.md` checkboxes written back
+
+> ⛔ **A checkpoint is NOT "wait for a human to sign off"** — it is the orchestrator
+> finishing the verification it can do on its own. **Human verification happens ONCE,
+> at the very end, as a single end-to-end run** (see the pre-delivery gate in
+> `../build/SKILL.md`). Stopping at every checkpoint pushes agent-doable work onto the
+> human and chops the pipeline into pieces that each wait for someone to come back.
 ```
 
 > ⚠️ Checkpoints are **blockquotes, not headings with sibling checkboxes** — see the scan rule above.
@@ -194,13 +200,13 @@ When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked 
 - [ ] **T1** ... · Size S · Depends on —
 - [ ] **T2** ... · Size M · Depends on T1
 
-> **Checkpoint: Foundation** — tests pass, builds clean → **get human confirmation before continuing**
+> **Checkpoint: Foundation** — tests pass, builds clean → **orchestrator self-check, then continue (no human stop)**
 
 ### Phase 2: Core Features
 - [ ] **T3** ... · Size M · Depends on T2
 - [ ] **T4** ... · Size M · Depends on T2
 
-> **Checkpoint: Core Features** — end-to-end flow works → **get human confirmation before continuing**
+> **Checkpoint: Core Features** — end-to-end flow works → **orchestrator self-check, then continue (no human stop)**
 
 ### Phase 3: Polish
 - [ ] **T5** ... · Size S · Depends on T4

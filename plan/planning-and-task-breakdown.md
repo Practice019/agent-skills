@@ -25,7 +25,7 @@ Before writing any code, operate in read-only mode:
 - Map dependencies between components
 - Note risks and unknowns
 
-**Do NOT write code during planning.** The output is a plan document saved to `tasks/plan.md` and a task list recorded in the task list target (see Output Files; default `tasks/todo.md`), not implementation.
+**Do NOT write code during planning.** The output is a plan document saved to `tasks/plan.md` and a task list recorded in the task list target (see Output Files; default: a section in `tasks/plan.md`), not implementation.
 
 ### Step 2: Identify the Dependency Graph
 
@@ -146,8 +146,12 @@ Create the `tasks/` directory if it does not exist.
 
 The task list target is where tasks and checkpoints are recorded. It is defined once, here; every other reference in this skill defers to it.
 
-- **Default: a checklist-style markdown file at `tasks/todo.md`.** This is the convention the `/build` command and other downstream tooling expect. Use it unless the project says otherwise.
-- **External tracker:** if the project's agent rules (`CLAUDE.md`, `AGENTS.md`, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, `bd`/beads), create one tracker item per task instead of writing `tasks/todo.md`. Map the Step 4 structure onto the tracker's fields: acceptance criteria and verification steps in the item body, dependencies via the tracker's linking mechanism (`bd dep add`, "blocked by", etc.). Record Step 5 checkpoints as tracker items too, or as a checklist in the plan document if the tracker has no natural equivalent.
+- **Default: a section inside `tasks/plan.md`.** That is the single file `build` reads — it takes the **lowest-numbered unfinished task** as the next epoch. There is no separate task file.
+- **External tracker:** if the project's agent rules (`AGENTS.md`, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, `bd`/beads), create one tracker item per task, and keep `tasks/plan.md`'s Task List section as an **ordered index of item IDs or links** rather than a duplicate checklist. Map the Step 4 structure onto the tracker's fields: acceptance criteria and verification steps in the item body, dependencies via the tracker's linking mechanism (`bd dep add`, "blocked by", etc.). Record Step 5 checkpoints as tracker items too, or as a checklist in the plan document if the tracker has no natural equivalent.
+
+> ⛔ **不要另建 `tasks/todo.md`。** 清单文件一旦分裂，`build` 每轮开头读到的
+> 就是另一份、或根本不存在的那一份 —— 而且**不报错，只空转**，
+> 正是本工作流最想治的病。**任务清单的单一权威 = `tasks/plan.md`。**
 
 When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked in Linear project FOO") so downstream steps and future sessions know where to look, and keep the plan document's Task List section as an ordered index of tracker item IDs or links rather than a duplicate checklist.
 
@@ -221,7 +225,7 @@ and lets you **reorder around a blocked item** instead of stalling on it.
 ## Red Flags
 
 - Starting implementation without a written task list
-- Writing `tasks/todo.md` when the project has designated an external tracker (or scattering tasks across both)
+- Scattering tasks between `tasks/plan.md` and a second file (the list must have one authority)
 - Tasks that say "implement the feature" without acceptance criteria
 - No verification steps in the plan
 - All tasks are XL-sized
@@ -235,7 +239,7 @@ Before starting implementation, confirm:
 - [ ] Every task has acceptance criteria
 - [ ] Every task has a verification step
 - [ ] Task dependencies are identified and ordered correctly
-- [ ] Tasks are recorded in the task list target (default `tasks/todo.md`)
+- [ ] Tasks are recorded in the task list target (default: a section in `tasks/plan.md`)
 - [ ] No task touches more than ~5 files
 - [ ] Checkpoints exist between major phases
 - [ ] The human has reviewed and approved the plan

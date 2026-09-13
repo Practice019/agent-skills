@@ -95,7 +95,7 @@ Each task follows this structure, whether it lands in the markdown task list or 
 - `src/path/to/file.ts`
 - `tests/path/to/test.ts`
 
-**Estimated scope:** [Small: 1-2 files | Medium: 3-5 files | Large: 5+ files]
+**Estimated scope:** [Small: 1-2 files | Medium: 3-5 files | Large: 5-8 files | XL: 8+ — must be split further]
 ```
 
 ### Step 5: Order and Checkpoint

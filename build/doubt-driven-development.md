@@ -36,10 +36,13 @@ If you doubt every keystroke, you ship nothing. The skill applies only to non-tr
 
 ## Loading Constraints
 
-This skill is designed for the **main-session orchestrator**, where Step 3 (DOUBT, detailed below) can spawn a fresh-context reviewer.
+**在主会话（主脑）里应用这个技能** —— 只有这里能派 Step 3 的**评审档**子代理。
 
-- **Do NOT add this skill to a persona's `skills:` frontmatter.** A persona that follows Step 3 would spawn another persona — the orchestration anti-pattern explicitly forbidden by `../_shared/references/orchestration-patterns.md` ("personas do not invoke other personas").
-- **If you find yourself applying this skill from inside a subagent context** (where Claude Code prevents nested subagent spawn): the preferred path is to surface to the user that doubt-driven cannot run nested and let the main session handle it. As a last resort only, a degraded self-questioning fallback exists — rewrite ARTIFACT + CONTRACT as a fresh self-prompt with a hard mental separator from your prior reasoning, and walk Steps 1–5. This is **not fresh-context review** (you carry your own context with you), so flag the result as degraded and prefer escalation whenever the user is reachable.
+- **不要从子代理内部应用它。** 子代理只有三类轻量任务（探索 / 讨论 / 评审），
+  它**不再往下派** —— 顾问套顾问收益趋近于零，还会把上下文翻倍。
+  如果你（作为子代理）发现自己需要这个技能：**把情况回报给主脑，由主会话来做**。
+- **不做「自我质疑」的降级代替品。** 自己复查自己在第 1 步就带着原判断，
+  那不是干净上下文 —— 与其降级成心理分隔，不如直接说明「本次未做独立评审」。
 
 ## The Process
 
@@ -221,7 +224,7 @@ If 3 cycles is "obviously insufficient" because the artifact is large: the artif
 - **`source-driven-development`**: SDD verifies *facts about frameworks* against official docs. Doubt-driven verifies *your reasoning about the artifact*. SDD checks the API exists; doubt-driven checks you used it correctly under the contract.
 - **`test-driven-development`**: TDD's RED step is doubt made concrete — a failing test is a disproof attempt. When TDD applies, that failing test *is* the doubt step for behavioral claims.
 - **`debugging-and-error-recovery`**: when the reviewer surfaces a real failure mode, drop into the debugging skill to localize and fix.
-- **Repo orchestration rules** (`../_shared/references/orchestration-patterns.md`): this skill orchestrates from the main session. A persona calling another persona is anti-pattern B — see Loading Constraints above.
+- **子代理分工规则**（`subagent-tasks.md`）：这个技能由**主脑**应用，评审档子代理是被派的一方；**子代理不再往下派**（见上方 Loading Constraints）。
 
 ## Verification
 

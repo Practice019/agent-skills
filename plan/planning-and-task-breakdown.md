@@ -73,30 +73,36 @@ Each vertical slice delivers working, testable functionality.
 
 ### Step 4: Write Tasks
 
-Each task follows this structure, whether it lands in the markdown task list or as an item in an external tracker (see Output Files):
+Each task has **two shapes** — a scannable one-line entry in the task list, plus an
+optional detail block beneath it:
 
 ```markdown
-## Task [N]: [Short descriptive title]
+- [ ] **T3** Short descriptive title · Size M · Depends on T1
 
-**Description:** One paragraph explaining what this task accomplishes.
+      **Description:** One paragraph explaining what this accomplishes.
 
-**Acceptance criteria:**
-- [ ] [Specific, testable condition]
-- [ ] [Specific, testable condition]
+      **Acceptance criteria:**
+      - [Specific, testable condition]
+      - [Specific, testable condition]
 
-**Verification:**
-- [ ] Tests pass: [the repository's focused-test command]
-- [ ] Build succeeds: [the repository's build command]
-- [ ] Manual check: [description of what to verify]
+      **Verification (three tiers — do NOT run the full suite every round):**
+      - **L1 every round:** [focused compile/typecheck + related tests]
+      - **L2 on sub-problem done:** [affected packages ∪ reverse deps] + build
+      - **L3 before delivery:** machine-decidable non-functional checks
 
-**Dependencies:** [Task numbers this depends on, or "None"]
+      **Dependencies:** [T-numbers, or "None"]
 
-**Files likely touched:**
-- `src/path/to/file.ts`
-- `tests/path/to/test.ts`
+      **Files likely touched:**
+      - `src/path/to/file.ts`
 
-**Estimated scope:** [Small: 1-2 files | Medium: 3-5 files | Large: 5-8 files | XL: 8+ — must be split further]
+      **Estimated scope:** [S: 1-2 files | M: 3-5 files | L: 5-8 files | XL: 8+ — must be split further]
 ```
+
+> ⛔ **The only checkbox that means "this task is not done yet" is the `- [ ] **T<n>**` line.**
+> `build` finds the next epoch by scanning for the **lowest-numbered unchecked `- [ ] **T<n>**`**.
+> Sub-items under a task, checkpoints, open questions, and self-check lists also use
+> checkboxes — **they are not tasks**, and the scan must exclude them (otherwise it
+> will try to "start" a checkpoint).
 
 ### Step 5: Order and Checkpoint
 
@@ -107,15 +113,18 @@ Arrange tasks so that:
 3. Verification checkpoints occur after every 2-3 tasks
 4. High-risk tasks are early (fail fast)
 
-Add explicit checkpoints to the task list target:
+Add explicit checkpoints to the plan document:
 
 ```markdown
-## Checkpoint: After Tasks 1-3
-- [ ] All tests pass
-- [ ] Application builds without errors
-- [ ] Core user flow works end-to-end
-- [ ] Review with human before proceeding
+> **Checkpoint: after T1–T3** — all must hold, then **get human confirmation before continuing**
+> - [ ] All tests pass
+> - [ ] Application builds without errors
+> - [ ] Core user flow works end-to-end
+> - [ ] **Human confirmed** — do not continue until this one holds
 ```
+
+> ⚠️ Checkpoints are **blockquotes, not headings with sibling checkboxes** — see the scan rule above.
+> A checkpoint is never a task that `build` can start.
 
 ## Task Sizing Guidelines
 
@@ -169,27 +178,26 @@ When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked 
 
 ## Task List
 
-### Phase 1: Foundation
-- [ ] Task 1: ...
-- [ ] Task 2: ...
+> ⚠️ Checkboxes are **only** for tasks, and the format is fixed: `- [ ] **T<n>**`.
+> Checkpoints are blockquotes. (See the scan rule in Step 4.)
 
-### Checkpoint: Foundation
-- [ ] Tests pass, builds clean
+### Phase 1: Foundation
+- [ ] **T1** ... · Size S · Depends on —
+- [ ] **T2** ... · Size M · Depends on T1
+
+> **Checkpoint: Foundation** — tests pass, builds clean → **get human confirmation before continuing**
 
 ### Phase 2: Core Features
-- [ ] Task 3: ...
-- [ ] Task 4: ...
+- [ ] **T3** ... · Size M · Depends on T2
+- [ ] **T4** ... · Size M · Depends on T2
 
-### Checkpoint: Core Features
-- [ ] End-to-end flow works
+> **Checkpoint: Core Features** — end-to-end flow works → **get human confirmation before continuing**
 
 ### Phase 3: Polish
-- [ ] Task 5: ...
-- [ ] Task 6: ...
+- [ ] **T5** ... · Size S · Depends on T4
+- [ ] **T6** ... · Size S · Depends on T4
 
-### Checkpoint: Complete
-- [ ] All acceptance criteria met
-- [ ] Ready for review
+> **Checkpoint: Complete** — all acceptance criteria met, ready for review
 
 ## Risks and Mitigations
 | Risk | Impact | Mitigation |

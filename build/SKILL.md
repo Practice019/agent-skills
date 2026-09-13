@@ -1,6 +1,9 @@
 ---
 name: build
-description: "Build 路由技能：每次任务先建 git 基线、套 epoch 训练循环（原子改进→真实验证→通过 commit 固化 / 失败 reset 换思路，子问题级与轮次级双粒度 checkpoint），并默认多 agent 编排（改动跨文件/跨模块或需并行探索与独立评审时派 Builder 子代理，仅单文件单函数级改动才显式降级）；再读对应资源文件执行。含增量实现、TDD、上下文工程、来源校验、对抗复查、前端与 API 设计。当进入某个已规划任务的编码实现时使用；也用于任何挂持久目标（goal）、派子代理/delegation、或长任务跨轮推进的场景——此时必须按 team-orchestration.md 的「Goal 自挂 + 轮内收束」执行：在轮内把子代理 join 干净，未 join 完不得结束本轮，否则 goal 会空烧轮次。（触发词：挂 goal、创建目标、持久目标、子代理、子智能体、delegation、委派、并行 agent、多 agent、编排、分工、长任务、一直循环、空转、等子代理、goal 不等待、继续这个任务。）Build router: always establish a git baseline and run the epoch training loop (atomic improvement -> real verification -> commit on pass / reset and change approach on fail, with sub-problem-level and round-level checkpoints), orchestrating Builder subagents by default. Also use whenever a persistent goal is attached, subagents are delegated to, or a long task spans multiple rounds — in that case follow the Goal + in-round join discipline in team-orchestration.md: join every subagent within the round and never end a round with unfinished joins, or the goal will burn empty rounds. Covers incremental implementation, TDD, context engineering, source-driven development, doubt-driven review, frontend and API design."
+description: "Build 路由技能：多轮任务先挂持久目标（≥2 个委派批次或跨轮推进时立刻 create_goal，不要问），再建 git 基线、套 epoch 训练循环（原子改进→真实验证→通过 commit 固化 / 失败 reset 换思路，子问题级与轮次级双粒度 checkpoint），并默认多 agent 编排（改动跨文件/跨模块或需并行探索与独立评审时派 Builder 子代理，仅单文件单函数级改动才显式降级）；任务从 tasks/queue/ 认领，并发上限 3-5。当进入某个已规划任务的编码实现时使用；也用于任何挂持久目标（goal）、派子代理/delegation、或长任务跨轮推进的场景——此时必须按 team-orchestration.md 的「Goal 自挂 + 轮内收束」执行：在轮内把子代理 join 干净，未 join 完不得结束本轮，否则 goal 会空烧轮次。（触发词：挂 goal、创建目标、持久目标、子代理、子智能体、delegation、委派、并行 agent、多 agent、编排、分工、长任务、一直循环、空转、等子代理、goal 不等待、继续这个任务。）Build router: attach a persistent goal first for multi-round work (call create_goal immediately when there are 2+ delegation batches or the task spans rounds — do not ask), then establish a git baseline and run the epoch training loop (atomic improvement -> real verification -> commit on pass / reset and change approach on fail, with sub-problem-level and round-level checkpoints), orchestrating Builder subagents by default and claiming tasks from tasks/queue/ with a concurrency cap of 3-5. Also use whenever a persistent goal is attached, subagents are delegated to, or a long task spans multiple rounds — in that case follow the Goal + in-round join discipline in team-orchestration.md: join every subagent within the round and never end a round with unfinished joins, or the goal will burn empty rounds. Covers incremental implementation, TDD, context engineering, source-driven development, doubt-driven review, frontend and API design."
+whenToUse: "上游 plan 已产出 tasks/queue/ 与 tasks/plan.md、准备动手实现时。含三类形态：多 agent 编排（默认）、单 agent（降级）、以及跨轮 epoch 推进。不适用于：需求还没拆（回 plan）、只是问答（无 goal 无队列）。"
+user-invocable: true
+disable-model-invocation: false
 ---
 
 # Build（构建阶段 · 路由）
@@ -54,7 +57,7 @@ git rev-parse --is-inside-work-tree   # exit 128 = 不是仓库
 | **单 agent**（降级后） | 单文件/单函数级改动 | `incremental-implementation.md` |
 
 **注意：epoch 循环不在这张表里** —— 它是包在所有形态外面的**通用外层循环**
-（见第三步），多 agent 和单 agent 都要走。
+（见第四步），多 agent 和单 agent 都要走。
 
 ### 降级规则：什么算「单文件 / 单函数」级
 
@@ -77,7 +80,45 @@ git rev-parse --is-inside-work-tree   # exit 128 = 不是仓库
 > **形态互斥**：同一时刻只有一条分支被激活。
 > 你是编排者就不亲自 build；你要亲手写代码就走单 agent 流程，别套用编排角色。
 
-## 第三步：套上 epoch 循环（所有形态通用）
+## 第三步：挂 goal（多轮任务必做）
+
+### 判定：什么时候建
+
+**多轮任务就建 —— 不要问用户，直接建。**
+
+| 条件（任一命中） | 动作 |
+|---|---|
+| 预计 ≥2 个委派批次 | **立刻** `create_goal(objective=...)` |
+| 需要跨轮推进（本轮做不完） | **立刻** `create_goal(objective=...)` |
+| 队列里 pending 任务 ≥2 个 | **立刻** `create_goal(objective=...)` |
+| 单轮内能收束（1 批委派 + 汇总） | 不建，直接做完 |
+| 用户在等一个即时答案 | 不建 |
+
+**只在主会话建**：`create_goal` 拒绝子代理调用（subagent authority），
+所以这一步必须在 Orchestrator 会话里做。
+
+### 怎么建
+
+```text
+create_goal(objective="<可验证的终点，不是步骤>")
+```
+
+- objective 写**达成什么**（如"登录模块可用且测试全绿"），
+  **不要**写"调用谁/分几步"（那是 plan 的事）
+- objective 要能被最终验证判定 —— 与 `plan` 的验收标准对齐
+
+### 建完之后
+
+**不要再向用户确认"要不要继续"**，直接推进。
+每轮开始先读 `tasks/queue/` 判断该派发、该 join、还是该收工
+（见 `team-orchestration.md` 的「与 goal 的配合」）。
+
+> ⚠️ **这是本技能最容易被漏掉的一步。** 只读到"Goal 自挂"这几个字
+> 而没实际调用 `create_goal`，就等于没有挂 —— 症状是：主会话一直开新轮、
+> 每轮都不知道在等谁，**空烧轮次**。看到"goal"这个词不等于建了 goal，
+> **必须真的调用工具。**
+
+## 第四步：套上 epoch 循环（所有形态通用）
 
 **无论多 agent 还是单 agent，都必须套这层循环。** 读 `epoch-loop.md`：
 
@@ -104,7 +145,7 @@ for 子问题 in 分解出的序列:
 > ★ 失败回退分支只在 `epoch-loop.md` 完整展开；
 > `incremental-implementation.md` 是切片内的局部循环，两者配合使用。
 
-## 第四步：按任务类型加载子模块
+## 第五步：按任务类型加载子模块
 
 无论哪种形态，命中下列情况时读对应文件：
 
@@ -129,7 +170,7 @@ for 子问题 in 分解出的序列:
 5. 失败 → 读 `../verify/debugging-and-error-recovery.md` 系统排查。
 6. 完成一个切片后提交，再进下一个。
 
-> 这层管"**切片内怎么写**"；第三步的 epoch 循环管"**跨轮怎么推进与回退**"。
+> 这层管"**切片内怎么写**"；第四步的 epoch 循环管"**跨轮怎么推进与回退**"。
 > 两层同时生效，不互相替代。
 
 ## 编排形态（默认路径）

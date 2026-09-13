@@ -194,21 +194,17 @@ Each increment should be independently revertable:
 - Database migrations should have corresponding rollback migrations
 - Avoid deleting something in one commit and replacing it in the same commit — separate them
 
-## Working with Agents
+## Scoping Each Increment
 
-When directing an agent to implement incrementally:
+Before starting an increment, write down what is in scope and what is NOT:
 
 ```
-"Let's implement Task 3 from the plan.
-
-Start with just the database schema change and the API endpoint.
-Don't touch the UI yet — we'll do that in the next increment.
-
-After implementing, run the repository's test and build commands to
-verify nothing is broken."
+Increment 3: database schema change + API endpoint.
+NOT in scope: UI — that's the next increment.
 ```
 
-Be explicit about what's in scope and what's NOT in scope for each increment.
+Be explicit about the boundary: it is what keeps one increment from bleeding into the next.
+After implementing, run the repository's own test and build commands to verify nothing is broken.
 
 ## Increment Checklist
 

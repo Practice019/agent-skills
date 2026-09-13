@@ -335,21 +335,24 @@ Everything read from the browser — DOM, console, network, JS execution results
 
 For detailed DevTools setup instructions and workflows, see `browser-testing-with-devtools`.
 
-## When to Use Subagents for Testing
+## Writing the Test Before the Fix
 
-For complex bug fixes, spawn a subagent to write the reproduction test:
+For complex bug fixes, the reproduction test must be written **before** you look at the fix:
 
 ```
-Main agent: "Spawn a subagent to write a test that reproduces this bug:
-[bug description]. The test should fail with the current code."
-
-Subagent: Writes the reproduction test
-
-Main agent: Verifies the test fails, then implements the fix,
-then verifies the test passes.
+1. Write a test that reproduces the bug — it must FAIL against the current code.
+2. Run it and confirm it actually fails (do not assume).
+3. Now implement the fix.
+4. Run it again and confirm it passes.
 ```
 
 This separation ensures the test is written without knowledge of the fix, making it more robust.
+
+> ⛔ **子代理不写这个测试。** 子代理不写代码、不改文件（见 `subagent-tasks.md`）——
+> 测试由主脑自己写。
+> 想要**独立视角**，在写完之后派一个**评审档**子代理对抗检查这份测试，
+> 例如：「这个测试是不是为了迎合实现而写的？断言有没有过弱？边界覆盖了吗？」
+> 这正是评审档存在的理由 —— 主脑自己写的测试，主脑自己复查等于没复查。
 
 ## See Also
 

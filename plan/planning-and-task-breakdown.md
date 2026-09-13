@@ -8,7 +8,7 @@ Decompose work into small, verifiable tasks with explicit acceptance criteria. G
 
 - You have a spec and need to break it into implementable units
 - A task feels too large or vague to start
-- Work needs to be parallelized across multiple agents or sessions
+- Work needs a deliberate order (what must come before what)
 - You need to communicate scope to a human
 - The implementation order isn't obvious
 
@@ -198,13 +198,16 @@ When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked 
 
 When tasks live in an external tracker, keep the Task List section above as an ordered index of tracker item IDs or links instead of a duplicate checklist.
 
-## Parallelization Opportunities
+## Sequencing: What Can Be Reordered
 
-When multiple agents or sessions are available:
+Single writer, so this is not about parallelism — it is about **order and batching**:
 
-- **Safe to parallelize:** Independent feature slices, tests for already-implemented features, documentation
-- **Must be sequential:** Database migrations, shared state changes, dependency chains
-- **Needs coordination:** Features that share an API contract (define the contract first, then parallelize)
+- **Independent (any order):** feature slices that don't share files, tests for already-implemented features, documentation
+- **Must be sequential:** database migrations, shared state changes, dependency chains
+- **Needs its contract first:** features that share an API contract — define the contract, then implement either side
+
+Knowing what is independent lets you **batch** related work together (fewer context switches),
+and lets you **reorder around a blocked item** instead of stalling on it.
 
 ## Common Rationalizations
 

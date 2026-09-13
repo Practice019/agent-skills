@@ -16,16 +16,19 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
 ## The Increment Cycle
 
 ```
-┌──────────────────────────────────────┐
-│                                      │
-│   Implement ──→ Test ──→ Verify ──┐  │
-│       ▲                           │  │
-│       └───── Commit ◄─────────────┘  │
-│              │                       │
-│              ▼                       │
-│          Next slice                  │
-│                                      │
-└──────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│                                                        │
+│   Implement ──→ Test ──→ Verify ──┬──→ Commit ─────┐   │
+│       ▲                           │                │   │
+│       │                           │                ▼   │
+│       │                      ★ fail           Next slice│
+│       │                           │                    │
+│       │                           ▼                    │
+│       │                    Revert to baseline          │
+│       └──── change approach ◄─────┘                    │
+│              (NOT retry the same way)                  │
+│                                                        │
+└────────────────────────────────────────────────────────┘
 ```
 
 For each slice:
@@ -35,6 +38,22 @@ For each slice:
 3. **Verify** — confirm the slice works as expected (tests pass, build succeeds, manual check)
 4. **Commit** -- save your progress with a descriptive message (see `git-workflow-and-versioning` for atomic commit guidance)
 5. **Move to the next slice** — carry forward, don't restart
+
+**★ On failure** — the step this diagram used to omit. When Verify fails:
+
+1. **Revert** to the slice's baseline commit (`git reset --hard <baseline>`)
+2. **Record why it failed** — the specific error, not "didn't work"
+3. **Change approach** — do NOT retry the same way. A retry without a new idea
+   reproduces the same failure.
+
+> This is the local (per-slice) form of the same discipline. For the
+> **cross-slice / milestone** version — task decomposition, git checkpoints per
+> sub-problem, and the full epoch loop — read `epoch-loop.md`.
+
+**Why reverting beats patching in place:** a patch accumulating on top of a broken
+slice makes the failure unattributable. Reverting to a known-good baseline keeps
+exactly one variable changed per attempt, which is what makes the next attempt
+informative.
 
 ## Slicing Strategies
 

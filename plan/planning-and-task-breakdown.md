@@ -155,8 +155,12 @@ Create the `tasks/` directory if it does not exist.
 
 The task list target is where tasks and checkpoints are recorded. It is defined once, here; every other reference in this skill defers to it.
 
-- **Default: a section inside `tasks/plan.md`.** That is the single file `build` reads — it takes the **lowest-numbered unfinished task** as the next epoch. There is no separate task file.
-- **External tracker:** if the project's agent rules (`AGENTS.md`, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, `bd`/beads), create one tracker item per task, and keep `tasks/plan.md`'s Task List section as an **ordered index of item IDs or links** rather than a duplicate checklist. Map the Step 4 structure onto the tracker's fields: acceptance criteria and verification steps in the item body, dependencies via the tracker's linking mechanism (`bd dep add`, "blocked by", etc.). Record Step 5 checkpoints as tracker items too, or as a checklist in the plan document if the tracker has no natural equivalent.
+- **Default: a section inside `tasks/plan.md`.** That is the single file `build` reads — it takes the **lowest-numbered unchecked `- [ ] **T<n>**`** as the next epoch. There is no separate task file.
+- **External tracker = optional mirror, never a substitute.** If the project's agent rules (`AGENTS.md`, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, `bd`/beads), map the Step 4 structure onto the tracker's fields (acceptance criteria and verification in the item body, dependencies via the tracker's linking mechanism, `bd dep add` / "blocked by", etc.) — but **`tasks/plan.md` still carries the authoritative `- [ ] **T<n>**` checklist**, and the tracker mirrors it. Record the mapping in `tasks/plan.md`.
+
+> ⛔ **绝不要让 tracker 成为任务存在的唯一地方。** `build` **只读 `tasks/plan.md`** ——
+> 如果勾选框只活在 Jira 里，`build` 就**没有输入**：它扫不到 `- [ ] **T<n>**`，
+> 于是判定「全部完成」然后收工。**这不是报错，是静默地少做。**
 
 > ⛔ **不要另建 `tasks/todo.md`。** 清单文件一旦分裂，`build` 每轮开头读到的
 > 就是另一份、或根本不存在的那一份 —— 而且**不报错，只空转**，

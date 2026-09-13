@@ -306,7 +306,14 @@ describe('TaskService', () => {
 
 ## Browser Testing with DevTools
 
-For anything that runs in a browser, unit tests alone aren't enough — you need runtime verification. Use Chrome DevTools MCP to give your agent eyes into the browser: DOM inspection, console logs, network requests, performance traces, and screenshots.
+For anything that runs in a browser, unit tests alone aren't enough — you need runtime verification.
+
+> ⚠️ **前提：本环境确实有浏览器自动化工具**（DevTools MCP / Playwright / 同类能力）。
+> 没有的话，**别假装做过浏览器验证** —— 把这一项如实写进「交给人验收」的清单，
+> 或先按 `../verify/browser-testing-with-devtools.md` 把工具装上。
+> **本工作流里最严重的错误就是「声称验过但没验」。**
+
+有了工具之后，它能给你 DOM、console、network、性能 trace 与截图：
 
 ### The DevTools Debugging Workflow
 

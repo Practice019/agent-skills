@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Plan 阶段：先与子代理讨论定下技术栈/架构/内部逻辑/链路设计（主脑拍板），再把规格拆成小而可验证的任务，产出 tasks/plan.md 与 tasks/queue/。当需求已明确、准备写代码之前需要方案讨论、任务拆解、依赖排序、并行划分时使用（对应 /plan）。任务太大不知从哪开始、要多人或多 agent 并行时也用本技能。Plan phase: discuss and decide the tech stack, architecture, internal logic and pipeline with subagents (the orchestrator makes the final call), then break the spec into small verifiable tasks producing tasks/plan.md and tasks/queue/. Use when requirements are settled and you need design discussion, task breakdown, sequencing, parallelism, or acceptance-criteria design before writing code (equivalent to /plan)."
+description: "Plan 阶段：先与子代理讨论定下技术栈/架构/内部逻辑/链路设计（主脑拍板），再把规格拆成小而可验证的任务，产出 tasks/plan.md。当需求已明确、准备写代码之前需要方案讨论、任务拆解、依赖排序时使用（对应 /plan）。任务太大不知从哪开始时也用本技能。**子代理只参与讨论，不写代码** —— 代码由主脑在 build 阶段自己写。Plan phase: discuss and decide the tech stack, architecture, internal logic and pipeline with subagents (the orchestrator makes the final call), then break the spec into small verifiable tasks producing tasks/plan.md. Use when requirements are settled and you need design discussion, task breakdown, sequencing, or acceptance-criteria design before writing code (equivalent to /plan). Subagents take part in discussion only — they never write code."
 whenToUse: "上游 define 已产出规格（或需求已被复述确认）、下游 build 即将动手之间的「讨论定方案 + 拆解」环节。不适用于：单文件小改动、规格里已自带清晰任务列表、纯探索性调研。"
 user-invocable: true
 disable-model-invocation: false
@@ -11,31 +11,32 @@ disable-model-invocation: false
 > 对应 `/plan`。核心理念：**Small, atomic tasks**。
 > 上游 `define`（要做什么）→ 本技能（**讨论定方案 + 怎么拆**）→ 下游 `build`（开始写代码）。
 >
-> ★ **本技能是"主脑"在规划期的舞台**：主代理**不一个人拍板** ——
-> 技术栈 / 架构 / 内部逻辑 / 链路设计**必须和子代理讨论**。
-> 但**主脑仍是最重的那个**，最终由它拍板。
+> ★ **本技能是「主脑」在规划期的舞台**：主脑**不一个人拍板** ——
+> 技术栈 / 架构 / 内部逻辑 / 链路设计**必须和子代理讨论**，
+> 但**最终由主脑拍板**（子代理只有参考性，没有否决权）。
+> 规划完成后，**实现也由主脑自己写**（见 `build`）—— **子代理不写代码**。
 
 ## 目标与边界
 
 **做**：
 
 - ★ **讨论定方案**：技术栈 / 架构 / 内部逻辑设计 / 第一二步的完整链路 ——
-  **不能一个人决定**，见下方「讨论机制」
+  **不一个人决定**，见下方「讨论机制」
 - 把规格拆成 S/M 粒度的可验证任务，每个任务自带验收标准与验证方式
-- 画依赖图、定实现顺序、标出可安全并行的任务组
+- 画依赖图、定实现顺序
 - 每 2–3 个任务插一个检查点
-- 产出 `tasks/plan.md` + `tasks/queue/pending/` + 建 goal
+- 产出 `tasks/plan.md` + 建 goal
 
 **不做**：
 
-- ❌ **不写实现代码**（不碰业务文件）—— 但**可以讨论并决定技术栈/架构**
+- ❌ **不写实现代码**（不碰业务文件）—— 但要**讨论并决定技术栈/架构**
 - ❌ 不做需求澄清与规格补全（那是 `define`）
 - ❌ 不执行任务、不部署、不发版（那是 `build` / `ship`）
 
-> ⚠️ **边界变更说明**：本技能此前是"严格只读、只拆不解"。
-> 现在**允许讨论并决定技术方案**（技术栈/架构/内部逻辑），
-> 因为主代理不写代码，若规划期也不决策，就没人决策了。
-> **但仍不写业务代码** —— 那是 `build` 阶段子代理的事。
+> ⚠️ **边界说明**：本技能**允许讨论并决定技术方案**（技术栈/架构/内部逻辑），
+> 因为规划期不决策，后面就没机会决策了。
+> **但不在此阶段写业务代码** —— 实现统一放在 `build`，由**主脑自己**写。
+> **子代理从始至终不写代码**，只做轻量任务（探索/讨论/评审）（见 `../build/subagent-tasks.md`）。
 
 ## ★ 讨论机制（全程可用，不限本阶段）
 
@@ -71,9 +72,10 @@ disable-model-invocation: false
 ⛔ 不要写代码、不要读文件、不要跑命令，**只回答**
 ```
 
-> ⚠️ **不要把写代码型子代理的提示词拿来讨论** —— 那个要求自包含、
-> 要读一堆文件，是**分钟级**的。讨论型是**秒级**的。
-> **"讨论要快"的前提就是：不让它去读文件。**
+> ⚠️ **不要拿探索档的提示词来讨论** —— 那个要读一堆文件，是**分钟级**的。
+> 讨论档是**秒级**的。**「讨论要快」的前提就是：不让它去读文件。**
+> 要读文件才能回答的问题，本来就该派**探索档**，不该派讨论档 ——
+> 三类任务的分工见 `../build/subagent-tasks.md`。
 
 ### 讨论结果怎么用：**参考性，主脑拍板**
 
@@ -219,7 +221,7 @@ read codebase-design.md   # 相对本技能目录
 
 **依赖**：[Task 编号，或 None]
 
-**预计改动文件/位置**（★ 派发冲突检查的依据，必须写到**函数/类/模块**级）：
+**预计改动文件/位置**（★ 动手前画边界的依据，必须写到**函数/类/模块**级）：
 - `cmd/server/multiprovider.go` → `buildProviders()`
 - `cmd/server/multiprovider.go` → `registerRoutes()`
 - `internal/auth/token.ts` → 整个文件（新文件）
@@ -227,34 +229,23 @@ read codebase-design.md   # 相对本技能目录
 **规模**：[XS / S / M / L]
 ```
 
-### 7.1 两份契约的归属（不要合并）
+### 7.1 任务契约只有一份
 
-**本节模板是「产出契约」；`../build/team-orchestration.md` 的「任务文件格式」是
-「队列消费契约」—— 两者字段集不同，都需要，不要合并成一个。**
+**队列没了** —— 子代理不写代码，也就不需要「认领」。
+所以任务从 plan 到 build **只有这一份格式**，下面这个任务块就是全部。
 
-**归属与单向引用**：
-
-| | 权威在哪 | 谁读 |
+| 字段 | 谁读 | 作用 |
 |---|---|---|
-| **产出格式**（plan 写任务时用） | **本节** | plan 自己 |
-| **队列格式**（frontmatter + Summary/Scope/Result/Blocked） | `../build/team-orchestration.md` | 主脑派发时、Builder 认领时 |
+| 标题 | build | 任务标识 |
+| 依赖 | build | 定实现顺序（哪几个能先做） |
+| 规模（XS/S/M/L） | build | 决定 epoch 的切片粒度 |
+| 验收标准 | build | 每个 epoch 的**完成判据** |
+| 验证方式 | build | L1/L2 跑什么命令 |
+| 预计改动文件/位置 | build | 动手前确认边界，别顺手改到别处 |
+| 需要的技能/资源 | build | 该加载哪个子模块 |
 
-**单向**：本技能可以指向 `../build/team-orchestration.md`；
-**反向不行**（build 不应依赖 plan 的内部结构）。
-
-**字段映射**（谁把 plan 任务转成队列文件 = 主脑，转换时按下表）：
-
-| 本节字段 | 队列 frontmatter / 段 |
-|---|---|
-| 标题 | `title` |
-| 依赖 | `depends_on` / `stacks_on` |
-| 规模 | `priority`（XS/S → P1，L/XL → P2/P3） |
-| 验收标准 | `## 验收标准` 段 |
-| 预计改动文件/位置 | `## Scope` 段 |
-| 需要的技能/资源 | 派发时写进委派提示词（不进队列文件） |
-
-> ⚠️ **为什么要写清映射**：此前"谁把 plan 任务转成队列文件"**没有任何规则**，
-> 全靠模型即兴 —— 这是粒度信息丢失最集中的地方（字段名两边都不一样）。
+> ⚠️ **没有「Result / Blocked」段了** —— 那是子代理交付时填的。
+> 现在主脑自己写代码，进度靠**每 epoch 的 commit** 与任务块的勾选状态体现。
 
 
 > **「需要的技能/资源」三态**：`✅ 本地`（catalog 或 build 资源里已有）、
@@ -276,51 +267,38 @@ read codebase-design.md   # 相对本技能目录
 - [ ] 人工确认后再继续
 ```
 
-### 9. 落盘 + 同步
+### 9. 落盘
 
-**产出两样东西**：人读的索引 + 机器可认领的队列。
-
-**① `tasks/plan.md`** —— 总览：概述、架构决策、任务索引、检查点、风险、能力盘点汇总。
-跨会话、抗压缩的持久记忆。
-
-**② `tasks/queue/pending/`** —— **一项一文件**，供多 agent 认领：
+**只产出一份东西：`tasks/plan.md`。**
 
 ```text
 tasks/
-  plan.md                    ← 总览（人读）
-  queue/
-    pending/   NNN-slug.md   ← 建 plan 时全部落在这里
-    claimed/   review/  blocked/  done/   ← 建空目录，执行时才有内容
+  plan.md        ← 总览（人读）+ 任务清单（build 读）
 ```
 
-**每条任务一个文件**，文件名 `NNN-slug.md`（零填充三位，`NNN` 全局递增）。
-**认领机制、状态机、任务文件格式见 `../build/team-orchestration.md` 的「任务队列与认领」** ——
-不要在 plan 里复制一份，单一来源。
+**没有 `tasks/queue/` 了。** 队列存在的两个理由是「多 agent 认领」与
+「派发前查并发冲突」，而现在**只有一个写者（主脑）** ——
+认领没意义，冲突也不可能发生。任务清单直接作为 `plan.md` 的一节：
 
-> **队列的第一作用是「派发前的冲突检查」。**
->
-> 每条任务的「预计改动文件/位置」是**并列执行的分区依据**。
-> **派发前必须扫一遍：有改动位置交集的任务，要么合并、要么串行。**
->
-> 这是队列存在的**首要理由** —— 因为只有把任务拆成独立文件，
-> 才能在**派发之前**（而不是运行时）看出哪些任务会互相踩。
->
-> **实证代价**：曾有三个任务（P1 / P2a / P2b）都改 `cmd/server/multiprovider.go`，
-> 但因为没有队列文件、看不到「预计改动文件」这一栏，三个子代理被同时派出 ——
-> 结果互相被对方的半成品绊住，`go build ./...` 间歇性红，
-> 其中一个子代理报告"另一个 agent 正在并发编辑，我全程未触碰"。
-> **有一条队列，这三栏写着同一个文件，一眼可见。**
->
-> **次要作用**：拆成一文件一任务后，各自认领各自的文件，
-> 避免多个 agent 同时改 `plan.md` 互相冲突。（这是副产品，不是主要理由。）
+```markdown
+## 任务清单
 
-> **队列是可追加的（执行中也能加）**：审计、排查、code review 发现的新任务，
-> **不需要重开 plan** —— 由 Orchestrator 分配下一个 `NNN` 并写入 `pending/` 即可。
-> 队列是**活的**。例：出站修复派出审计 → 审计发现 4 处漏网 → 直接追加 4 条，
-> 而不是停下来重做规划。
->
-> **编号即优先级**：`NNN` 全局一次分配（追加时继续递增），
-> 执行时**总是认领编号最小的** —— 不需要额外排序逻辑。
+- [ ] **T1** <标题> · 规模 S · 依赖 —
+      验收：<二元可测> ｜ 验证：`<命令>`
+      改动：`path/to/file.ts` → `fn()`
+- [ ] **T2** <标题> · 规模 M · 依赖 T1
+      验收：<二元可测> ｜ 验证：`<命令>`
+      改动：`path/to/other.ts`（新文件）
+```
+
+**编号即执行顺序**：`build` 总是取**编号最小的未完成任务**做下一个 epoch。
+
+**清单是可追加的（执行中也能加）**：排查、评审、审计发现的新任务，
+**不需要重开 plan** —— 直接追加下一个编号。清单是**活的**。
+
+> ⚠️ **「预计改动文件/位置」这一栏仍然要写**，但作用变了：
+> 以前是**派发前查并发冲突**（现在没有并发，不再需要），
+> 现在是**给主脑自己画边界** —— 动手前确认这次只碰这几处，别顺手改到别处。
 
 - 用 `todo_write` 把任务列表写进当前会话 —— 本轮可见、可跟踪进度
 - 若项目指定了外部 tracker（GitHub Issues / Jira / Linear / beads），`tasks/plan.md` 里只保留**有序索引**（ID 或链接），不要两处都维护同一份清单
@@ -339,7 +317,7 @@ tasks/
 
 **判定**：
 
-| `tasks/queue/pending/` 里的任务数 | 动作 |
+| `tasks/plan.md` 任务清单里的任务数 | 动作 |
 |---|---|
 | **≥ 2** | **立刻 `create_goal`** |
 | = 1（单轮能收束） | 不建 |
@@ -356,22 +334,19 @@ create_goal(objective="<见下方模板>")
 ```text
 <一句话终点，与验收标准对齐，如"登录模块可用且测试全绿">
 
-【每轮开始先查 tasks/queue/】
-- pending 空 + claimed 空 → 全部完成，调 update_goal complete
-- pending 空 + claimed 非空 → 在等子代理，**立刻 join**，不要开新活
-- pending 非空 + 无运行中子代理 → **现在就重算可认领数 N**
-    （可认领 = pending 里 depends_on 与 stacks_on 全部已在 done/ 的项）
-    → 本轮派 **min(N, 5)** 个
-    ⛔ 不是"派 1 个"，也不是"不设上限全部派"
+【每轮开始先读 tasks/plan.md 的任务清单】
+- 有未完成任务 → 取**编号最小的那个**，做一个 epoch：
+      原子改进 → L1 廉价验证 → 通过则 commit；失败则回退并换思路
+- 全部任务已完成 → 跑 L2 / L3，然后 update_goal complete
+- 同一阻塞连续 ≥3 轮未解决 → update_goal blocked，写明具体阻塞
 
-【禁止】没有可认领任务却开新一轮 —— 那是空烧轮次。
-【收尾】本轮扇出的子代理必须全部 join 或显式处置，否则不得结束本轮。
+【禁止】没有未完成任务却开新一轮 —— 那是空烧轮次。
+【纪律】每个 epoch 必须 commit；失败回退后**不原样重试**。
 ```
 
-> ⚠️ **objective 写的是「求值方法 + 上限」，不是「一个数」。**
-> 它是每轮重新注入的**文本**，不是每轮重新求值的**表达式** ——
-> 写死"派 1 个"会在每轮少派；写死"派全部"会绕过上限 5。
-> **正确写法是把计算逻辑写进去，让 N 每轮现算。**
+> ⚠️ **objective 写「怎么推进」，不写「跑到第几轮」。**
+> 它是每轮重新注入的**文本**，进度必须每轮现算 ——
+> 写死"再做 3 轮"会与实际脱节。
 
 > ⚠️ **为什么纪律要写进 objective**：它不依赖 skill 被加载、不依赖模型记性，
 > **每轮唤醒时直接在场**。这是替代 agent preset 的办法 —— 按任务定制，
@@ -457,10 +432,9 @@ create_goal(objective="<见下方模板>")
 - [ ] 主要阶段之间都有检查点
 - [ ] 已写入 `tasks/plan.md`，并同步到会话 todo 列表
 - [ ] 用户已确认计划
-- [ ] **任务数 ≥2 时已 `create_goal`，且 objective 内含「每轮必读队列」纪律**
+- [ ] **任务数 ≥2 时已 `create_goal`，且 objective 内含「每轮先读任务清单」纪律**
 - [ ] **每个任务标出了它要过的非功能清单**（安全/性能/可观测/无障碍，按特征挂载；
-      任何任务都过 `definition-of-done.md`）—— 见 `../build/team-orchestration.md`
-      的「完成 = 已验证（含非功能项）」
+      任何任务都过 `definition-of-done.md`）—— 「完成 = 已验证」见该文件的完成定义
 
 ## 常见坑
 
@@ -497,7 +471,7 @@ create_goal(objective="<见下方模板>")
 | 有性能指标要求 | `../_shared/references/performance-checklist.md` |
 | **碰前端 UI** | `../_shared/references/accessibility-checklist.md` |
 | 需要日志 / 指标 / 追踪 | `../_shared/references/observability-checklist.md` |
-| 多 agent 并行编排 | `../_shared/references/orchestration-patterns.md` |
+| 要派子代理探索 / 讨论 / 评审 | `../build/subagent-tasks.md` |
 
 > **为什么要求挂到 task 上**：plan 阶段一开始判断不了"有没有 UI"——
 > 那是**任务级**属性。等到步骤 4 盘点了具体任务，才知道该挂哪几张清单。

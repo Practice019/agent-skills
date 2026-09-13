@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Plan 阶段：先与子代理讨论定下技术栈/架构/内部逻辑/链路设计（主脑拍板），再把规格拆成小而可验证的任务，产出 tasks/plan.md。当需求已明确、准备写代码之前需要方案讨论、任务拆解、依赖排序时使用（对应 /plan）。任务太大不知从哪开始时也用本技能。**子代理只参与讨论，不写代码** —— 代码由主脑在 build 阶段自己写。Plan phase: discuss and decide the tech stack, architecture, internal logic and pipeline with subagents (the orchestrator makes the final call), then break the spec into small verifiable tasks producing tasks/plan.md. Use when requirements are settled and you need design discussion, task breakdown, sequencing, or acceptance-criteria design before writing code (equivalent to /plan). Subagents take part in discussion only — they never write code."
+description: "Plan 阶段：先与子代理讨论定下技术栈/架构/内部逻辑/链路设计（主脑拍板），再把规格拆成小而可验证的任务，产出 tasks/plan.md。当需求已明确、准备写代码之前需要方案讨论、任务拆解、依赖排序时使用（对应 /plan）。任务太大不知从哪开始时也用本技能。**子代理只做三类轻量任务**（探索代码 / 讨论方案 / 对抗评审），不写代码、不改文件、不碰 git —— 代码由主脑在 build 阶段自己写。Plan phase: discuss and decide the tech stack, architecture, internal logic and pipeline with subagents (the orchestrator makes the final call), then break the spec into small verifiable tasks producing tasks/plan.md. Use when requirements are settled and you need design discussion, task breakdown, sequencing, or acceptance-criteria design before writing code (equivalent to /plan). Subagents do lightweight work only (explore the codebase, discuss options, adversarially review) — they never write code, never edit files, and never touch git."
 whenToUse: "上游 define 已产出规格（或需求已被复述确认）、下游 build 即将动手之间的「讨论定方案 + 拆解」环节。不适用于：单文件小改动、规格里已自带清晰任务列表、纯探索性调研。"
 user-invocable: true
 disable-model-invocation: false
@@ -43,57 +43,29 @@ disable-model-invocation: false
 > **讨论不是某个阶段的一次性会议，是贯穿全程的机制。**
 > `plan` 和 `build` 都适用 —— **凡是有疑问就讨论**。
 
-### 什么时候讨论
+**完整机制见 `../build/subagent-tasks.md`** —— 三类任务的分工、派几个、
+提示词模板、采纳判据、决策权分层，都在那里。
+**本文件不复制一份**，避免两处漂移。
 
-| 场景 | 例子 |
+规划期真正需要讨论的是**这几类**：
+
+| 该讨论 | 例子 |
 |---|---|
-| **plan 期 · 大决策** | 用哪个技术栈？架构怎么分？模块边界？第一二步怎么排？ |
-| **build 期 · 实现疑问** | 这个接口怎么设计？这处要不要拆？和已有代码怎么对接？ |
-| **任何时候 · 不确定** | 拿不准、有多个合理选项、风险不明 |
+| 技术栈 / 库选型 | 用哪个框架，为什么不用另一个 |
+| 架构与模块边界 | 怎么分层、接缝画在哪 |
+| 内部逻辑 / 数据流 | 第一二步的完整链路怎么走 |
+| 对外契约 | API 形状、错误语义、兼容性 |
+| 安全相关横切 | 认证/会话怎么存、密钥从哪来、要不要数据迁移 |
 
-**判据**：**"我自己拿不准，或存在多个合理选项"** → 讨论。
-
-### 派几个
-
-| 议题 | 派几个 |
+| 不必讨论 | 为什么 |
 |---|---|
-| **重大决策**（技术栈 / 架构 / 对外契约） | **2 个**（不同角度，互相制衡） |
-| **日常疑问**（实现细节 / 局部取舍） | **1 个** |
+| 命名 / 目录 / 代码风格 | 品味问题，**直接定，走** |
+| 查一下文档就知道的 | 自己查；要读很多文件才答得上来的 → 派**探索档** |
 
-### 怎么派（讨论型子代理 —— 必须快）
-
-**讨论必须快 —— 只是对话，不写代码、不读文件、不跑命令。**
-
-```text
-背景：<3-5 句话，只讲必要上下文>
-我的疑问：<具体问题>
-约束：<关键限制，如已有技术栈 / 性能要求 / 兼容性>
-请给：你的判断 + 理由 + 风险
-⛔ 不要写代码、不要读文件、不要跑命令，**只回答**
-```
-
-> ⚠️ **不要拿探索档的提示词来讨论** —— 那个要读一堆文件，是**分钟级**的。
-> 讨论档是**秒级**的。**「讨论要快」的前提就是：不让它去读文件。**
-> 要读文件才能回答的问题，本来就该派**探索档**，不该派讨论档 ——
-> 三类任务的分工见 `../build/subagent-tasks.md`。
-
-### 讨论结果怎么用：**参考性，主脑拍板**
-
-```text
-主脑提案 → 子代理给意见（可赞成可反对）→ **主脑拍板**
-                                        ↑
-                            子代理是参谋，不是决策者
-```
-
-- 子代理给的是**判断 + 理由 + 风险**
-- **主脑可以采纳，也可以否决** —— 否决时**说明理由**
-- **主脑始终是最终决策者**，子代理是副脑
-
-> ⚠️ **不要因为子代理反对就停住** —— 它是参谋不是否决者。
-> 但如果**多个子代理独立指向同一风险**，要认真对待（那可能是真问题）。
-
-> ⚠️ **也不要只在"想确认自己是对的"时才讨论** ——
-> 那样讨论会退化成走过场。**真有多个选项时才讨论。**
+> ★ **主脑提案，子代理给意见，主脑拍板。** 子代理是参谋，**没有否决权** ——
+> 不要因为它反对就停住；但**多个子代理独立指向同一风险**时要认真对待。
+>
+> ⚠️ 也**不要只在「想确认自己是对的」时才讨论** —— 那样会退化成走过场。
 
 ## 前置检查（Gate）
 
@@ -140,10 +112,10 @@ read codebase-design.md   # 相对本技能目录
 
 ### 3.5 ★ 讨论定方案（重大决策必须做）
 
-**技术栈 / 架构 / 内部逻辑设计 / 链路怎么排 —— 不能一个人拍板。**
+**技术栈 / 架构 / 内部逻辑设计 / 链路怎么排 —— 不一个人拍板。**
 
-按本文件顶部「讨论机制」执行：**重大决策派 2 个讨论型子代理，日常疑问派 1 个**，
-拿到判断 + 理由 + 风险后**由主脑拍板**。
+按顶部「讨论机制」执行：派**讨论档**子代理拿「判断 + 理由 + 风险」，**主脑拍板**。
+派几个、提示词模板、采纳判据见 `../build/subagent-tasks.md`。
 
 **必须讨论的议题**（命中任一）：
 

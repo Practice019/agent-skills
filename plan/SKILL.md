@@ -191,10 +191,15 @@ read codebase-design.md   # 相对本技能目录
 **需要的技能/资源**（步骤 4 盘点的结论，逐任务落下来）：
 | 能力 | 来源 | 状态 |
 |---|---|---|
-| [要做什么] | `skill: <name>` 或 `read: build/<file>.md` | ✅ 本地 |
+| [要做什么] | `skill: <name>` 或 `read: ../build/<file>.md` | ✅ 本地 |
 | [要做什么] | — | ⚠️ 缺：需联网查 / 需 find-skills |
 
-**依赖**：[Task 编号，或 None]
+> ⚠️ **路径基准是「本技能目录」（即 `plan/`），所以要写 `../build/...`。**
+> 写成 `build/<file>.md` 会被解析成 `plan/build/<file>.md` —— **不存在**，
+> 而且失败时是**静默查空**：盘点出一个根本读不到的能力来源，后面才发现。
+> 本技能与 build 的内嵌资源都**不注册为技能**，只能用 `read` + 相对路径。
+
+**依赖**：[T 编号，或 None]
 
 **预计改动文件/位置**（★ 动手前画边界的依据，必须写到**函数/类/模块**级）：
 - `cmd/server/multiprovider.go` → `buildProviders()`
@@ -403,7 +408,7 @@ create_goal(objective="<见下方模板>")
 ## 能力盘点汇总
 | 能力 | 来源 | 状态 |
 |------|------|------|
-| [能力] | `skill: <name>` / `read: build/<file>.md` | ✅ 本地 |
+| [能力] | `skill: <name>` / `read: ../build/<file>.md` | ✅ 本地 |
 | [能力] | — | ⚠️ 缺 |
 
 **缺项处理**：

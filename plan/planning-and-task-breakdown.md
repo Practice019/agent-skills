@@ -136,10 +136,12 @@ Add explicit checkpoints to the plan document:
 | **XS** | 1 | Single function or config change | Add a validation rule |
 | **S** | 1-2 | One component or endpoint | Add a new API endpoint |
 | **M** | 3-5 | One feature slice | User registration flow |
-| **L** | 5-8 | Multi-component feature | Search with filtering and pagination |
-| **XL** | 8+ | **Too large — break it down further** | — |
+| **L** | 5-8 | Multi-component feature — **prefer splitting; keep as one task only with a written reason** | Search with filtering and pagination |
+| **XL** | 8+ | **Too large — must be broken down, no exceptions** | — |
 
-If a task is L or larger, it should be broken into smaller tasks. An agent performs best on S and M tasks.
+**XL (8+ files) must be split — no exceptions.** **L (5-8) should be split too**, but it may
+stay as a single task **only if you write down why it cannot be split**. An agent performs
+best on S and M tasks.
 
 **When to break a task down further:**
 - It would take more than one focused session (roughly 2+ hours of agent work)

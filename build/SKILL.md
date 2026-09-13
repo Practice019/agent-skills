@@ -116,6 +116,8 @@ for 子问题 in 分解出的序列:
 | 涉及前端 UI | `frontend-ui-engineering.md` |
 | 需要权威资料、不能凭记忆写 | `source-driven-development.md` |
 | 高风险/不确定决策，需要对抗性复查 | `doubt-driven-development.md` |
+| **多 agent 并行 / 派发子代理 / 任务认领 / 队列** | `team-orchestration.md` 的「任务队列与认领」 |
+| **决定开几个 agent / 并发上限** | `team-orchestration.md` 的「并发上限」 |
 | 失败，需要系统排查 | `../verify/debugging-and-error-recovery.md` |
 
 **切片内的执行顺序**（降级为单 agent 时，或作为 Builder 子代理时）：
@@ -134,14 +136,19 @@ for 子问题 in 分解出的序列:
 
 除降级情形外，按多 agent 推进：主会话做 Orchestrator（路由 / 跟踪 / 评审），
 实现交给 Builder 子代理。读 `team-orchestration.md` 获取完整规则——角色定义、
-任务状态机、交接五要素、评审门禁、**Git 归属**、以及 DSH 特有的
+**任务队列与认领**（`tasks/queue/` 状态机）、**并发上限 3-5**、Git 归属、
+交接五要素、评审门禁、以及 DSH 特有的
 **「Goal 自挂 + 轮内收束」**（自动挂 goal，并把子代理在轮内 join 干净）。
 
-**三层同时生效**，缺一层都会出问题：
+**任务从哪来**：`plan` 阶段把每个任务写成 `tasks/queue/pending/NNN-slug.md`。
+**每轮第一件事是读一眼队列**，再决定派发、join 还是收工（见该文件的「与 goal 的配合」）。
+
+**四层同时生效**，缺一层都会出问题：
 
 | 层 | 谁执行 | 管什么 |
 |---|---|---|
 | git 基线 | **只有 Orchestrator** | 全队唯一回退点 |
+| 任务队列与认领 | **只有 Orchestrator** 移动 `tasks/queue/` | 防重复认领、抗 goal 空转 |
 | epoch 循环 | Orchestrator 调度，子代理在每个子问题内执行 | 推进与失败回退 |
 | 切片 + TDD | 每个 Builder 子代理内部 | 单切片怎么写 |
 
@@ -156,7 +163,7 @@ for 子问题 in 分解出的序列:
 | `incremental-implementation.md` | 增量实现主流程（薄垂直切片、切片策略、实现规则） |
 | `test-driven-development.md` | 测试驱动开发（RED-GREEN-REFACTOR、Prove-It、测试金字塔） |
 | `epoch-loop.md` | **通用外层循环**（git 基线、任务分解、双粒度 checkpoint、失败回退）**每次都用** |
-| `team-orchestration.md` | **多智能体编排**（角色、生命周期、交接、评审、goal/join 纪律） |
+| `team-orchestration.md` | **多智能体编排**（角色、**任务队列与认领**、**并发上限**、Git 归属、生命周期、交接、评审、goal/join 纪律） |
 | `context-engineering.md` | 上下文工程 |
 | `source-driven-development.md` | 基于官方文档开发 |
 | `doubt-driven-development.md` | 对抗性复查 |

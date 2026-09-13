@@ -85,10 +85,13 @@ optional detail block beneath it:
       - [Specific, testable condition]
       - [Specific, testable condition]
 
-      **Verification (three tiers — do NOT run the full suite every round):**
+      **Verification (per task: L1 and L2 only — L3 is a ONE-TIME pre-delivery gate):**
       - **L1 every round:** [focused compile/typecheck + related tests]
       - **L2 on sub-problem done:** [affected packages ∪ reverse deps] + build
-      - **L3 before delivery:** machine-decidable non-functional checks
+        (changes to semantics/contracts: skip the narrowing, run the full suite)
+      - **L3 / full regression are NOT listed here** — they run ONCE before delivery
+        (see the "pre-delivery gate" in `../build/SKILL.md`). List this task's
+        non-functional items in Acceptance criteria instead.
 
       **Dependencies:** [T-numbers, or "None"]
 

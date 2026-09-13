@@ -105,15 +105,21 @@
 
 ```text
 1. 形态判定       写一行 [形态判定]，确认保持多 agent（或降级并说明理由）
-2. 读任务队列     从 tasks/plan.md 取「可认领」的任务（见「任务队列与认领」）
-3. 挂 goal        多轮/多批次 → create_goal（见「Goal 自挂」一节）
-4. 分配 + 扇出    给每个任务在队列里标记认领者，再派 Builder（提示词模板见文末）
-5. 填满空窗       主会话做不重叠的独立工作（读代码/起草骨架/准备验证脚本）
-6. join           job_output(wait:true) 或逐 id 收敛 —— 拿齐前不结束本轮
-7. 更新队列       通过 → 标 done + commit hash；失败 → 回退到 pending
-8. 评审           要独立评审 → 再派一个 Reviewer 子代理（干净上下文）
-9. 交棒           汇总产物、决定下一轮
+2. 读任务队列     从 tasks/queue/ 取「可认领」的任务（见「任务队列与认领」）
+3. 确认 goal      已挂则复用；多轮/多批次且没挂 → create_goal
+4. 分配 + 扇出    队列里标记认领者，再派 Builder：
+                  默认 subagent(run_in_background: false) × N
+                  ⚠️ 同一轮发多个 = 真并行 + 全部返回后才继续
+5. 收敛           默认(false) → 工具返回即已收敛，无需额外动作
+                  用了(true)  → 无事后等待接口，结果靠推送（下一轮）
+6. 更新队列       通过 → 标 done + commit hash；失败 → 回退到 pending
+7. 评审           要独立评审 → 再派一个 Reviewer 子代理（干净上下文）
+8. 交棒           汇总产物、决定下一轮
 ```
+
+> **独立工作放在哪**：用默认的 `false` 时工具**本身阻塞**，
+> 所以主会话没有"空窗"要填 —— 该做的独立工作应放在**第 4 步扇出之前**做完。
+> 只有用异步 `true` 时才需要"边跑边干"。
 
 ### ⚠️ 并发上限：3-5 个，不是越多越好
 
@@ -344,26 +350,53 @@ goal 的 objective 要写成"达成什么"，不要写成"调用谁"。挂了 go
 ```text
 主窗口一轮的标准骨架：
   1. todo_write          写清本轮边界与验收标准
-  2. 扇出                subagent(..., run_in_background: true) × N，记下 id
-  3. 填满空窗            做与子代理**不重叠**的独立工作：
+  2. 扇出                默认 subagent(run_in_background: false) × N
+                         ⚠️ 同一轮发多个 = 真并行，且全部返回后才继续
+                         （需脚本化编排/大批量汇总时才用 workflow）
+  3. 填满空窗            ⚠️ 这一步只在用了异步(true)时才需要；
+                         用默认(false) 时工具本身阻塞，不需要"填空窗"
+                         做与子代理**不重叠**的独立工作：
                          读文件 / 起草骨架 / 建目录 / 查依赖 / 准备验证脚本
-  4. join               job_output(wait: true) 或对每个 id send_message 收敛
-                         ⚠️ 拿齐结果之前，不得输出本轮最终文本
+  4. 收敛                用默认(false) → 工具返回即已收敛，无需额外动作
+                         用了异步(true)  → **无事后等待接口**，
+                                          只能等推送通知（下一轮）
   5. 消费 + 交棒         写文件、更新任务状态、决定下一轮
 ```
 
-**第 3 步是纪律的关键**：主窗口不是"什么都不做"，而是**做互不冲突的工作**。
-goal 之所以有缝可钻，就是因为主窗口把"空闲"暴露出来了；把空闲填成独立工作，缝就没了。
-第 4 步是硬门禁 —— **未 join 完就结束本轮 = 把半成品暴露给 goal 的下一轮**。
+> ⚠️ **实测校正（两条）**：
+>
+> **① `subagent(run_in_background: false)` 本身就是阻塞 + 并行。**
+> 实测同一轮发 2 个、每个内部 sleep 20 秒：两者 start 相差 0.64s、
+> end 相差 0.65s，**总耗时 20s 而非 40s** —— 真并行，且全部完成才返回。
+> 所以**默认就该用它**，不需要 `workflow` 来"实现并行"。
+>
+> **② `job_output` 不能用于子代理。**
+> 实测 `job_output(<subagent-id>, wait: true)` 返回 `Error: unknown job` ——
+> 子代理 id 与 job id 是两套命名空间。
+> **异步子代理没有事后等待接口**，完成时由 runtime 推通知。
+> **不要写"用 job_output 等子代理"——那条路不存在。**
 
-### 3. 按规模选等待形态
+**第 3 步的定位**：它是为**异步模式**准备的（`run_in_background: true`）。
+如果用默认的 `false`，工具本身阻塞，主窗口没有"空窗"要填 ——
+此时把独立工作**放到扇出之前**做，才是正确顺序。
 
-| 规模 | 形态 | 为什么 |
+### 3. 按场景选形态（实测校正版）
+
+| 场景 | 用什么 | 能否本轮拿到结果 |
 |---|---|---|
-| 1 个子代理 | `subagent(run_in_background: false)` | 工具调用本身阻塞，天然无缝隙 |
-| 2~5 个并行 | 后台扇出 + 填独立工作 + 末尾 `job_output(wait: true)` | 真并行，且不暴露空转 |
-| >5 个 / 需要结构化汇总 | **`workflow`（前台阻塞）** | 调用期间**物理上没有轮次边界**，goal 完全插不进来 |
-| 本轮本质就是"等结果" | `create_goal(..., max_goal_rounds=1)` | 直接取消续跑语义，等齐再自己判 `complete` |
+| **并行 + 要结果**（绝大多数） | **`subagent(run_in_background: false)` × N** | ✅ **能**（工具返回即全部完成） |
+| 大批量（>5）+ 脚本化/结构化汇总 | `workflow(...)` | ✅ 能（前台阻塞） |
+| 不需要本轮结果 | `subagent(run_in_background: true)` | ❌ 靠推送通知到下一轮 |
+| 本轮本质就是"等结果" | `create_goal(..., max_goal_rounds=1)` | 直接取消续跑语义 |
+
+```text
+要并行 + 本轮要结果   →  run_in_background: false × N   ← 默认首选
+大批量 + 要脚本编排    →  workflow
+不要本轮结果          →  run_in_background: true（结果下一轮到）
+```
+
+**关键**：`workflow` **不是**唯一的并行手段，只是"需要脚本化编排"时的选择。
+单纯要并行拿结果，**同一轮发多个 `false` 就够了**。
 
 ### 4. 写权唯一：等待期间的行为边界
 
@@ -433,16 +466,41 @@ goal 之所以有缝可钻，就是因为主窗口把"空闲"暴露出来了；�
 > 注意第 0 条用的是「报告本轮改动」而不是「commit 本轮改动」——
 > 子代理没有 commit 权限，它只负责把改动**落盘**并**说清楚**。
 
-## DSH 等待语义速查
+## DSH 等待语义速查（实测校正）
 
-| 工具 | 是否阻塞当前轮 | 适用 |
-|---|---|---|
-| `subagent(run_in_background: false)` | **阻塞** —— 不返回直到跑完 | 单个子代理；天然无缝隙 |
-| `subagent(run_in_background: true)` | 不阻塞，返回 durable id | 并行扇出；**必须显式 join** |
-| `job_output(job_id, wait: true)` | **阻塞**（有上限） | 后台作业的收敛点 |
-| `send_message(agent_id, ...)` | 不阻塞（仅投递） | 中途 steer；也可唤醒 idle 子代理 |
-| `workflow(...)` | **前台阻塞** —— 整个脚本跑完才返回 | 大批量扇出；**结构上消除轮次缝隙** |
-| `interrupt_agent(agent_id)` | 立即返回（请求取消） | 超时兜底 |
+| 工具 | 是否阻塞当前轮 | 能否本轮拿到结果 | 适用 |
+|---|---|---|---|
+| **`subagent(run_in_background: false)`** | ✅ **阻塞** —— 不返回直到跑完 | ✅ **能** | **默认首选**；同一轮发多个 = 真并行 |
+| `workflow(...)` | ✅ 前台阻塞 —— 脚本跑完才返回 | ✅ 能 | 大批量 + 脚本化/结构化汇总 |
+| `subagent(run_in_background: true)` | ❌ 不阻塞，立即返回 id | ❌ **不能**（靠推送通知，下一轮） | 不需要本轮结果时 |
+| ~~`job_output(job_id, wait: true)`~~ | ⚠️ 阻塞，但**只对 job id** | — | **实测对子代理无效**（`Error: unknown job`） |
+| `send_message(agent_id, ...)` | 不阻塞（仅投递） | — | 中途 steer；也可唤醒 idle 子代理 |
+| `interrupt_agent(agent_id)` | 立即返回（请求取消） | — | 超时兜底 |
+
+### 实测记录（本机验证，勿凭推断覆盖）
+
+```text
+① 同一轮发 2 个 subagent(run_in_background: false)，各 sleep 20s：
+     A start=14:14:07.978 end=14:14:27.995
+     B start=14:14:08.620 end=14:14:28.645
+   → start 差 0.64s / end 差 0.65s / 总耗时 20s（非 40s）
+   → 结论：默认模式天然并行，且全部完成后才返回
+
+② subagent(run_in_background: true) 返回：
+     "started subagent 4d5d7a4f-..."
+   → 只给 id，无结果；结果随后由 runtime 推通知
+
+③ job_output("cf1c9d11-...", wait:true) 其中 id 来自 subagent：
+     Error: unknown job cf1c9d11-...
+   → 结论：subagent id ≠ job id，job_output 不能用于子代理
+```
+
+**关键区分**：`job_output` 的 id 来自"**启动了后台作业的那个工具**"
+（例如 `pwsh(run_in_background: true)`）；而 `subagent` 返回的是 **subagent id**，
+**两者不通用**。
+
+> **要并行又要在本轮拿到结果 → 同一轮发多个 `run_in_background: false`。**
+> 不要用 `true` 然后再想办法"等" —— 那个"等"不存在。
 
 **没有"跳过本轮"的信号** —— 这正是必须在轮内 join 的原因。
 

@@ -185,6 +185,12 @@ For richer context, use Model Context Protocol servers:
 | **Filesystem** | Project file access and search |
 | **GitHub** | Issue, PR, and repository context |
 
+> ⚠️ **这是「可选能力菜单」，不是「默认已装」。**
+> 本机的 MCP 服务器由**「技能与 MCP 管理器」**插件管理
+> （DSH 设置页 →「Web UI 插件 → 技能与 MCP」）——
+> **先看已经连上哪几个，再决定要不要加。**
+> 别照着一张设想中的清单去调用不存在的工具。
+
 ## Confusion Management
 
 Even with good context, you will encounter ambiguity. How you handle it determines outcome quality.

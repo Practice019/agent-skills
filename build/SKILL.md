@@ -1,6 +1,6 @@
 ---
 name: build
-description: "Build 路由技能：多轮任务先挂持久目标（≥2 个委派批次或跨轮推进时立刻 create_goal，不要问），再建 git 基线、套 epoch 训练循环（原子改进→真实验证→通过 commit 固化 / 失败 reset 换思路，子问题级与轮次级双粒度 checkpoint），并默认多 agent 编排（改动跨文件/跨模块或需并行探索与独立评审时派 Builder 子代理，仅单文件单函数级改动才显式降级）；任务从 tasks/queue/ 认领，并发上限 3-5。当进入某个已规划任务的编码实现时使用；也用于任何挂持久目标（goal）、派子代理/delegation、或长任务跨轮推进的场景——此时必须按 team-orchestration.md 的「Goal 自挂 + 轮内收束」执行：在轮内把子代理 join 干净，未 join 完不得结束本轮，否则 goal 会空烧轮次。（触发词：挂 goal、创建目标、持久目标、子代理、子智能体、delegation、委派、并行 agent、多 agent、编排、分工、长任务、一直循环、空转、等子代理、goal 不等待、继续这个任务。）Build router: attach a persistent goal first for multi-round work (call create_goal immediately when there are 2+ delegation batches or the task spans rounds — do not ask), then establish a git baseline and run the epoch training loop (atomic improvement -> real verification -> commit on pass / reset and change approach on fail, with sub-problem-level and round-level checkpoints), orchestrating Builder subagents by default and claiming tasks from tasks/queue/ with a concurrency cap of 3-5. Also use whenever a persistent goal is attached, subagents are delegated to, or a long task spans multiple rounds — in that case follow the Goal + in-round join discipline in team-orchestration.md: join every subagent within the round and never end a round with unfinished joins, or the goal will burn empty rounds. Covers incremental implementation, TDD, context engineering, source-driven development, doubt-driven review, frontend and API design."
+description: "Build 路由技能：多轮任务先挂持久目标（≥2 个委派批次或跨轮推进时立刻 create_goal，不要问），再建 git 基线、套 epoch 训练循环（原子改进→真实验证→通过 commit 固化 / 失败 reset 换思路，子问题级与轮次级双粒度 checkpoint），并默认多 agent 编排（改动跨文件/跨模块或需并行探索与独立评审时派 Builder 子代理，仅单文件单函数级改动才显式降级）；任务从 tasks/queue/ 认领，**一轮派完所有可认领任务（有几个派几个，上限 5；不许一次只派一个）**。当进入某个已规划任务的编码实现时使用；也用于任何挂持久目标（goal）、派子代理/delegation、或长任务跨轮推进的场景——此时必须按 team-orchestration.md 的「Goal 自挂 + 轮内收束」执行：在轮内把子代理 join 干净，未 join 完不得结束本轮，否则 goal 会空烧轮次。（触发词：挂 goal、创建目标、持久目标、子代理、子智能体、delegation、委派、并行 agent、多 agent、编排、分工、长任务、一直循环、空转、等子代理、goal 不等待、继续这个任务。）Build router: attach a persistent goal first for multi-round work (call create_goal immediately when there are 2+ delegation batches or the task spans rounds — do not ask), then establish a git baseline and run the epoch training loop (atomic improvement -> real verification -> commit on pass / reset and change approach on fail, with sub-problem-level and round-level checkpoints), orchestrating Builder subagents by default and dispatching ALL claimable tasks in one round (one subagent per task, capped at 5 — never dispatch just one when more are claimable). Also use whenever a persistent goal is attached, subagents are delegated to, or a long task spans multiple rounds — in that case follow the Goal + in-round join discipline in team-orchestration.md: join every subagent within the round and never end a round with unfinished joins, or the goal will burn empty rounds. Covers incremental implementation, TDD, context engineering, source-driven development, doubt-driven review, frontend and API design."
 whenToUse: "上游 plan 已产出 tasks/queue/ 与 tasks/plan.md、准备动手实现时。含三类形态：多 agent 编排（默认）、单 agent（降级）、以及跨轮 epoch 推进。不适用于：需求还没拆（回 plan）、只是问答（无 goal 无队列）。"
 user-invocable: true
 disable-model-invocation: false
@@ -170,7 +170,7 @@ for 子问题 in 分解出的序列:
 | 需要权威资料、不能凭记忆写 | `source-driven-development.md` |
 | 高风险/不确定决策，需要对抗性复查 | `doubt-driven-development.md` |
 | **多 agent 并行 / 派发子代理 / 任务认领 / 队列** | `team-orchestration.md` 的「任务队列与认领」 |
-| **决定开几个 agent / 并发上限** | `team-orchestration.md` 的「并发上限」 |
+| **决定开几个 agent / 派发数量** | `team-orchestration.md` 的「并发数量」 |
 | 失败，需要系统排查 | `../verify/debugging-and-error-recovery.md` |
 
 **切片内的执行顺序**（降级为单 agent 时，或作为 Builder 子代理时）：
@@ -189,7 +189,7 @@ for 子问题 in 分解出的序列:
 
 除降级情形外，按多 agent 推进：主会话做 Orchestrator（路由 / 跟踪 / 评审），
 实现交给 Builder 子代理。读 `team-orchestration.md` 获取完整规则——角色定义、
-**任务队列与认领**（`tasks/queue/` 状态机）、**并发上限 3-5**、Git 归属、
+**任务队列与认领**（`tasks/queue/` 状态机）、**并发数量（有几个可认领就派几个，上限 5）**、Git 归属、
 交接五要素、评审门禁、以及 DSH 特有的
 **「Goal 自挂 + 轮内收束」**（自动挂 goal，并把子代理在轮内 join 干净）。
 
@@ -223,20 +223,47 @@ for 子问题 in 分解出的序列:
 **默认就用 `subagent(run_in_background: false)`** —— 它本身阻塞、直接返回结果，
 且**同一轮发多个就是真并行**（实测见下）。
 
+**⛔ 一次必须派完所有可认领任务，不是一次派一个。**
+
+```text
+可认领任务数 N（= tasks/queue/pending/ 里依赖已满足的项数）
+  → 本轮就把这 N 个全部派出，同一轮发 N 个 subagent 调用
+  → N > 5 时，本轮派 5 个，剩下的下一轮继续
+  → N = 1 时才派 1 个（这是允许的例外，但必须是真的只有 1 个）
+```
+
+**只派 1 个 = 自己把自己退化成单 agent**，还额外付了提示词冷启动成本 ——
+**比不派更差**。所以"本轮只派一个"必须有理由：**队列里确实只剩一个可认领任务**。
+
+| 可认领任务数 | 本轮派几个 |
+|---|---|
+| 1 | 1（唯一允许只派一个的情况） |
+| 2–5 | **全部派出**（2 就派 2，5 就派 5） |
+| >5 | 5（上限），其余下一轮 |
+| 0 | 不派 —— 去 join 在跑的，或收工 |
+
 | 场景 | 用什么 |
 |---|---|
-| **并行 + 要结果**（绝大多数情况） | **`subagent(run_in_background: false)`，同一轮发多个** ← **默认首选** |
+| **并行 + 要结果**（绝大多数情况） | **`subagent(run_in_background: false)`，同一轮发 N 个** ← **默认首选** |
 | 大批量（>5）+ 需要脚本化/结构化汇总 | `workflow(...)` |
 | 不需要本轮结果，想边跑边干别的 | `run_in_background: true`（结果下一轮才到） |
 
 **实测证据（本机跑过）**：
 
 ```text
-同一轮并行发 2 个 run_in_background: false 的子代理，每个内部 sleep 20 秒：
-  Probe A  start=14:14:07.978  end=14:14:27.995
-  Probe B  start=14:14:08.620  end=14:14:28.645
-  → 开始相差 0.64s，结束相差 0.65s，总耗时 20s（不是 40s）
-  → 结论：真并行，且全部完成后才一起返回
+① 同一轮并行发 2 个 run_in_background: false，各 sleep 20 秒：
+     A start=14:14:07.978  end=14:14:27.995
+     B start=14:14:08.620  end=14:14:28.645
+   → 开始相差 0.64s，结束相差 0.65s，总耗时 20s（不是 40s）
+
+② 同一轮并行发 5 个，各 sleep 25 秒：
+     P2 14:46:48.770 → 14:47:13.783
+     P3 14:46:50.807 → 14:47:15.894
+     P4 14:46:50.884 → 14:47:15.909
+     P5 14:46:51.279 → 14:47:16.292
+     P1 14:46:51.416 → 14:47:16.429
+   → 5 个在 2.6s 内全部启动，总耗时 25s（不是 125s）
+   → 结论：一次派 5 个是可行的，平台没有并发限制问题
 ```
 
 #### 三、确认收敛后才收尾
@@ -246,6 +273,9 @@ for 子问题 in 分解出的序列:
 
 **⛔ 禁止清单**：
 
+- ❌ **本轮只派 1 个，而队列里明明有多个可认领任务** —— 这是最常见的错误
+  （把自己退化成单 agent，还多付冷启动成本，**比不派更差**）
+- ❌ 把"可认领任务"拆成多轮逐个派 —— 依赖允许的就同一轮全部发出
 - ❌ **还没做完自己那份活就调阻塞调用**（把并行串行化）
 - ❌ 用 `job_output` 等**子代理** —— **实测无效**（`Error: unknown job`；子代理 id ≠ job id）
 - ❌ 默认写成 `run_in_background: true` 却又声称"本轮会等它" ——
@@ -253,9 +283,9 @@ for 子问题 in 分解出的序列:
 - ❌ 留下"等它回来我再处理"这种未兑现的意图 —— 那就是空烧轮次的起点
 - ❌ 本轮有未收敛的后台子代理，却输出"完成"类结论
 
-> **要点**：要并行又要在本轮拿到结果 → **同一轮发多个 `run_in_background: false`**。
-> 不要用 `run_in_background: true` 然后再想办法"等" —— 那个"等"不存在。
-> `workflow` 不是唯一的并行手段，只在需要脚本化编排时用它。
+> **要点**：要并行又要在本轮拿到结果 → **同一轮发多个 `run_in_background: false`**，
+> **有几个可认领就派几个**（上限 5）。不要用 `run_in_background: true` 然后再想办法"等"
+> —— 那个"等"不存在。`workflow` 不是唯一的并行手段，只在需要脚本化编排时用它。
 
 **四层同时生效**，缺一层都会出问题：
 
@@ -277,7 +307,7 @@ for 子问题 in 分解出的序列:
 | `incremental-implementation.md` | 增量实现主流程（薄垂直切片、切片策略、实现规则） |
 | `test-driven-development.md` | 测试驱动开发（RED-GREEN-REFACTOR、Prove-It、测试金字塔） |
 | `epoch-loop.md` | **通用外层循环**（git 基线、任务分解、双粒度 checkpoint、失败回退）**每次都用** |
-| `team-orchestration.md` | **多智能体编排**（角色、**任务队列与认领**、**并发上限**、Git 归属、生命周期、交接、评审、goal/join 纪律） |
+| `team-orchestration.md` | **多智能体编排**（角色、**任务队列与认领**、**并发数量**、Git 归属、生命周期、交接、评审、goal/join 纪律） |
 | `context-engineering.md` | 上下文工程 |
 | `source-driven-development.md` | 基于官方文档开发 |
 | `doubt-driven-development.md` | 对抗性复查 |

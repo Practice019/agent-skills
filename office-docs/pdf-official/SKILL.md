@@ -1,6 +1,7 @@
 ---
 name: pdf-official
-description: "生成、读取、转换、填写 PDF：提取文本与表格、合并/裁剪/旋转/加水印、合成新 PDF、填 AcroForm 表单、OCR。当产物或输入是 PDF 时使用。 \"Use this skill whenever a PDF file is being produced, opened, transformed, filled, or read. That includes: extracting text or tables from an existing PDF; combining, carving, rotating, cropping, or watermarking pages; composing a fresh PDF (report, invoice, certificate); filling AcroForm fields or overlaying text onto a non-fillable scanned form; encrypting or unlocking a PDF; running OCR over a scanned document; rendering pages to PNG/JPEG for visual analysis. Trigger on mentions of 'PDF', a filename ending in .pdf, requests like 'turn this into a PDF report', or references to AcroForm / form fields.\" license: Apache-2.0 — see LICENSE for terms and third-party attributions"
+description: "生成、读取、转换、填写 PDF：提取文本与表格、合并/裁剪/旋转/加水印、合成新 PDF、填 AcroForm 表单、OCR。当产物或输入是 PDF 时使用。 \"Use this skill whenever a PDF file is being produced, opened, transformed, filled, or read. That includes: extracting text or tables from an existing PDF; combining, carving, rotating, cropping, or watermarking pages; composing a fresh PDF (report, invoice, certificate); filling AcroForm fields or overlaying text onto a non-fillable scanned form; encrypting or unlocking a PDF; running OCR over a scanned document; rendering pages to PNG/JPEG for visual analysis. Trigger on mentions of 'PDF', a filename ending in .pdf, requests like 'turn this into a PDF report', or references to AcroForm / form fields.\""
+license: Apache-2.0 — see LICENSE for terms and third-party attributions
 ---
 
 # PDF skill

@@ -1,6 +1,9 @@
 ---
 name: arxiv
-description: "检索、阅读、引用、下载 arXiv 论文：按主题/作者/分类/ID 搜索、取摘要与元数据、生成 BibTeX、下载 PDF、跟踪最新投稿。当用户要找论文、读论文、查引用、下载 arXiv PDF 时使用。 \"Use this skill whenever the user wants to find, read, cite, track, download, or analyze academic papers on arXiv. That includes: searching papers by topic, author, category, or arXiv ID; fetching abstracts or full metadata; generating BibTeX citations; downloading PDFs; listing the latest submissions in a field (e.g. cs.AI daily digest); checking a paper's citation impact; finding who cites a paper, what it references, or related-paper recommendations. Trigger on mentions of 'arXiv', an arXiv ID (e.g. 2601.02780 or hep-th/0601001), an arxiv.org URL, 'paper search', 'literature review', 'find papers about X', 'cite this paper', or 'what's new in cs.LG'.\" version: 2.0.0 license: MIT platforms: [linux, macos, windows]"
+description: "检索、阅读、引用、下载 arXiv 论文：按主题/作者/分类/ID 搜索、取摘要与元数据、生成 BibTeX、下载 PDF、跟踪最新投稿。当用户要找论文、读论文、查引用、下载 arXiv PDF 时使用。 \"Use this skill whenever the user wants to find, read, cite, track, download, or analyze academic papers on arXiv. That includes: searching papers by topic, author, category, or arXiv ID; fetching abstracts or full metadata; generating BibTeX citations; downloading PDFs; listing the latest submissions in a field (e.g. cs.AI daily digest); checking a paper's citation impact; finding who cites a paper, what it references, or related-paper recommendations. Trigger on mentions of 'arXiv', an arXiv ID (e.g. 2601.02780 or hep-th/0601001), an arxiv.org URL, 'paper search', 'literature review', 'find papers about X', 'cite this paper', or 'what's new in cs.LG'.\""
+version: 2.0.0
+license: MIT
+platforms: [linux, macos, windows]
 ---
 
 # arXiv Research

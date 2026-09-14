@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `git-workflow-and-versioning.md`（原样搬入，未本地改动）
+
 # Git Workflow and Versioning
 
 ## Overview

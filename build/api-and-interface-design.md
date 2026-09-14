@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `api-and-interface-design.md`（原样搬入，未本地改动）
+
 # API and Interface Design
 
 ## Overview
@@ -22,7 +24,7 @@ This means: every public behavior — including undocumented quirks, error messa
 
 - **Be intentional about what you expose.** Every observable behavior is a potential commitment.
 - **Don't leak implementation details.** If users can observe it, they will depend on it.
-- **Plan for deprecation at design time.** See `../ship/deprecation-and-migration.md` for how to safely remove things users depend on.
+- **Plan for deprecation at design time.** See `deprecation-and-migration` for how to safely remove things users depend on.
 - **Tests are not enough.** Even with perfect contract tests, Hyrum's Law means "safe" changes can break real users who depend on undocumented behavior.
 
 ### The One-Version Rule

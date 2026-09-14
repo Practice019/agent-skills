@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `debugging-and-error-recovery.md`（原样搬入，未本地改动）
+
 # Debugging and Error Recovery
 
 ## Overview

@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `doubt-driven-development.md`（原样搬入，未本地改动）
+
 # Doubt-Driven Development
 
 ## Overview
@@ -36,13 +38,10 @@ If you doubt every keystroke, you ship nothing. The skill applies only to non-tr
 
 ## Loading Constraints
 
-**在主会话（主脑）里应用这个技能** —— 只有这里能派 Step 3 的**评审档**子代理。
+This skill is designed for the **main-session orchestrator**, where Step 3 (DOUBT, detailed below) can spawn a fresh-context reviewer.
 
-- **不要从子代理内部应用它。** 子代理只有三类轻量任务（探索 / 讨论 / 评审），
-  它**不再往下派** —— 顾问套顾问收益趋近于零，还会把上下文翻倍。
-  如果你（作为子代理）发现自己需要这个技能：**把情况回报给主脑，由主会话来做**。
-- **不做「自我质疑」的降级代替品。** 自己复查自己在第 1 步就带着原判断，
-  那不是干净上下文 —— 与其降级成心理分隔，不如直接说明「本次未做独立评审」。
+- **Do NOT add this skill to a persona's `skills:` frontmatter.** A persona that follows Step 3 would spawn another persona — the orchestration anti-pattern explicitly forbidden by `../_shared/references/orchestration-patterns.md` ("personas do not invoke other personas").
+- **If you find yourself applying this skill from inside a subagent context** (where Claude Code prevents nested subagent spawn): the preferred path is to surface to the user that doubt-driven cannot run nested and let the main session handle it. As a last resort only, a degraded self-questioning fallback exists — rewrite ARTIFACT + CONTRACT as a fresh self-prompt with a hard mental separator from your prior reasoning, and walk Steps 1–5. This is **not fresh-context review** (you carry your own context with you), so flag the result as degraded and prefer escalation whenever the user is reachable.
 
 ## The Process
 
@@ -103,9 +102,9 @@ CONTRACT: <paste contract>
 
 **Pass ARTIFACT + CONTRACT only. Do NOT pass the CLAIM.** Handing the reviewer your conclusion biases it toward agreement. The reviewer must independently determine whether the artifact satisfies the contract.
 
-**在 DSH 里，这个 reviewer 就是一个「评审档」子代理** —— 干净上下文、只读、只回问题。 派法与提示词模板见 `subagent-tasks.md` 的「评审」一节。
+In Claude Code, the role-based reviewers in `agents/` start with isolated context by design and are usable here — see `agents/` for the roster and per-domain match.
 
-**The adversarial prompt above takes precedence over any default reviewer style.** Generic reviewers tend to produce balanced verdicts with both strengths and weaknesses; doubt-driven needs issues-only output. Paste the adversarial prompt verbatim into the subagent's prompt so the brief overrides whatever default shape it would otherwise produce.
+**The adversarial prompt above takes precedence over the persona's default response shape.** Personas like `code-reviewer` are written to produce balanced verdicts with both strengths and weaknesses; doubt-driven needs issues-only output. Paste the adversarial prompt verbatim into the invocation so it overrides the persona's default. If a persona's response shape can't be overridden cleanly, fall back to a generic subagent with the adversarial prompt.
 
 #### Cross-model escalation
 
@@ -220,11 +219,11 @@ If 3 cycles is "obviously insufficient" because the artifact is large: the artif
 
 ## Interaction with Other Skills
 
-- **`../review/code-review-and-quality.md` / `/review`**: complementary. `/review` is post-hoc PR verdict; doubt-driven is in-flight per-decision. Use both.
+- **`code-review-and-quality` / `/review`**: complementary. `/review` is post-hoc PR verdict; doubt-driven is in-flight per-decision. Use both.
 - **`source-driven-development`**: SDD verifies *facts about frameworks* against official docs. Doubt-driven verifies *your reasoning about the artifact*. SDD checks the API exists; doubt-driven checks you used it correctly under the contract.
 - **`test-driven-development`**: TDD's RED step is doubt made concrete — a failing test is a disproof attempt. When TDD applies, that failing test *is* the doubt step for behavioral claims.
 - **`debugging-and-error-recovery`**: when the reviewer surfaces a real failure mode, drop into the debugging skill to localize and fix.
-- **子代理分工规则**（`subagent-tasks.md`）：这个技能由**主脑**应用，评审档子代理是被派的一方；**子代理不再往下派**（见上方 Loading Constraints）。
+- **Repo orchestration rules** (`../_shared/references/orchestration-patterns.md`): this skill orchestrates from the main session. A persona calling another persona is anti-pattern B — see Loading Constraints above.
 
 ## Verification
 

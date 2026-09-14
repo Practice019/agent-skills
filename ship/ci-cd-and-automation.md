@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `ci-cd-and-automation.md`（原样搬入，未本地改动）
+
 # CI/CD and Automation
 
 ## Overview

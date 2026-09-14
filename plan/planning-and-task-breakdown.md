@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `planning-and-task-breakdown.md`（原样搬入，未本地改动）
+
 # Planning and Task Breakdown
 
 ## Overview
@@ -8,7 +10,7 @@ Decompose work into small, verifiable tasks with explicit acceptance criteria. G
 
 - You have a spec and need to break it into implementable units
 - A task feels too large or vague to start
-- Work needs a deliberate order (what must come before what)
+- Work needs to be parallelized across multiple agents or sessions
 - You need to communicate scope to a human
 - The implementation order isn't obvious
 
@@ -25,7 +27,7 @@ Before writing any code, operate in read-only mode:
 - Map dependencies between components
 - Note risks and unknowns
 
-**Do NOT write code during planning.** The output is a plan document saved to `tasks/plan.md` and a task list recorded in the task list target (see Output Files; default: a section in `tasks/plan.md`), not implementation.
+**Do NOT write code during planning.** The output is a plan document saved to `tasks/plan.md` and a task list recorded in the task list target (see Output Files; default `tasks/todo.md`), not implementation.
 
 ### Step 2: Identify the Dependency Graph
 
@@ -73,39 +75,30 @@ Each vertical slice delivers working, testable functionality.
 
 ### Step 4: Write Tasks
 
-Each task has **two shapes** — a scannable one-line entry in the task list, plus an
-optional detail block beneath it:
+Each task follows this structure, whether it lands in the markdown task list or as an item in an external tracker (see Output Files):
 
 ```markdown
-- [ ] **T3** Short descriptive title · Size M · Depends on T1
+## Task [N]: [Short descriptive title]
 
-      **Description:** One paragraph explaining what this accomplishes.
+**Description:** One paragraph explaining what this task accomplishes.
 
-      **Acceptance criteria:**
-      - [Specific, testable condition]
-      - [Specific, testable condition]
+**Acceptance criteria:**
+- [ ] [Specific, testable condition]
+- [ ] [Specific, testable condition]
 
-      **Verification (per task: L1 and L2 only — L3 is a ONE-TIME pre-delivery gate):**
-      - **L1 every round:** [focused compile/typecheck + related tests]
-      - **L2 on sub-problem done:** [affected packages ∪ reverse deps] + build
-        (changes to semantics/contracts: skip the narrowing, run the full suite)
-      - **L3 / full regression are NOT listed here** — they run ONCE before delivery
-        (see the "pre-delivery gate" in `../build/SKILL.md`). List this task's
-        non-functional items in Acceptance criteria instead.
+**Verification:**
+- [ ] Tests pass: [the repository's focused-test command]
+- [ ] Build succeeds: [the repository's build command]
+- [ ] Manual check: [description of what to verify]
 
-      **Dependencies:** [T-numbers, or "None"]
+**Dependencies:** [Task numbers this depends on, or "None"]
 
-      **Files likely touched:**
-      - `src/path/to/file.ts`
+**Files likely touched:**
+- `src/path/to/file.ts`
+- `tests/path/to/test.ts`
 
-      **Estimated scope:** [S: 1-2 files | M: 3-5 files | L: 5-8 files | XL: 8+ — must be split further]
+**Estimated scope:** [Small: 1-2 files | Medium: 3-5 files | Large: 5+ files]
 ```
-
-> ⛔ **The only checkbox that means "this task is not done yet" is the `- [ ] **T<n>**` line.**
-> `build` finds the next epoch by scanning for the **lowest-numbered unchecked `- [ ] **T<n>**`**.
-> Sub-items under a task, checkpoints, open questions, and self-check lists also use
-> checkboxes — **they are not tasks**, and the scan must exclude them (otherwise it
-> will try to "start" a checkpoint).
 
 ### Step 5: Order and Checkpoint
 
@@ -116,24 +109,15 @@ Arrange tasks so that:
 3. Verification checkpoints occur after every 2-3 tasks
 4. High-risk tasks are early (fail fast)
 
-Add explicit checkpoints to the plan document:
+Add explicit checkpoints to the task list target:
 
 ```markdown
-> **Checkpoint: after T1–T3** — an **agent-run gate, not a human stop**
-> - [ ] All tests pass (run L2: affected packages ∪ reverse deps)
-> - [ ] Application builds without errors
-> - [ ] Core user flow **runs — verify it yourself** (for any UI: screenshot + `read_image`)
-> - [ ] `tasks/plan.md` checkboxes written back
-
-> ⛔ **A checkpoint is NOT "wait for a human to sign off"** — it is the orchestrator
-> finishing the verification it can do on its own. **Human verification happens ONCE,
-> at the very end, as a single end-to-end run** (see the pre-delivery gate in
-> `../build/SKILL.md`). Stopping at every checkpoint pushes agent-doable work onto the
-> human and chops the pipeline into pieces that each wait for someone to come back.
+## Checkpoint: After Tasks 1-3
+- [ ] All tests pass
+- [ ] Application builds without errors
+- [ ] Core user flow works end-to-end
+- [ ] Review with human before proceeding
 ```
-
-> ⚠️ Checkpoints are **blockquotes, not headings with sibling checkboxes** — see the scan rule above.
-> A checkpoint is never a task that `build` can start.
 
 ## Task Sizing Guidelines
 
@@ -142,12 +126,10 @@ Add explicit checkpoints to the plan document:
 | **XS** | 1 | Single function or config change | Add a validation rule |
 | **S** | 1-2 | One component or endpoint | Add a new API endpoint |
 | **M** | 3-5 | One feature slice | User registration flow |
-| **L** | 5-8 | Multi-component feature — **prefer splitting; keep as one task only with a written reason** | Search with filtering and pagination |
-| **XL** | 8+ | **Too large — must be broken down, no exceptions** | — |
+| **L** | 5-8 | Multi-component feature | Search with filtering and pagination |
+| **XL** | 8+ | **Too large — break it down further** | — |
 
-**XL (8+ files) must be split — no exceptions.** **L (5-8) should be split too**, but it may
-stay as a single task **only if you write down why it cannot be split**. An agent performs
-best on S and M tasks.
+If a task is L or larger, it should be broken into smaller tasks. An agent performs best on S and M tasks.
 
 **When to break a task down further:**
 - It would take more than one focused session (roughly 2+ hours of agent work)
@@ -162,20 +144,19 @@ best on S and M tasks.
 
 Create the `tasks/` directory if it does not exist.
 
+**Never overwrite an incomplete plan.** Before writing `tasks/plan.md` or `tasks/todo.md`, check whether they already exist and still contain unchecked tasks:
+
+- Same work being replanned (the user asked to revise or extend this plan) → update the existing files in place.
+- Different work → **stop and ask.** The unchecked tasks may be mid-build in another session. Do not delete, overwrite, or rename the existing files on your own; present the conflict and let the user decide (finish the old plan first, explicitly discard it, or tell you where the new plan should go).
+
+The same rule applies to an external task list target: never bulk-close or delete another plan's open tracker items to make room for new ones.
+
 ### Task List Target
 
 The task list target is where tasks and checkpoints are recorded. It is defined once, here; every other reference in this skill defers to it.
 
-- **Default: a section inside `tasks/plan.md`.** That is the single file `build` reads — it takes the **lowest-numbered unchecked `- [ ] **T<n>**`** as the next epoch. There is no separate task file.
-- **External tracker = optional mirror, never a substitute.** If the project's agent rules (`AGENTS.md`, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, `bd`/beads), map the Step 4 structure onto the tracker's fields (acceptance criteria and verification in the item body, dependencies via the tracker's linking mechanism, `bd dep add` / "blocked by", etc.) — but **`tasks/plan.md` still carries the authoritative `- [ ] **T<n>**` checklist**, and the tracker mirrors it. Record the mapping in `tasks/plan.md`.
-
-> ⛔ **绝不要让 tracker 成为任务存在的唯一地方。** `build` **只读 `tasks/plan.md`** ——
-> 如果勾选框只活在 Jira 里，`build` 就**没有输入**：它扫不到 `- [ ] **T<n>**`，
-> 于是判定「全部完成」然后收工。**这不是报错，是静默地少做。**
-
-> ⛔ **不要另建 `tasks/todo.md`。** 清单文件一旦分裂，`build` 每轮开头读到的
-> 就是另一份、或根本不存在的那一份 —— 而且**不报错，只空转**，
-> 正是本工作流最想治的病。**任务清单的单一权威 = `tasks/plan.md`。**
+- **Default: a checklist-style markdown file at `tasks/todo.md`.** This is the convention the `/build` command and other downstream tooling expect. Use it unless the project says otherwise.
+- **External tracker:** if the project's agent rules (`CLAUDE.md`, `AGENTS.md`, etc.) or the user designate an issue tracker (e.g. GitHub Issues, Jira, Linear, `bd`/beads), create one tracker item per task instead of writing `tasks/todo.md`. Map the Step 4 structure onto the tracker's fields: acceptance criteria and verification steps in the item body, dependencies via the tracker's linking mechanism (`bd dep add`, "blocked by", etc.). Record Step 5 checkpoints as tracker items too, or as a checklist in the plan document if the tracker has no natural equivalent.
 
 When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked in Linear project FOO") so downstream steps and future sessions know where to look, and keep the plan document's Task List section as an ordered index of tracker item IDs or links rather than a duplicate checklist.
 
@@ -193,26 +174,27 @@ When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked 
 
 ## Task List
 
-> ⚠️ Checkboxes are **only** for tasks, and the format is fixed: `- [ ] **T<n>**`.
-> Checkpoints are blockquotes. (See the scan rule in Step 4.)
-
 ### Phase 1: Foundation
-- [ ] **T1** ... · Size S · Depends on —
-- [ ] **T2** ... · Size M · Depends on T1
+- [ ] Task 1: ...
+- [ ] Task 2: ...
 
-> **Checkpoint: Foundation** — tests pass, builds clean → **orchestrator self-check, then continue (no human stop)**
+### Checkpoint: Foundation
+- [ ] Tests pass, builds clean
 
 ### Phase 2: Core Features
-- [ ] **T3** ... · Size M · Depends on T2
-- [ ] **T4** ... · Size M · Depends on T2
+- [ ] Task 3: ...
+- [ ] Task 4: ...
 
-> **Checkpoint: Core Features** — end-to-end flow works → **orchestrator self-check, then continue (no human stop)**
+### Checkpoint: Core Features
+- [ ] End-to-end flow works
 
 ### Phase 3: Polish
-- [ ] **T5** ... · Size S · Depends on T4
-- [ ] **T6** ... · Size S · Depends on T4
+- [ ] Task 5: ...
+- [ ] Task 6: ...
 
-> **Checkpoint: Complete** — all acceptance criteria met, ready for review
+### Checkpoint: Complete
+- [ ] All acceptance criteria met
+- [ ] Ready for review
 
 ## Risks and Mitigations
 | Risk | Impact | Mitigation |
@@ -225,16 +207,13 @@ When using an external tracker, note it in `tasks/plan.md` (e.g. "Tasks tracked 
 
 When tasks live in an external tracker, keep the Task List section above as an ordered index of tracker item IDs or links instead of a duplicate checklist.
 
-## Sequencing: What Can Be Reordered
+## Parallelization Opportunities
 
-Single writer, so this is not about parallelism — it is about **order and batching**:
+When multiple agents or sessions are available:
 
-- **Independent (any order):** feature slices that don't share files, tests for already-implemented features, documentation
-- **Must be sequential:** database migrations, shared state changes, dependency chains
-- **Needs its contract first:** features that share an API contract — define the contract, then implement either side
-
-Knowing what is independent lets you **batch** related work together (fewer context switches),
-and lets you **reorder around a blocked item** instead of stalling on it.
+- **Safe to parallelize:** Independent feature slices, tests for already-implemented features, documentation
+- **Must be sequential:** Database migrations, shared state changes, dependency chains
+- **Needs coordination:** Features that share an API contract (define the contract first, then parallelize)
 
 ## Common Rationalizations
 
@@ -244,11 +223,13 @@ and lets you **reorder around a blocked item** instead of stalling on it.
 | "The tasks are obvious" | Write them down anyway. Explicit tasks surface hidden dependencies and forgotten edge cases. |
 | "Planning is overhead" | Planning is the task. Implementation without a plan is just typing. |
 | "I can hold it all in my head" | Context windows are finite. Written plans survive session boundaries and compaction. |
+| "The old `tasks/plan.md` is stale, I'll just replace it" | Unchecked tasks may be mid-build in another session. Overwriting them destroys work state that exists nowhere else. Stop and ask. |
 
 ## Red Flags
 
 - Starting implementation without a written task list
-- Scattering tasks between `tasks/plan.md` and a second file (the list must have one authority)
+- Overwriting a `tasks/plan.md` or `tasks/todo.md` that still has unchecked tasks for different work, without asking
+- Writing `tasks/todo.md` when the project has designated an external tracker (or scattering tasks across both)
 - Tasks that say "implement the feature" without acceptance criteria
 - No verification steps in the plan
 - All tasks are XL-sized
@@ -262,7 +243,8 @@ Before starting implementation, confirm:
 - [ ] Every task has acceptance criteria
 - [ ] Every task has a verification step
 - [ ] Task dependencies are identified and ordered correctly
-- [ ] Tasks are recorded in the task list target (default: a section in `tasks/plan.md`)
+- [ ] Tasks are recorded in the task list target (default `tasks/todo.md`)
+- [ ] No pre-existing incomplete plan was overwritten without explicit user confirmation
 - [ ] No task touches more than ~5 files
 - [ ] Checkpoints exist between major phases
 - [ ] The human has reviewed and approved the plan

@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `idea-refine.md`（原样搬入，未本地改动）
+
 # Idea Refine
 
 Refines raw ideas into sharp, actionable concepts worth building through structured divergent and convergent thinking.
@@ -76,7 +78,7 @@ When the user invokes this skill with an idea (`$ARGUMENTS`), guide them through
 
 **If running inside a codebase:** Use `Glob`, `Grep`, and `Read` to scan for relevant context — existing architecture, patterns, constraints, prior art. Ground your variations in what actually exists. Reference specific files and patterns when relevant.
 
-Read `support/idea-refine/frameworks.md` for additional ideation frameworks you can draw from. Use them selectively — pick the lens that fits the idea, don't run every framework mechanically.
+Read `frameworks.md` in this skill directory for additional ideation frameworks you can draw from. Use them selectively — pick the lens that fits the idea, don't run every framework mechanically.
 
 #### Phase 2: Evaluate & Converge
 
@@ -89,7 +91,7 @@ After the user reacts to Phase 1 (indicates which ideas resonate, pushes back, a
    - **Feasibility:** What's the technical and resource cost? What's the hardest part?
    - **Differentiation:** What makes this genuinely different? Would someone switch from their current solution?
 
-   Read `support/idea-refine/refinement-criteria.md` for the full evaluation rubric.
+   Read `refinement-criteria.md` in this skill directory for the full evaluation rubric.
 
 3. **Surface hidden assumptions.** For each direction, explicitly name:
    - What you're betting is true (but haven't validated)
@@ -148,7 +150,7 @@ Ask the user if they'd like to save this to `docs/ideas/[idea-name].md` (or a lo
 
 Direct, thoughtful, slightly provocative. You're a sharp thinking partner, not a facilitator reading from a script. Channel the energy of "that's interesting, but what if..." -- always pushing one step further without being exhausting.
 
-Read `support/idea-refine/examples.md` for examples of what great ideation sessions look like.
+Read `examples.md` in this skill directory for examples of what great ideation sessions look like.
 
 ## Red Flags
 

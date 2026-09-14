@@ -1,3 +1,5 @@
+> 来源：addyosmani/agent-skills v0.6.9 · `incremental-implementation.md`（原样搬入，未本地改动）
+
 # Incremental Implementation
 
 ## Overview
@@ -16,19 +18,16 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
 ## The Increment Cycle
 
 ```
-┌────────────────────────────────────────────────────────┐
-│                                                        │
-│   Implement ──→ Test ──→ Verify ──┬──→ Commit ─────┐   │
-│       ▲                           │                │   │
-│       │                           │                ▼   │
-│       │                      ★ fail           Next slice│
-│       │                           │                    │
-│       │                           ▼                    │
-│       │                    Revert to baseline          │
-│       └──── change approach ◄─────┘                    │
-│              (NOT retry the same way)                  │
-│                                                        │
-└────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────┐
+│                                      │
+│   Implement ──→ Test ──→ Verify ──┐  │
+│       ▲                           │  │
+│       └───── Commit ◄─────────────┘  │
+│              │                       │
+│              ▼                       │
+│          Next slice                  │
+│                                      │
+└──────────────────────────────────────┘
 ```
 
 For each slice:
@@ -36,24 +35,8 @@ For each slice:
 1. **Implement** the smallest complete piece of functionality
 2. **Test** — run the test suite (or write a test if none exists)
 3. **Verify** — confirm the slice works as expected (tests pass, build succeeds, manual check)
-4. **Commit** -- save your progress with a descriptive message (see `../ship/git-workflow-and-versioning.md` for atomic commit guidance)
+4. **Commit** -- save your progress with a descriptive message (see `git-workflow-and-versioning` for atomic commit guidance)
 5. **Move to the next slice** — carry forward, don't restart
-
-**★ On failure** — the step this diagram used to omit. When Verify fails:
-
-1. **Revert** to the slice's baseline commit (`git reset --hard <baseline>`)
-2. **Record why it failed** — the specific error, not "didn't work"
-3. **Change approach** — do NOT retry the same way. A retry without a new idea
-   reproduces the same failure.
-
-> This is the local (per-slice) form of the same discipline. For the
-> **cross-slice / milestone** version — task decomposition, git checkpoints per
-> sub-problem, and the full epoch loop — read `epoch-loop.md`.
-
-**Why reverting beats patching in place:** a patch accumulating on top of a broken
-slice makes the failure unattributable. Reverting to a known-good baseline keeps
-exactly one variable changed per attempt, which is what makes the next attempt
-informative.
 
 ## Slicing Strategies
 
@@ -194,17 +177,21 @@ Each increment should be independently revertable:
 - Database migrations should have corresponding rollback migrations
 - Avoid deleting something in one commit and replacing it in the same commit — separate them
 
-## Scoping Each Increment
+## Working with Agents
 
-Before starting an increment, write down what is in scope and what is NOT:
+When directing an agent to implement incrementally:
 
 ```
-Increment 3: database schema change + API endpoint.
-NOT in scope: UI — that's the next increment.
+"Let's implement Task 3 from the plan.
+
+Start with just the database schema change and the API endpoint.
+Don't touch the UI yet — we'll do that in the next increment.
+
+After implementing, run the repository's test and build commands to
+verify nothing is broken."
 ```
 
-Be explicit about the boundary: it is what keeps one increment from bleeding into the next.
-After implementing, run the repository's own test and build commands to verify nothing is broken.
+Be explicit about what's in scope and what's NOT in scope for each increment.
 
 ## Increment Checklist
 

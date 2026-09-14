@@ -52,6 +52,32 @@ const FOREIGN_RUNTIME = [
 // 上游 frontmatter 键：DSH 不识别，留着通常意味着搬运未清理
 const FOREIGN_KEYS = ['entrypoint', 'assemble', 'description_zh', 'triggers', 'homepage', 'always', 'provenance'];
 
+// 只可能出现在 frontmatter 顶层、不会作为普通英文散文出现在 description 里的键名。
+// 命中即说明 description 标量把后面的顶层键吞了（见「1b」处说明）。
+const SWALLOWABLE_KEYS = [
+  'license', 'version', 'platforms', 'allowed-tools', 'argument-hint', 'model',
+  'hooks', 'metadata', 'author', 'homepage', 'repository', 'category',
+  'when_to_use', 'disable-model-invocation', 'user-invocable', 'provenance',
+];
+// 从 raw SKILL.md 文本判定 description 标量是否吞并了后续顶层键。
+// 只看 description 行本身，以及其后到「下一个顶层键行」之前的续行，
+// 一旦遇到形如 `key:` 的顶格行就停止，避免把合法的独立 license 键误判为被吞。
+function swallowedKeys(raw) {
+  const lines = raw.split('\n');
+  const end = lines.findIndex((l, i) => i > 0 && l.trim() === '---');
+  if (end < 0) return [];
+  const fmLines = lines.slice(1, end);
+  const di = fmLines.findIndex(l => /^description\s*:/.test(l));
+  if (di < 0) return [];
+  const span = [fmLines[di]];
+  for (let k = di + 1; k < fmLines.length; k++) {
+    if (/^[A-Za-z][\w-]*\s*:/.test(fmLines[k])) break;
+    span.push(fmLines[k]);
+  }
+  const text = span.join('\n');
+  return SWALLOWABLE_KEYS.filter(key => new RegExp(`[\\s"']${key}\\s*:`).test(text));
+}
+
 function collectArtifacts(lines) {
   const set = new Set();
   let inFence = false;
@@ -145,6 +171,14 @@ for (const name of targets) {
     }
   }
 
+  // ---- 1b. description 标量吞并后续顶层键 ----
+  // 双语 description 被引号包裹后若未在应有位置闭合，会把后面的 license/version/platforms
+  // 等顶层键一起吞进标量。YAML 仍能解析（就是一个超长字符串），硬门禁与库级扫描都看不出，
+  // 后果是元数据丢失 + 路由描述被无关字样污染，故只能按文本判定。
+  for (const k of swallowedKeys(raw)) {
+    errors.push(`description 标量吞并后续顶层键: ${k}（元数据丢失 + description 被污染）`);
+  }
+
   // ---- 2. 行尾 / 机器路径 / ~ 路径 / 引用精度 ----
   if (raw.includes('\r\n')) errors.push('SKILL.md 含 CRLF（会破坏 YAML frontmatter）');
 
@@ -214,6 +248,13 @@ for (const name of targets) {
     const rel = path.relative(dir, f).replace(/\\/g, '/');
     const base = path.basename(f);
     if (base === 'SKILL.md' && rel !== 'SKILL.md') nested++;
+    // 嵌套 SKILL.md 的 frontmatter 也要查键吞并：office-docs/*-official 就是这一类，
+    // 只查顶层 SKILL.md 会整片漏掉。
+    if (base === 'SKILL.md' && rel !== 'SKILL.md') {
+      for (const k of swallowedKeys(fs.readFileSync(f, 'utf8'))) {
+        errors.push(`${rel}: description 标量吞并后续顶层键: ${k}（元数据丢失 + description 被污染）`);
+      }
+    }
     if (!/\.(md|txt|py|ps1|sh|json|ya?ml|css|html)$/i.test(f)) continue;
     const t = fs.readFileSync(f, 'utf8');
     if (base.endsWith('.md') && base !== 'SKILL.md' && !/^tool-index\.md$/i.test(base) && t.includes('\r\n')) crlf++;

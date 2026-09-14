@@ -1,6 +1,6 @@
 ---
 name: skill-audit
-description: "审计并修复整个 DSH 技能库：库级两级扫描（硬门禁 + 宽口径：frontmatter / name / CRLF / 引用可解析 / 机器路径 / 重复内容 / description 质量）加单技能纵深体检（frontmatter 残留键、description 双语、专有运行时残留、引用精度、技能内重复、嵌套注册性），自动归类已知误报，再按 epoch 循环逐个原子修复并复验。当用户要求审查技能、检查 skill 规范、技能库体检、修复 skill、批量修技能、skill 有没有问题、清理技能库时使用。 Audit and repair the entire DSH skill library: library-level hard gate plus wide scan, plus a per-skill deep check (leftover foreign frontmatter keys, bilingual description, foreign runtime residue, reference precision, intra-skill duplicates, nested-skill registration), auto-classify known false positives, then fix atomically one at a time in an epoch loop with re-verification. Use when the user asks to audit skills, check skill conventions, run a skill-library health check, repair skills, bulk-fix skills, or clean up the library."
+description: "审计并修复整个 DSH 技能库：库级两级扫描（硬门禁 + 宽口径：frontmatter / name / CRLF / 引用可解析 / 机器路径 / 重复内容 / description 质量）加单技能纵深体检（frontmatter 残留键与键吞并、description 双语、专有运行时残留、引用精度、技能内重复、嵌套注册性），自动归类已知误报，再按 epoch 循环逐个原子修复并复验。当用户要求审查技能、检查 skill 规范、技能库体检、修复 skill、批量修技能、skill 有没有问题、清理技能库时使用。 Audit and repair the entire DSH skill library: library-level hard gate plus wide scan, plus a per-skill deep check (leftover foreign or swallowed frontmatter keys, bilingual description, foreign runtime residue, reference precision, intra-skill duplicates, nested-skill registration), auto-classify known false positives, then fix atomically one at a time in an epoch loop with re-verification. Use when the user asks to audit skills, check skill conventions, run a skill-library health check, repair skills, bulk-fix skills, or clean up the library."
 whenToUse: "用户说「审查我全部的 skill」「检查技能规范」「修复 skill」「技能库体检」「skill 是不是都规范了」「清理技能库」时；技能库有较大改动后也可定期自查。"
 user-invocable: true
 ---
@@ -13,7 +13,7 @@ user-invocable: true
 
 **做**：
 - 扫描技能库全部文件，找出真缺陷（断链、frontmatter 不合法、name 不合规、CRLF、机器路径、重复内容、description 过短）
-- 对单个技能做纵深体检（frontmatter 残留键、description 双语、专有运行时残留、引用精度、技能内重复、嵌套注册性）
+- 对单个技能做纵深体检（frontmatter 残留键与**键吞并**、description 双语、专有运行时残留、引用精度、技能内重复、嵌套注册性）
 - 区分「真缺陷」与「已知误报」，只修前者
 - 按 epoch 循环逐个原子修复，每个修复都真实验证后才 commit
 - 输出可核对的审计报告
@@ -29,7 +29,7 @@ user-invocable: true
 |---|---|---|
 | 硬门禁（库级） | 只看 SKILL.md 的 6 项（frontmatter/name/CRLF/读引用/`~`/用户名路径） | `../_shared/validate-skills.cjs` |
 | 宽口径审计（库级） | 扫全部 `.md`：CRLF、显式相对引用、机器路径、重复内容、description 质量 | `scripts/audit-library.cjs` |
-| 单技能体检（纵深） | 逐个技能：frontmatter 残留键、description 双语与长度、专有运行时残留、引用精度、技能内重复、嵌套 SKILL.md、文件清单 | `scripts/audit-skill.cjs` |
+| 单技能体检（纵深） | 逐个技能（含嵌套 SKILL.md）：frontmatter 残留键与**键吞并**、description 双语与长度、专有运行时残留、引用精度、技能内重复、嵌套 SKILL.md、文件清单 | `scripts/audit-skill.cjs` |
 
 三个脚本都**用自身位置反推技能库根目录**，不需要硬编码路径；技能库整体移动后仍可用。三者共用同一套误报口径（`NON_REPO` / `ARTIFACTS` / `BENIGN_TILDE`），改口径要三处同步。
 
@@ -69,7 +69,7 @@ node "<skills-root>\skill-audit\scripts\audit-skill.cjs" <skill-a> <技能b>   #
 
 | 类别 | 判据 | 处置 |
 |---|---|---|
-| 真缺陷 | 引用指向不存在的仓库内文件；frontmatter 不合法；name 非 kebab 或与目录名不一致；SKILL.md 含 CRLF；本机真实用户名绝对路径；正文残留 `OPENSQUILLA`/`{baseDir}`/`{{ with.* }}`/`skill_exec` 等专有运行时调用（检测说明见「本技能自带的三个工具」） | 必须修 |
+| 真缺陷 | 引用指向不存在的仓库内文件；frontmatter 不合法；**`description` 标量吞并了后续顶层键（`license`/`version`/`platforms` 等，元数据丢失且路由描述被污染）**；name 非 kebab 或与目录名不一致；SKILL.md 含 CRLF；本机真实用户名绝对路径；正文残留 `OPENSQUILLA`/`{baseDir}`/`{{ with.* }}`/`skill_exec` 等专有运行时调用（检测说明见「本技能自带的三个工具」） | 必须修 |
 | 已知误报 | 命中下方「误报分类表」 | 记入报告，**不改** |
 | 灰色 | description 过短或缺某一语言半句、上游 frontmatter 键残留、同名不同内容、嵌套 SKILL.md、第三方正文里的历史写法 | **先问用户**，不擅自改语义 |
 
@@ -116,15 +116,24 @@ CHANGELOG + `package.json` + tag。**不自动 push、不自动 npm publish。**
 
 ## 自检（证明体检器不是空转）
 
-改过 `scripts/audit-skill.cjs` 或怀疑它漏检时，用一份故意做坏的夹具库验证它确实报错：
+改过 `scripts/audit-skill.cjs` 或怀疑它漏检时，在**临时目录**（不要放进技能库）造一份故意做坏的夹具库验证它确实报错：
 
 ```powershell
-# 夹具生成器（在临时目录里造 BadName / broken-refs / dup-check / nested-check / crlf-check）
-node <fixture-dir>\make-fixture.cjs
+# 自己写一个 .cjs 在 <fixture-dir>\fake-lib 下造各类坏样本，
+# 并把真实的 scripts/audit-skill.cjs 复制到 <fixture-dir>\fake-lib\skill-audit\scripts\ 下
+# （体检器用自身位置反推根目录，复制后 ROOT 才指向夹具库）
+node <fixture-dir>\make-fixture.cjs <fixture-dir>\fake-lib <skills-root>\skill-audit\scripts
 node <fixture-dir>\fake-lib\skill-audit\scripts\audit-skill.cjs
 ```
 
-期望：`FAIL` 命中非 kebab name、frontmatter 残留键、正文专有运行时残留、断链、裸文件名读引用、`read ~/`、本机用户名路径、SKILL.md CRLF；`WARN` 命中技能内重复与 description 缺半句；嵌套 SKILL.md 与说明性引用归 `INFO`；退出码 1。夹具库用完即删，**不要放进技能库**。
+夹具必须含**正样本**（一个干净技能，期望 `PASS`），否则证明不了「不误报」。期望命中：
+
+- `FAIL`：非 kebab `name` / 与目录名不一致、相对引用断链、SKILL.md 含 CRLF、本机用户名绝对路径、`read ~/`（反例写法）、**description 标量吞并后续顶层键**（顶层与嵌套各造一例）。
+- `WARN`：上游 frontmatter 残留键、正文专有运行时残留、技能内内容完全相同的副本、description 缺中文/英文半句。
+- `INFO`：嵌套 SKILL.md、说明性引用。
+- 退出码 1；正样本 `PASS`。
+
+注意：**裸文件名读引用**（`tool-index.md`、`frameworks.md`）不由本脚本报出，那是 `audit-library.cjs` 的 INFO 类。夹具库用完即删，**不要放进技能库**。
 
 ## 修复规范
 
@@ -179,4 +188,5 @@ node <fixture-dir>\fake-lib\skill-audit\scripts\audit-skill.cjs
 | 用 `node -e "..."` 写校验逻辑 | PowerShell 剥离引号，语法报错 | 写成 `.cjs` 文件再跑 |
 | 体检器报一堆噪声就关掉它 | 真缺陷被淹没 | 先把已知误报写进分类表并降级为 INFO，再复跑 |
 | 改了体检器不做夹具自检 | 静默漏检，越修越假绿 | 用「自检」一节的夹具库验证报错能力 |
+| 双语 description 的引号在英文半句结束后忘了闭合 | 后续 `license:`/`version:`/`platforms:` 被一起吞进标量：YAML 仍能解析，硬门禁与库级扫描**全绿**，只有元数据丢失 + 路由描述被污染 | 让闭合引号落在英文半句末尾；改完跑 `audit-skill.cjs` 确认「键吞并」为 0。已知这一类只在纵深体检里查得出来，**必须查嵌套 SKILL.md** |
 | 顺手 push / publish | 不可控 | 需用户明确同意 |

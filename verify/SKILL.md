@@ -26,10 +26,10 @@ disable-model-invocation: false
 | **用测试证明行为正确**（要写/跑测试） | `test-driven-development.md` |
 | **浏览器真实环境验证**（DOM / console / network / 截图看视图） | `browser-testing-with-devtools.md` |
 | **东西坏了，要系统化排错** | `debugging-and-error-recovery.md` |
-| **拿到一段报错堆栈 / traceback / panic / 崩溃日志** | `../_shared/references/../verify/stack-trace-triage.md` 见下 |
+| **拿到一段报错堆栈 / traceback / panic / 崩溃日志** | `stack-trace-triage.md`（同目录） 见下 |
 
-> 注：上游的 `stack-trace-triage` 在本库中位于 `verify/` 之外时，按
-> `skills/stack-trace-triage/SKILL.md` 查找；若未搬运，则不引用。
+> 注：`stack-trace-triage` **不是上游内容**（上游 skills/ 里没有它），
+> 它是本库原有的本地子模块，从重置前的 git 历史恢复而来。
 
 ## 三条路径的顺序
 

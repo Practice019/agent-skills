@@ -1,11 +1,12 @@
 ---
 name: frontend-design
-description: "为新建或改造 UI 提供有辨识度的视觉设计指导：网站、落地页、Web 应用、仪表盘、React/HTML/Vue 组件、有视觉产出的 artifact、风格改造。当任务产出或修改任何用户会看到渲染结果的东西时使用。 Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Use whenever the task produces or modifies anything a user will see rendered — websites, landing pages, web apps, dashboards, React/HTML/Vue components, artifacts with visual output, style overhauls, or \"make this look better\" requests — even if the user never says the word \"design\". Covers aesthetic direction, typography, environment constraints (fonts, Tailwind, assets), and when to converge on convention instead of chasing distinctiveness. license: Complete terms in LICENSE.txt"
+description: "为新建或改造 UI 提供有辨识度的视觉设计指导：网站、落地页、Web 应用、仪表盘、React/HTML/Vue 组件、有视觉产出的 artifact、风格改造。当任务产出或修改任何用户会看到渲染结果的东西时使用。 Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Use whenever the task produces or modifies anything a user will see rendered — websites, landing pages, web apps, dashboards, React/HTML/Vue components, artifacts with visual output, style overhauls, or \"make this look better\" requests — even if the user never says the word \"design\". Covers aesthetic direction, typography, environment constraints (fonts, Tailwind, assets), and when to converge on convention instead of chasing distinctiveness."
+license: Complete terms in LICENSE.txt
 ---
 
 # Frontend Design
 
-> **Boundary with `design-blueprint`** (`../define/design-blueprint/SKILL.md`): if the task still has no spec — no DESIGN.md, no structural layout, no decision record — start there first. This skill covers visual direction, typography, environment constraints, and implementation polish once the blueprint exists.
+> **Boundary with the `define` phase** (`../define/SKILL.md`): if the task still has no spec — no DESIGN.md, no structural layout, no decision record — resolve that first. This skill covers visual direction, typography, environment constraints, and implementation polish once the spec exists.
 
 Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
 

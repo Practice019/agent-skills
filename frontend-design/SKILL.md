@@ -6,7 +6,7 @@ license: Complete terms in LICENSE.txt
 
 # Frontend Design
 
-> **Boundary with the `define` phase** (`../define/SKILL.md`): if the task still has no spec — no DESIGN.md, no structural layout, no decision record — resolve that first. This skill covers visual direction, typography, environment constraints, and implementation polish once the spec exists.
+> **Boundary with `design-blueprint`** (`../design-blueprint/SKILL.md`): if the task still has no spec — no DESIGN.md, no structural layout, no decision record — resolve that first. This skill covers visual direction, typography, environment constraints, and implementation polish once the spec exists.
 
 Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
 

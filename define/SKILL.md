@@ -1,6 +1,6 @@
 ---
 name: define
-description: "Define 阶段：写代码之前先想清楚『要做什么』。四条路径 —— 需求还没影（interview-me 反问出真实意图）、有模糊想法（idea-refine 结构化发散收敛）、要落成规格（spec-driven-development 先规格后代码）、要把质量标准写下来（constraint-driven-development 把评审口味变成可执行红线）。产出 SPEC.md / 约束配置，不含任何实现。Define phase: clarify WHAT to build before any code. Four routes — interview-me (surface the real intent), idea-refine (structured divergent/convergent refinement), spec-driven-development (spec before code), constraint-driven-development (turn review taste into executable gates). Use when requirements are vague, when starting a new project or feature, or when there is no written spec. Produces a spec, not an implementation. Based on addyosmani/agent-skills v0.6.9."
+description: "Define 阶段：写代码之前先想清楚『要做什么』。六条路径 —— 需求还没影（interview-me 反问出真实意图）、有模糊想法（idea-refine 结构化发散收敛）、要落成规格（spec-driven-development 先规格后代码）、要把质量标准写下来（constraint-driven-development 把评审口味变成可执行红线）、方案已成形但没人挑战过（grilling 设计树拷问）、要做视觉产物（design-blueprint 先出 DESIGN.md）。产出 SPEC.md / DESIGN.md / 约束配置，不含任何实现。Define phase: clarify WHAT to build before any code. Routes — interview-me (surface the real intent), idea-refine (divergent then convergent refinement), spec-driven-development (spec before code), constraint-driven-development (turn review taste into executable gates), grilling (design-tree stress test of an already-formed plan), design-blueprint (produce DESIGN.md for visual artifacts). Use when requirements are vague, when starting a new project or feature, when a plan needs stress-testing, or when a visual artifact needs a spec before pixels. Produces a spec, not an implementation. Four routes based on addyosmani/agent-skills v0.6.9."
 whenToUse: "需求模糊、新项目/新功能起步、没有书面规格、或要把质量标准固化成门禁时。不适用于：规格已明确（走 plan）、只是修一个已知 bug（走 verify）。"
 user-invocable: true
 disable-model-invocation: false
@@ -11,6 +11,10 @@ disable-model-invocation: false
 > 来源：[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) v0.6.9 的
 > `interview-me` / `idea-refine` / `spec-driven-development` / `constraint-driven-development`。
 > 本文件是**路由层**，四份原文都是**本技能目录下的子文件**，用 `read` 按相对路径读取。
+>
+> 另有两条**本地**路由：`grilling.md`（本目录）与 `../design-blueprint/SKILL.md`（顶层技能）。
+> 上游没有对应的「方案完备性拷问」与「视觉产物规格」入口，这两条是本地补齐的，
+> 不随上游升级变动——将来上游升级时只覆盖上面那四份。
 
 ## 这个阶段干什么
 
@@ -27,6 +31,8 @@ disable-model-invocation: false
 | **有模糊想法，想看几种可能** | `idea-refine.md` | 结构化发散 + 收敛，把想法磨清楚 |
 | **要把它写成规格** | `spec-driven-development.md` | 先规格后代码 |
 | **要把质量标准写下来** | `constraint-driven-development.md` | 把「评审口味」变成可执行门禁 |
+| **方案已成形，但没人挑战过** | `grilling.md` | 设计树拷问：每问带推荐答案，逼出静默假设 |
+| **要做的是视觉产物（页面/海报/PPT/图表）** | `../design-blueprint/SKILL.md` | 先出 DESIGN.md（结构布局 + Decision Trace），再谈实现 |
 
 > ★ **拿不准从哪开始 → 先 `interview-me.md`。**
 > 最常见的失败是「需求模糊却直接开写」—— 假设做错了，后面全是返工。
@@ -42,6 +48,13 @@ spec-driven-development   → 写成规格 + 验收标准
     ↓
 constraint-driven-development → 把质量红线固化成可执行检查（可选，团队级）
 ```
+
+**拷问（grilling）插在方案成形之后、写规格之前**：先用 `idea-refine.md` / 自己的思考把方案定下来，
+再用 `grilling.md` 走一遍设计树，确认分支都走过、没有静默假设，最后才交给 `spec-driven-development.md` 落笔。
+顺序反过来会变成「拷问一个还不存在的方案」。
+
+**视觉产物先出规格**：页面 / 海报 / PPT / 图表类任务，在写规格的同时读 `../design-blueprint/SKILL.md`，
+先产出 DESIGN.md（结构布局 + Decision Trace）；没有 DESIGN.md 就进实现，大概率产出「AI 味」的模板脸。
 
 **不是每一步都要走。** 需求已经很清楚 → 直接 `spec-driven-development.md`。
 

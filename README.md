@@ -50,7 +50,8 @@
 | `learn-everything` | 把 PDF/论文/书章/URL/主题变成结构化互动课程：分章学习与练习 |
 | `research-paper-writing` | 学术论文撰写/改写/润色：Abstract→Conclusion，中译英、逐段打磨 |
 | `latex-compile` | LaTeX 多遍构建（xelatex → bibtex → xelatex ×2）+ 日志尾部/页数/警告信号，可选 `--min-pages` / `--min-refs` 门禁 |
-| `define`（含 `design-blueprint/`） | 动手做视觉产物前先出设计规格：DESIGN.md + 结构布局 + Decision Trace |
+| `define` | 写代码前想清楚「要做什么」：反问出需求 / 想法打磨 / 先规格后代码 / 质量红线 / 方案拷问（`grilling.md`）/ 视觉产物走 `design-blueprint` |
+| `design-blueprint` | 动手做视觉产物前先出设计规格：DESIGN.md + 结构布局 + Decision Trace |
 | `frontend-design` | 新建或改造 UI 的视觉设计指导：配色、排版、环境约束、风格改造 |
 | `60fps-animation` | 修卡顿动画：把逐帧重排/重绘的属性改成 `transform`/`opacity`，含 FLIP、`height auto`、滚动与 hover 抖动 |
 | `video`（含 `html-to-video-pipeline/`） | HTML/CSS/JS 页面可靠渲染成 MP4：无头浏览器录制 + ffmpeg |
@@ -110,9 +111,9 @@ frontmatter 必填 `name`（小写 kebab-case）与 `description`（双引号包
 | 原顶层技能 | 现位置 |
 |---|---|
 | `tdd` | `build/test-driven-development.md`（独有段并入） |
-| `zoom-out` | `plan/zoom-out.md` |
-| `design-blueprint` | `define/design-blueprint/` |
-| `ship`（含 `push-project/`） | 发布阶段：CI/CD、上线清单、回滚；`push-project/` 负责 npm + GitHub 具体发布（**先确认发布目标**） |
+| `zoom-out` | _(已随 define/plan 阶段重置删除，仅存于 tag `pre-upstream-reset`：`plan/zoom-out.md`)_ |
+| `design-blueprint` | `design-blueprint/`（顶层，2026 年 define 阶段重置后恢复为顶层技能） |
+| `ship`（`push-project/` 已随 ship 阶段重置删除） | 发布阶段：CI/CD、上线清单、回滚（具体发布动作走 `github-cli`） |
 | `find-skills` | _(已恢复为顶层技能)_ |
 | `{pdf,docx,xlsx,pptx}-official` | `office-docs/`（新路由） |
 | `video-post-production` + `html-to-video-pipeline` | `video/`（新路由） |

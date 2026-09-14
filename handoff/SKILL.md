@@ -43,12 +43,16 @@ Links or paths to artifacts that provide context — don't inline their content 
 Skills the next session should load. For each, one line explaining why:
 - `diagnose` — if there is an unresolved bug to investigate
 - `build`（其 `test-driven-development.md`）— if the next task is implementing a feature with tests
-- `to-issues` — if a plan needs to be broken into tickets
+- `plan`（其 `planning-and-task-breakdown.md`）— if a plan needs to be broken into small verifiable tasks / tickets
 - `define`（其 `grilling.md`）— if a design decision still needs to be resolved
 - `plan`（其 `zoom-out.md`）— if the next session will enter unfamiliar code
 - `handoff` — if the session will need to hand off again
 Only list skills relevant to the actual next steps; omit the rest.
 ```
+
+> ⚠️ 上面模板里的技能名**必须在本技能库中真实存在**，列出的子文件也必须在对应技能目录下。
+> 不确定的先确认再写——下一个会话拿到的是这份文档，它会照着去 `read`，
+> 名字写错等于让它在上下文全丢的状态下扑空。库里加删技能后要回来同步这一节。
 
 ## Tools
 

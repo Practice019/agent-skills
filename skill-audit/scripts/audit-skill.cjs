@@ -32,17 +32,9 @@ const LOCAL_USER = (process.env.USERNAME || process.env.USER || '').trim();
 const MIN_DESC = 40;
 const SKIP_DIRS = ['.git', 'node_modules', '_shared'];
 
-// ---- 与库级扫描器保持同一套误报口径（改口径要三处同步）----
-const NON_REPO = [
-  /^DESIGN\.md$/i, /^tasks\//, /^SPEC\.md$/i, /^PRD/i, /^CLAUDE\.md$/i, /^AGENTS\.md$/i,
-  /^design\.md$/i, /^\.hallmark/, /^work\//, /^\.codex/, /^\.claude/,
-  /^src\//, /^tests\//, /^docs\//, /^package\.json$/, /^index\.html$/,
-  /^agent-workspace\\/, /^\$/, /^\.\/logs\//, /^\.\/scratch\//,
-  /var\/www\//, /^\/etc\//, /^\/tmp\//,
-];
-const PROSE_DOCS = /(^|\/)(CHANGELOG|CONTRIBUTING|README)\.md$/;
-const BENIGN_TILDE = /(禁止|不要|不展开|反例|错误|警告|没有|无 `|规范|规则)/;
-const READ_WORDS = /(read\b|读取|详见|参见|参考|查阅|加载)/i;
+// ---- 误报口径与键名清单：从 _shared/ 共用，避免三处漂移 ----
+const { NON_REPO, BENIGN_TILDE, SWALLOWABLE_KEYS, PROSE_DOCS, READ_WORDS } =
+  require(path.join(ROOT, '_shared', 'audit-constants.cjs'));
 
 // 专有运行时残留：这些字符串出现在正文里，说明技能没有真正移植到 DSH
 const FOREIGN_RUNTIME = [
@@ -52,13 +44,6 @@ const FOREIGN_RUNTIME = [
 // 上游 frontmatter 键：DSH 不识别，留着通常意味着搬运未清理
 const FOREIGN_KEYS = ['entrypoint', 'assemble', 'description_zh', 'triggers', 'homepage', 'always', 'provenance'];
 
-// 只可能出现在 frontmatter 顶层、不会作为普通英文散文出现在 description 里的键名。
-// 命中即说明 description 标量把后面的顶层键吞了（见「1b」处说明）。
-const SWALLOWABLE_KEYS = [
-  'license', 'version', 'platforms', 'allowed-tools', 'argument-hint', 'model',
-  'hooks', 'metadata', 'author', 'homepage', 'repository', 'category',
-  'when_to_use', 'disable-model-invocation', 'user-invocable', 'provenance',
-];
 // 从 raw SKILL.md 文本判定 description 标量是否吞并了后续顶层键。
 // 只看 description 行本身，以及其后到「下一个顶层键行」之前的续行，
 // 一旦遇到形如 `key:` 的顶格行就停止，避免把合法的独立 license 键误判为被吞。

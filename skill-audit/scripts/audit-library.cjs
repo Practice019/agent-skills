@@ -27,17 +27,12 @@ const LOCAL_USER = (process.env.USERNAME || process.env.USER || '').trim();
 const MIN_DESC = 40;
 
 // 非仓库引用：技能让 agent 去读用户项目 / 运行时 / 靶机里的东西
-const NON_REPO = [
-  /^DESIGN\.md$/i, /^tasks\//, /^SPEC\.md$/i, /^PRD/i, /^CLAUDE\.md$/i, /^AGENTS\.md$/i,
-  /^design\.md$/i, /^\.hallmark/, /^work\//, /^\.codex/, /^\.claude/,
-  /^src\//, /^tests\//, /^docs\//, /^package\.json$/, /^index\.html$/,
-  /^agent-workspace\\/, /^\$/, /^\.\/logs\//, /^\.\/scratch\//,
-  /var\/www\//, /^\/etc\//, /^\/tmp\//,
-];
-// 变更说明 / 模板文档：引用是描述性的
-const PROSE_DOCS = /(^|\/)(CHANGELOG|CONTRIBUTING|README)\.md$/;
-// 规则说明里的 ~/ 反例
-const BENIGN_TILDE = /(禁止|不要|不展开|反例|错误|警告|没有|无 `|规范|规则)/;
+// 口径与键名清单从 _shared/ 共用，避免三处漂移
+const { NON_REPO, BENIGN_TILDE, PROSE_DOCS, READ_WORDS } =
+  require(path.join(ROOT, '_shared', 'audit-constants.cjs'));
+
+// 变更说明 / 模板文档：引用是描述性的（PROSE_DOCS）
+// 规则说明里的 ~/ 反例（BENIGN_TILDE）
 
 function walk(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -55,7 +50,7 @@ const skills = all.filter(p => path.basename(p) === 'SKILL.md');
 const rel = p => path.relative(ROOT, p).replace(/\\/g, '/');
 const md5 = p => crypto.createHash('md5').update(fs.readFileSync(p)).digest('hex');
 
-const READ_WORDS = /(read\b|读取|详见|参见|参考|查阅|加载)/i;
+// READ_WORDS 见 _shared/audit-constants.cjs
 const TOP_SKILLS = fs.readdirSync(ROOT, { withFileTypes: true })
   .filter(e => e.isDirectory() && !['.git', '_shared', 'node_modules'].includes(e.name))
   .map(e => path.join(ROOT, e.name));

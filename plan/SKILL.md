@@ -11,6 +11,10 @@ disable-model-invocation: false
 > 来源：[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) v0.6.9 的
 > `planning-and-task-breakdown`。本文件是**路由层**，原文是**本技能目录下的子文件**，
 > 用 `read` 按相对路径读取。
+>
+> 另有 `zoom-out.md`（陌生代码全局地图）与 `codebase-design.md`（模块与接缝设计，
+> 附 `DEEPENING.md` / `DESIGN-IT-TWICE.md`）两条**本地**路由——上游没有对应物，
+> 不随上游升级变动。将来上游升级只覆盖 `planning-and-task-breakdown.md`。
 
 ## 这个阶段干什么
 
@@ -23,6 +27,8 @@ disable-model-invocation: false
 | 你要做的事 | 读 |
 |---|---|
 | **拆任务、定依赖、写验收标准** | `planning-and-task-breakdown.md` |
+| **要进陌生代码、先拿全局地图** | `zoom-out.md` |
+| **要设计代码库结构 / 模块边界** | `codebase-design.md`（另见 `DEEPENING.md`、`DESIGN-IT-TWICE.md`） |
 | 全项目的完成定义（每个改动都要过） | `../_shared/references/definition-of-done.md` |
 | 前端任务的可访问性清单 | `../_shared/references/accessibility-checklist.md` |
 | 涉及安全边界的任务 | `../_shared/references/security-checklist.md` |

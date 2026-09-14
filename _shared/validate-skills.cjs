@@ -44,20 +44,10 @@ function collectArtifacts(lines) {
 }
 
 // 非仓库引用：技能指示 agent 去读「用户项目」或「运行时」里的东西，仓库内本就不存在
-const NON_REPO = [
-  /^DESIGN\.md$/i,              // 用户项目的设计契约
-  /^tasks\//,                    // 用户项目的计划/待办
-  /^SPEC\.md$/i, /^PRD/i,
-  /^CLAUDE\.md$/i, /^AGENTS\.md$/i,
-  /^design\.md$/i,
-  /^\.hallmark/, /^work\//, /^\.codex/, /^\.claude/,
-  /^src\//, /^tests\//, /^docs\//,
-  /^package\.json$/, /^index\.html$/,
-  /^agent-workspace\\/,          // 运行时工作区
-  /^\$/,                          // $FC 等变量占位
-];
-
-const READ_WORDS = /(read\b|读取|详见|参见|参考|查阅|见\s*`|加载)/i;
+// 口径从 audit-constants.cjs 共用，与两个库级扫描器保持一致
+// （原先这一份缺少 ./logs/ ./scratch/ var/www/ /etc/ /tmp/ 五条，与另两处不一致）
+const { NON_REPO, BENIGN_TILDE, READ_WORDS } = require(path.join(__dirname, 'audit-constants.cjs'));
+// 本脚本历史上多一条「见 \`xxx\`」的读引用引导词，保留为本地补充
 
 function walk(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -107,7 +97,7 @@ for (const file of files) {
 
   // 5 + 6: 坏路径
   // 规则说明/反例里的 ~/ 不是缺陷（如「禁止 read ~/…」）
-  const BENIGN_TILDE = /(禁止|不要|不展开|反例|错误|警告|没有|无 `|规范|规则)/;
+  // BENIGN_TILDE 见 audit-constants.cjs
   lines.forEach((line, i) => {
     if (/read\s+~\/|读取\s*`~\//.test(line) && !BENIGN_TILDE.test(line)) {
       problems.push(`line ${i + 1}: read ~/ 路径`);
